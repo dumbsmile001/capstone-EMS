@@ -1,100 +1,187 @@
-<div class="p-6 bg-gray-50 min-h-screen">
-    <div class="mb-6">
-        <h1 class="text-2xl font-bold">Student Dashboard</h1>
-        <p class="text-sm text-gray-600">Discover events, manage your tickets, and view receipts.</p>
-    </div>
+<div class="flex min-h-screen bg-gray-50">
+    <!-- Sidebar -->
+    <x-dashboard-sidebar />
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div class="bg-white rounded-xl shadow p-4">
-            <p class="text-sm text-gray-500">Upcoming Events</p>
-            <p class="text-3xl font-semibold mt-1">7</p>
-            <button class="mt-4 px-3 py-2 text-sm bg-indigo-600 text-white rounded hover:bg-indigo-700">Browse Events</button>
-        </div>
-        <div class="bg-white rounded-xl shadow p-4">
-            <p class="text-sm text-gray-500">My Registrations</p>
-            <p class="text-3xl font-semibold mt-1">3</p>
-            <button class="mt-4 px-3 py-2 text-sm bg-emerald-600 text-white rounded hover:bg-emerald-700">View Tickets</button>
-        </div>
-        <div class="bg-white rounded-xl shadow p-4">
-            <p class="text-sm text-gray-500">Unread Announcements</p>
-            <p class="text-3xl font-semibold mt-1">1</p>
-            <button class="mt-4 px-3 py-2 text-sm bg-amber-600 text-white rounded hover:bg-amber-700">Read Now</button>
-        </div>
-    </div>
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col">
+        <!-- Header -->
+        <x-dashboard-header userRole="Student" :userInitials="$userInitials" />
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div class="bg-white rounded-xl shadow">
-            <div class="p-4 border-b">
-                <h2 class="text-lg font-semibold">Recommended Events</h2>
+        <!-- Dashboard Content -->
+        <div class="flex-1 p-6">
+            <!-- Overview Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                <x-overview-card 
+                    title="My Events" 
+                    value="5" 
+                    icon='<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>'
+                    iconColor="blue"
+                />
+                <x-overview-card 
+                    title="My Tickets" 
+                    value="3" 
+                    icon='<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path></svg>'
+                    iconColor="green"
+                />
+                <x-overview-card 
+                    title="Pending Payments" 
+                    value="2" 
+                    icon='<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>'
+                    iconColor="yellow"
+                />
+                <x-overview-card 
+                    title="Upcoming Events" 
+                    value="8" 
+                    icon='<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>'
+                    iconColor="orange"
+                />
             </div>
-            <div class="p-4 overflow-x-auto">
-                <table class="min-w-full text-sm">
-                    <thead class="text-left text-gray-600">
-                        <tr>
-                            <th class="py-2 pr-4">Event</th>
-                            <th class="py-2 pr-4">Date</th>
-                            <th class="py-2 pr-4">Venue</th>
-                            <th class="py-2">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y">
-                        <tr>
-                            <td class="py-2 pr-4">Tech Summit</td>
-                            <td class="py-2 pr-4">Dec 12, 2025</td>
-                            <td class="py-2 pr-4">Main Hall</td>
-                            <td class="py-2">
-                                <button class="px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700">Details</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="py-2 pr-4">Career Fair</td>
-                            <td class="py-2 pr-4">Jan 8, 2026</td>
-                            <td class="py-2 pr-4">Auditorium</td>
-                            <td class="py-2">
-                                <button class="px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700">Details</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
 
-        <div class="bg-white rounded-xl shadow">
-            <div class="p-4 border-b">
-                <h2 class="text-lg font-semibold">My Tickets</h2>
-            </div>
-            <div class="p-4 overflow-x-auto">
-                <table class="min-w-full text-sm">
-                    <thead class="text-left text-gray-600">
-                        <tr>
-                            <th class="py-2 pr-4">Event</th>
-                            <th class="py-2 pr-4">Ticket</th>
-                            <th class="py-2 pr-4">Status</th>
-                            <th class="py-2">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y">
-                        <tr>
-                            <td class="py-2 pr-4">Tech Summit</td>
-                            <td class="py-2 pr-4">General</td>
-                            <td class="py-2 pr-4"><span class="px-2 py-1 rounded bg-emerald-100 text-emerald-800">Paid</span></td>
-                            <td class="py-2">
-                                <button class="px-2 py-1 text-xs bg-gray-100 rounded hover:bg-gray-200">Download</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="py-2 pr-4">Career Fair</td>
-                            <td class="py-2 pr-4">Free</td>
-                            <td class="py-2 pr-4"><span class="px-2 py-1 rounded bg-yellow-100 text-yellow-800">Pending</span></td>
-                            <td class="py-2">
-                                <button class="px-2 py-1 text-xs bg-gray-100 rounded hover:bg-gray-200">View</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Main Content Area -->
+                <div class="lg:col-span-2 space-y-6">
+                    <!-- Upcoming Events Section -->
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4">Upcoming Events</h2>
+                        <div class="space-y-4">
+                            <!-- Event Card 1 -->
+                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow">
+                                <h3 class="text-lg font-semibold text-gray-800 mb-2">Annual Tech Conference</h3>
+                                <p class="text-sm text-gray-600 mb-3">Join us for the biggest tech event of the year with keynote speakers and workshops.</p>
+                                <div class="flex flex-wrap gap-2 text-sm text-gray-600 mb-3">
+                                    <span class="flex items-center"><svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>June 15, 2023</span>
+                                    <span class="flex items-center"><svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>10:00 AM - 4:00 PM</span>
+                                    <span class="flex items-center"><svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>University Auditorium</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-semibold">Registration Open</span>
+                                    <button wire:click="registerForEvent(1)" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">Register</button>
+                                </div>
+                            </div>
+
+                            <!-- Event Card 2 -->
+                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow">
+                                <h3 class="text-lg font-semibold text-gray-800 mb-2">Web Development Workshop</h3>
+                                <p class="text-sm text-gray-600 mb-3">Learn the latest web development techniques and frameworks in this hands-on workshop.</p>
+                                <div class="flex flex-wrap gap-2 text-sm text-gray-600 mb-3">
+                                    <span class="flex items-center"><svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>June 22, 2023</span>
+                                    <span class="flex items-center"><svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>2:00 PM - 5:00 PM</span>
+                                    <span class="flex items-center"><svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>Computer Lab B</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-semibold">Registered</span>
+                                    <button wire:click="cancelRegistration(2)" class="px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition-colors text-sm font-medium">Cancel</button>
+                                </div>
+                            </div>
+
+                            <!-- Event Card 3 -->
+                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow">
+                                <h3 class="text-lg font-semibold text-gray-800 mb-2">Data Science Summit</h3>
+                                <p class="text-sm text-gray-600 mb-3">Explore the world of data science with industry experts and practical applications.</p>
+                                <div class="flex flex-wrap gap-2 text-sm text-gray-600 mb-3">
+                                    <span class="flex items-center"><svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>July 5, 2023</span>
+                                    <span class="flex items-center"><svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>9:00 AM - 6:00 PM</span>
+                                    <span class="flex items-center"><svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>Conference Center</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-semibold">Registration Open</span>
+                                    <button wire:click="registerForEvent(3)" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">Register</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Registration History Table -->
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4">Registration History</h2>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Event Name</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duration</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <tr>
+                                        <td class="px-4 py-3 text-sm text-gray-900">Web Development Workshop</td>
+                                        <td class="px-4 py-3 text-sm text-gray-600">Workshop</td>
+                                        <td class="px-4 py-3 text-sm text-gray-600">June 22, 2023</td>
+                                        <td class="px-4 py-3 text-sm text-gray-600">3 hours</td>
+                                        <td class="px-4 py-3 text-sm text-blue-600 font-medium">Registered</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 text-sm text-gray-900">AI and Machine Learning Seminar</td>
+                                        <td class="px-4 py-3 text-sm text-gray-600">Seminar</td>
+                                        <td class="px-4 py-3 text-sm text-gray-600">May 15, 2023</td>
+                                        <td class="px-4 py-3 text-sm text-gray-600">2 hours</td>
+                                        <td class="px-4 py-3 text-sm text-blue-600 font-medium">Attended</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 text-sm text-gray-900">Cybersecurity Conference</td>
+                                        <td class="px-4 py-3 text-sm text-gray-600">Conference</td>
+                                        <td class="px-4 py-3 text-sm text-gray-600">April 10, 2023</td>
+                                        <td class="px-4 py-3 text-sm text-gray-600">6 hours</td>
+                                        <td class="px-4 py-3 text-sm text-pink-600 font-medium">Cancelled</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 text-sm text-gray-900">Mobile App Development</td>
+                                        <td class="px-4 py-3 text-sm text-gray-600">Workshop</td>
+                                        <td class="px-4 py-3 text-sm text-gray-600">March 5, 2023</td>
+                                        <td class="px-4 py-3 text-sm text-gray-600">4 hours</td>
+                                        <td class="px-4 py-3 text-sm text-blue-600 font-medium">Attended</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Sidebar -->
+                <div class="space-y-6">
+                    <!-- Announcements Feed -->
+                    <x-announcements-feed :announcements="[
+                        ['title' => 'Welcome to the New Semester!', 'content' => 'Check out the exciting events we have planned for this semester.', 'posted' => 'Posted 2 days ago'],
+                        ['title' => 'Tech Conference Registration Open', 'content' => 'Register now for the Annual Tech Conference on June 15th.', 'posted' => 'Posted 5 days ago'],
+                        ['title' => 'Workshop Reminder', 'content' => 'Don\'t forget about the Web Development Workshop this Friday.', 'posted' => 'Posted 1 week ago'],
+                    ]" />
+
+                    <!-- My Tickets Section -->
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">My Tickets</h3>
+                        <div class="border-2 border-gray-200 rounded-lg p-4">
+                            <div class="flex justify-between items-start mb-4">
+                                <h4 class="font-semibold text-gray-800">Web Development Workshop</h4>
+                                <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-semibold">Paid</span>
+                            </div>
+                            <div class="space-y-2 mb-4 text-sm text-gray-600">
+                                <div><strong>Date:</strong> June 22, 2023</div>
+                                <div><strong>Time:</strong> 2:00 PM - 5:00 PM</div>
+                                <div><strong>Location:</strong> Computer Lab B</div>
+                                <div><strong>Ticket ID:</strong> TKT-789012</div>
+                            </div>
+                            <!-- QR Code Placeholder -->
+                            <div class="bg-gray-100 rounded-lg p-4 mb-4 flex items-center justify-center">
+                                <div class="w-32 h-32 bg-white border-2 border-gray-300 rounded flex items-center justify-center">
+                                    <svg class="w-24 h-24 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M3 11h8V3H3v8zm2-6h4v4H5V5zM13 3v8h8V3h-8zm6 6h-4V5h4v4zM3 21h8v-8H3v8zm2-6h4v4H5v-4zM16 13h2v2h-2zM18 15h2v2h-2zM16 17h2v2h-2zM13 13h2v2h-2zM15 15h2v2h-2zM13 17h2v2h-2zM18 17h2v2h-2zM21 13h-2v2h2zM21 17h-2v2h2z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="text-sm text-gray-700 mb-4"><strong>Student Name:</strong> {{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</div>
+                            <button wire:click="downloadTicket(1)" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium flex items-center justify-center">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                </svg>
+                                Download
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
-
