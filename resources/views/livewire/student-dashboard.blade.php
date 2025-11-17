@@ -91,65 +91,195 @@
                         </div>
                     </div>
 
-                    <!-- Registration History Table -->
-                    <div class="bg-white rounded-lg shadow-md p-6">
-                        <h2 class="text-xl font-semibold text-gray-800 mb-4">Registration History</h2>
+                    <!-- Tabbed Tables Section -->
+                    <div class="bg-white rounded-lg shadow-md p-6" x-data="{ activeTab: 'registrations' }">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-xl font-semibold text-gray-800">My Data</h2>
+                            <button class="px-4 py-2 text-sm text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                        </div>
+                        
+                        <!-- Tabs -->
+                        <div class="border-b border-gray-200 mb-4">
+                            <nav class="flex space-x-4">
+                                <button @click="activeTab = 'registrations'" :class="activeTab === 'registrations' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'" class="px-4 py-2 font-medium text-sm transition-colors">
+                                    Registration History
+                                </button>
+                                <button @click="activeTab = 'payments'" :class="activeTab === 'payments' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'" class="px-4 py-2 font-medium text-sm transition-colors">
+                                    Payments
+                                </button>
+                                <button @click="activeTab = 'tickets'" :class="activeTab === 'tickets' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'" class="px-4 py-2 font-medium text-sm transition-colors">
+                                    Tickets
+                                </button>
+                            </nav>
+                        </div>
+
+                        <!-- Tab Content -->
                         <div class="overflow-x-auto">
-                            <table class="min-w-full divide-y divide-gray-200">
-                                <thead class="bg-gray-50">
-                                    <tr>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Event Name</th>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duration</th>
-                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="bg-white divide-y divide-gray-200">
-                                    <tr>
-                                        <td class="px-4 py-3 text-sm text-gray-900">Web Development Workshop</td>
-                                        <td class="px-4 py-3 text-sm text-gray-600">Workshop</td>
-                                        <td class="px-4 py-3 text-sm text-gray-600">June 22, 2023</td>
-                                        <td class="px-4 py-3 text-sm text-gray-600">3 hours</td>
-                                        <td class="px-4 py-3 text-sm text-blue-600 font-medium">Registered</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="px-4 py-3 text-sm text-gray-900">AI and Machine Learning Seminar</td>
-                                        <td class="px-4 py-3 text-sm text-gray-600">Seminar</td>
-                                        <td class="px-4 py-3 text-sm text-gray-600">May 15, 2023</td>
-                                        <td class="px-4 py-3 text-sm text-gray-600">2 hours</td>
-                                        <td class="px-4 py-3 text-sm text-blue-600 font-medium">Attended</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="px-4 py-3 text-sm text-gray-900">Cybersecurity Conference</td>
-                                        <td class="px-4 py-3 text-sm text-gray-600">Conference</td>
-                                        <td class="px-4 py-3 text-sm text-gray-600">April 10, 2023</td>
-                                        <td class="px-4 py-3 text-sm text-gray-600">6 hours</td>
-                                        <td class="px-4 py-3 text-sm text-pink-600 font-medium">Cancelled</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="px-4 py-3 text-sm text-gray-900">Mobile App Development</td>
-                                        <td class="px-4 py-3 text-sm text-gray-600">Workshop</td>
-                                        <td class="px-4 py-3 text-sm text-gray-600">March 5, 2023</td>
-                                        <td class="px-4 py-3 text-sm text-gray-600">4 hours</td>
-                                        <td class="px-4 py-3 text-sm text-blue-600 font-medium">Attended</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <!-- Registration History Table -->
+                            <div x-show="activeTab === 'registrations'" x-transition>
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Event Name</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duration</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200">
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-4 py-3 text-sm text-gray-900">Web Development Workshop</td>
+                                            <td class="px-4 py-3 text-sm text-gray-600">Workshop</td>
+                                            <td class="px-4 py-3 text-sm text-gray-600">June 22, 2023</td>
+                                            <td class="px-4 py-3 text-sm text-gray-600">3 hours</td>
+                                            <td class="px-4 py-3 text-sm text-blue-600 font-medium">Registered</td>
+                                        </tr>
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-4 py-3 text-sm text-gray-900">AI and Machine Learning Seminar</td>
+                                            <td class="px-4 py-3 text-sm text-gray-600">Seminar</td>
+                                            <td class="px-4 py-3 text-sm text-gray-600">May 15, 2023</td>
+                                            <td class="px-4 py-3 text-sm text-gray-600">2 hours</td>
+                                            <td class="px-4 py-3 text-sm text-blue-600 font-medium">Attended</td>
+                                        </tr>
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-4 py-3 text-sm text-gray-900">Cybersecurity Conference</td>
+                                            <td class="px-4 py-3 text-sm text-gray-600">Conference</td>
+                                            <td class="px-4 py-3 text-sm text-gray-600">April 10, 2023</td>
+                                            <td class="px-4 py-3 text-sm text-gray-600">6 hours</td>
+                                            <td class="px-4 py-3 text-sm text-pink-600 font-medium">Cancelled</td>
+                                        </tr>
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-4 py-3 text-sm text-gray-900">Mobile App Development</td>
+                                            <td class="px-4 py-3 text-sm text-gray-600">Workshop</td>
+                                            <td class="px-4 py-3 text-sm text-gray-600">March 5, 2023</td>
+                                            <td class="px-4 py-3 text-sm text-gray-600">4 hours</td>
+                                            <td class="px-4 py-3 text-sm text-blue-600 font-medium">Attended</td>
+                                        </tr>
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-4 py-3 text-sm text-gray-900">Database Management Workshop</td>
+                                            <td class="px-4 py-3 text-sm text-gray-600">Workshop</td>
+                                            <td class="px-4 py-3 text-sm text-gray-600">February 20, 2023</td>
+                                            <td class="px-4 py-3 text-sm text-gray-600">3 hours</td>
+                                            <td class="px-4 py-3 text-sm text-blue-600 font-medium">Attended</td>
+                                        </tr>
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-4 py-3 text-sm text-gray-900">Cloud Computing Seminar</td>
+                                            <td class="px-4 py-3 text-sm text-gray-600">Seminar</td>
+                                            <td class="px-4 py-3 text-sm text-gray-600">January 18, 2023</td>
+                                            <td class="px-4 py-3 text-sm text-gray-600">2 hours</td>
+                                            <td class="px-4 py-3 text-sm text-blue-600 font-medium">Attended</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Payments Table -->
+                            <div x-show="activeTab === 'payments'" x-transition>
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Event</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment Date</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200">
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-4 py-3 text-sm text-gray-900">Web Development Workshop</td>
+                                            <td class="px-4 py-3 text-sm text-gray-600">₱500.00</td>
+                                            <td class="px-4 py-3 text-sm text-gray-600">June 20, 2023</td>
+                                            <td class="px-4 py-3 text-sm">
+                                                <span class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-medium">Paid</span>
+                                            </td>
+                                            <td class="px-4 py-3 text-sm">
+                                                <button wire:click="viewReceipt(1)" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-xs font-medium">View Receipt</button>
+                                            </td>
+                                        </tr>
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-4 py-3 text-sm text-gray-900">Data Science Summit</td>
+                                            <td class="px-4 py-3 text-sm text-gray-600">₱750.00</td>
+                                            <td class="px-4 py-3 text-sm text-gray-600">-</td>
+                                            <td class="px-4 py-3 text-sm">
+                                                <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs font-medium">Pending</span>
+                                            </td>
+                                            <td class="px-4 py-3 text-sm">
+                                                <button wire:click="payNow(2)" class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-xs font-medium">Pay Now</button>
+                                            </td>
+                                        </tr>
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-4 py-3 text-sm text-gray-900">Annual Tech Conference</td>
+                                            <td class="px-4 py-3 text-sm text-gray-600">₱1,000.00</td>
+                                            <td class="px-4 py-3 text-sm text-gray-600">-</td>
+                                            <td class="px-4 py-3 text-sm">
+                                                <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs font-medium">Pending</span>
+                                            </td>
+                                            <td class="px-4 py-3 text-sm">
+                                                <button wire:click="payNow(3)" class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-xs font-medium">Pay Now</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Tickets Table -->
+                            <div x-show="activeTab === 'tickets'" x-transition>
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Event</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ticket ID</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200">
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-4 py-3 text-sm text-gray-900">Web Development Workshop</td>
+                                            <td class="px-4 py-3 text-sm text-gray-600">TKT-789012</td>
+                                            <td class="px-4 py-3 text-sm text-gray-600">June 22, 2023</td>
+                                            <td class="px-4 py-3 text-sm">
+                                                <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-medium">Valid</span>
+                                            </td>
+                                            <td class="px-4 py-3 text-sm">
+                                                <button wire:click="downloadTicket(1)" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-xs font-medium">Download</button>
+                                            </td>
+                                        </tr>
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-4 py-3 text-sm text-gray-900">AI and Machine Learning Seminar</td>
+                                            <td class="px-4 py-3 text-sm text-gray-600">TKT-456789</td>
+                                            <td class="px-4 py-3 text-sm text-gray-600">May 15, 2023</td>
+                                            <td class="px-4 py-3 text-sm">
+                                                <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded text-xs font-medium">Used</span>
+                                            </td>
+                                            <td class="px-4 py-3 text-sm">
+                                                <button wire:click="viewTicket(2)" class="px-3 py-1 bg-gray-600 text-white rounded hover:bg-gray-700 text-xs font-medium">View</button>
+                                            </td>
+                                        </tr>
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-4 py-3 text-sm text-gray-900">Mobile App Development</td>
+                                            <td class="px-4 py-3 text-sm text-gray-600">TKT-123456</td>
+                                            <td class="px-4 py-3 text-sm text-gray-600">March 5, 2023</td>
+                                            <td class="px-4 py-3 text-sm">
+                                                <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded text-xs font-medium">Used</span>
+                                            </td>
+                                            <td class="px-4 py-3 text-sm">
+                                                <button wire:click="viewTicket(3)" class="px-3 py-1 bg-gray-600 text-white rounded hover:bg-gray-700 text-xs font-medium">View</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Right Sidebar -->
                 <div class="space-y-6">
-                    <!-- Announcements Feed -->
-                    <x-announcements-feed :announcements="[
-                        ['title' => 'Welcome to the New Semester!', 'content' => 'Check out the exciting events we have planned for this semester.', 'posted' => 'Posted 2 days ago'],
-                        ['title' => 'Tech Conference Registration Open', 'content' => 'Register now for the Annual Tech Conference on June 15th.', 'posted' => 'Posted 5 days ago'],
-                        ['title' => 'Workshop Reminder', 'content' => 'Don\'t forget about the Web Development Workshop this Friday.', 'posted' => 'Posted 1 week ago'],
-                    ]" />
-
-                    <!-- My Tickets Section -->
+                    <!-- My Tickets Section (Moved Higher) -->
                     <div class="bg-white rounded-lg shadow-md p-6">
                         <h3 class="text-lg font-semibold text-gray-800 mb-4">My Tickets</h3>
                         <div class="border-2 border-gray-200 rounded-lg p-4">

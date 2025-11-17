@@ -11,8 +11,21 @@ class Dashboard extends Component
 
     public function mount()
     {
-        $this->role = Auth::user()?->getRoleNames()->first() ?? 'guest';
-        // No auto-redirect - let users see the main dashboard and choose
+        $this->role = Auth::user()?->getRoleNames()->first() ?? 'student';
+        
+        // Redirect to role-specific dashboard
+        $redirectRoutes = [
+            'admin' => route('dashboard.admin'),
+            'organizer' => route('dashboard.organizer'),
+            'student' => route('dashboard.student'),
+        ];
+        
+        if (isset($redirectRoutes[$this->role])) {
+            return $this->redirect($redirectRoutes[$this->role], navigate: false);
+        }
+        
+        // Default to student dashboard if no role
+        return $this->redirect(route('dashboard.student'), navigate: false);
     }
 
     /** @method static layout(string $name)*/

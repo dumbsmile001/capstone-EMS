@@ -134,14 +134,32 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- Users Table -->
-                <div class="bg-white rounded-lg shadow-md p-6">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-semibold text-gray-800">Users</h2>
-                        <button class="px-4 py-2 text-sm text-blue-600 hover:text-blue-700 font-medium">View All</button>
-                    </div>
-                    <div class="overflow-x-auto">
+            <!-- Tabbed Tables Section -->
+            <div class="bg-white rounded-lg shadow-md p-6" x-data="{ activeTab: 'users' }">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold text-gray-800">Data Management</h2>
+                    <button class="px-4 py-2 text-sm text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                </div>
+                
+                <!-- Tabs -->
+                <div class="border-b border-gray-200 mb-4">
+                    <nav class="flex space-x-4">
+                        <button @click="activeTab = 'users'" :class="activeTab === 'users' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'" class="px-4 py-2 font-medium text-sm transition-colors">
+                            Users
+                        </button>
+                        <button @click="activeTab = 'events'" :class="activeTab === 'events' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'" class="px-4 py-2 font-medium text-sm transition-colors">
+                            Event Updates
+                        </button>
+                        <button @click="activeTab = 'roles'" :class="activeTab === 'roles' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'" class="px-4 py-2 font-medium text-sm transition-colors">
+                            Roles Changes
+                        </button>
+                    </nav>
+                </div>
+
+                <!-- Tab Content -->
+                <div class="overflow-x-auto">
+                    <!-- Users Table -->
+                    <div x-show="activeTab === 'users'" x-transition>
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
@@ -179,14 +197,103 @@
                             </tbody>
                         </table>
                     </div>
-                </div>
 
-                <!-- Announcements Feed -->
-                <x-announcements-feed :announcements="[
-                    ['title' => 'System Maintenance', 'content' => 'The system will be undergoing maintenance on June 10th from 2:00 AM to 4:00 AM.', 'posted' => 'Posted 2 hours ago'],
-                    ['title' => 'New Features Added', 'content' => 'We\'ve added new reporting features to the admin dashboard.', 'posted' => 'Posted 1 day ago'],
-                    ['title' => 'Upcoming Training', 'content' => 'Training session for new organizers scheduled for June 12th.', 'posted' => 'Posted 2 days ago'],
-                ]" />
+                    <!-- Event Updates Table -->
+                    <div x-show="activeTab === 'events'" x-transition>
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Event</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Updated By</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-4 py-3 text-sm text-gray-900">Annual Tech Conference</td>
+                                    <td class="px-4 py-3 text-sm text-gray-600">Sarah Johnson</td>
+                                    <td class="px-4 py-3 text-sm text-gray-600">June 10, 2023</td>
+                                    <td class="px-4 py-3 text-sm">
+                                        <span class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">Updated</span>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-4 py-3 text-sm text-gray-900">Web Development Workshop</td>
+                                    <td class="px-4 py-3 text-sm text-gray-600">Sarah Johnson</td>
+                                    <td class="px-4 py-3 text-sm text-gray-600">June 9, 2023</td>
+                                    <td class="px-4 py-3 text-sm">
+                                        <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">Created</span>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-4 py-3 text-sm text-gray-900">Data Science Summit</td>
+                                    <td class="px-4 py-3 text-sm text-gray-600">Admin</td>
+                                    <td class="px-4 py-3 text-sm text-gray-600">June 8, 2023</td>
+                                    <td class="px-4 py-3 text-sm">
+                                        <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs">Modified</span>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-4 py-3 text-sm text-gray-900">AI Workshop</td>
+                                    <td class="px-4 py-3 text-sm text-gray-600">Sarah Johnson</td>
+                                    <td class="px-4 py-3 text-sm text-gray-600">June 7, 2023</td>
+                                    <td class="px-4 py-3 text-sm">
+                                        <span class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">Updated</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Roles Changes Table -->
+                    <div x-show="activeTab === 'roles'" x-transition>
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Old Role</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">New Role</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-4 py-3 text-sm text-gray-900">Michael Brown</td>
+                                    <td class="px-4 py-3 text-sm text-gray-600">Student</td>
+                                    <td class="px-4 py-3 text-sm text-gray-600">Organizer</td>
+                                    <td class="px-4 py-3 text-sm">
+                                        <button wire:click="editUser(1)" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-xs font-medium">Edit Role</button>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-4 py-3 text-sm text-gray-900">Alex Rivera</td>
+                                    <td class="px-4 py-3 text-sm text-gray-600">Student</td>
+                                    <td class="px-4 py-3 text-sm text-gray-600">Student</td>
+                                    <td class="px-4 py-3 text-sm">
+                                        <button wire:click="editUser(2)" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-xs font-medium">Edit Role</button>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-4 py-3 text-sm text-gray-900">Lisa Chen</td>
+                                    <td class="px-4 py-3 text-sm text-gray-600">Student</td>
+                                    <td class="px-4 py-3 text-sm text-gray-600">Student</td>
+                                    <td class="px-4 py-3 text-sm">
+                                        <button wire:click="editUser(3)" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-xs font-medium">Edit Role</button>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-4 py-3 text-sm text-gray-900">David Wilson</td>
+                                    <td class="px-4 py-3 text-sm text-gray-600">Student</td>
+                                    <td class="px-4 py-3 text-sm text-gray-600">Student</td>
+                                    <td class="px-4 py-3 text-sm">
+                                        <button wire:click="editUser(4)" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-xs font-medium">Edit Role</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
