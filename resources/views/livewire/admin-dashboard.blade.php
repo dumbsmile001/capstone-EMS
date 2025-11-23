@@ -97,7 +97,16 @@
                 <div class="bg-white rounded-lg shadow-md p-6">
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-xl font-semibold text-gray-800">Upcoming Events</h2>
-                        <button wire:click="createEvent" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">Create Event</button>
+                        <x-modal wire:model="showCreateModal">
+                            <div class="p-6">
+                                <h2 class="text-xl">Create Event</h2>
+                                <input type="text" wire:model="event_name" class="mt-3 w-full border-rounded px-3 py-2">
+                                <div class="mt-4 flex justify-end">
+                                    <button wire:click="saveEvent" class="px-4 py-2 bg-blue-600 text-white rounded">Save</button>
+                                </div>
+                            </div>
+                        </x-modal>
+                        <button wire:click="openCreateModal" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">Create Event</button>
                     </div>
                     <div class="space-y-4">
                         <div class="flex items-center space-x-4 p-3 border-l-4 border-blue-500 bg-blue-50 rounded">

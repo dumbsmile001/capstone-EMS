@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 
 class AdminDashboard extends Component
 {
+    public $showCreateModal = false;
     public function viewUser($userId)
     {
         $this->dispatch('open-modal', modal: 'view-user', userId: $userId);
@@ -22,6 +23,13 @@ class AdminDashboard extends Component
         $this->dispatch('open-modal', modal: 'create-event');
     }
 
+    public function openCreateModal(){
+        $this->showCreateModal = true;
+    }
+
+    public function saveEvent(){
+        $this->showCreateModal = false;
+    }
     public function render()
     {
         $user = Auth::user();

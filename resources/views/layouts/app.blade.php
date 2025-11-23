@@ -20,8 +20,8 @@
     <body class="font-sans antialiased">
         <x-banner />
 
-        <!-- Page Content -->
-        {{ $slot }}
+            <!-- Page Content -->
+                {{ $slot }}
 
         @stack('modals')
         @stack('scripts')
