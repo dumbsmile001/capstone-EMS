@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Auth;
 class AdminDashboard extends Component
 {
     public $showCreateModal = false;
+    public $showEditModal = false;
+    public $showDeleteModal = false;
+    
     public function viewUser($userId)
     {
         $this->dispatch('open-modal', modal: 'view-user', userId: $userId);
@@ -17,7 +20,6 @@ class AdminDashboard extends Component
     {
         $this->dispatch('open-modal', modal: 'edit-user', userId: $userId);
     }
-
     public function createEvent()
     {
         $this->dispatch('open-modal', modal: 'create-event');
@@ -25,6 +27,12 @@ class AdminDashboard extends Component
 
     public function openCreateModal(){
         $this->showCreateModal = true;
+    }
+    public function openEditModal(){
+        $this->showEditModal = true;
+    }
+    public function openDeleteModal(){
+        $this->showDeleteModal = true;
     }
 
     public function saveEvent(){
@@ -40,5 +48,3 @@ class AdminDashboard extends Component
         ])->layout('layouts.app');
     }
 }
-
-

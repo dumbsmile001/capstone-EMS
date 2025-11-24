@@ -7,6 +7,10 @@ use Illuminate\Support\Facades\Auth;
 
 class Home extends Component
 {
+    public $showAnnouncementModal = false;
+    public function openAnnouncementModal(){
+        $this->showAnnouncementModal = true;
+    }
     public function render()
     {
         $user = Auth::user();

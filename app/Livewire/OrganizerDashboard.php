@@ -7,9 +7,26 @@ use Illuminate\Support\Facades\Auth;
 
 class OrganizerDashboard extends Component
 {
+    public $showCreateModal = false;
+    public $showEditModal = false;
+    public $showDeleteModal = false;
+
     public function viewAllRegistrations()
     {
         $this->dispatch('open-modal', modal: 'view-all-registrations');
+    }
+
+    public function openCreateModal(){
+        $this->showCreateModal = true;
+    }
+    public function openEditModal(){
+        $this->showEditModal = true;
+    }
+    public function openDeleteModal(){
+        $this->showDeleteModal = true;
+    }
+    public function saveEvent(){
+        $this->showCreateModal = false;
     }
 
     public function render()

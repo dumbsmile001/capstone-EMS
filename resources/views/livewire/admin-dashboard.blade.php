@@ -38,7 +38,7 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                <!-- Recent Activity Card -->
+                <!-- Recent Activity Card, record recent changes in different tables below -->
                 <div class="bg-white rounded-lg shadow-md p-6">
                     <h2 class="text-xl font-semibold text-gray-800 mb-4">Recent Activity</h2>
                     <div class="space-y-4">
@@ -99,66 +99,70 @@
                         <h2 class="text-xl font-semibold text-gray-800">Upcoming Events</h2>
                         <x-custom-modal model="showCreateModal">
                             <h1 class="text-xl text-center font-bold">Create Event</h1>
-                            <h3>Event Title</h3>
-                            <input type="text" wire:model="event_title" class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Enter Event Title...">
-                            <div class="flex flex-col">
-                                <h3>Event Date and Time</h3>
-                                <div class="flex flex-row">
-                                    <input type="date" wire:model="event_date" class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                    <input type="time" wire:model="event_time" class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            <form class="max-w-md mx-auto">
+                                <div class="mb-5">
+                                    <label for="title" class="block mb-2.5 text-sm font-medium text-heading">Event Title</label>
+                                    <input type="text" id="title" wire:model="event_title" class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Enter Event Title...">
                                 </div>
-                            </div>
-                            <div class="flex flex-col">
-                                <h3>Event Type</h3>
-                                <div class="flex flex-row">
-                                    <div class="flex items-center mb-4">
-                                        <input id="default-radio-1" type="radio" value="online" name="default-radio" class="w-4 h-4 text-neutral-primary border-default-medium bg-neutral-secondary-medium rounded-full checked:border-brand focus:ring-2 focus:outline-none focus:ring-brand-subtle border border-default appearance-none mx-3">
-                                        <label for="default-radio-1" class="select-none ms-2 text-sm font-medium text-heading">Online</label>
-                                    </div>
-                                    <div class="flex items-center mb-4">
-                                        <input id="default-radio-2" type="radio" value="face-to-face" name="default-radio" class="w-4 h-4 text-neutral-primary border-default-medium bg-neutral-secondary-medium rounded-full checked:border-brand focus:ring-2 focus:outline-none focus:ring-brand-subtle border border-default appearance-none mx-3">
-                                        <label for="default-radio-2" class="select-none ms-2 text-sm font-medium text-heading">Face-to-face</label>
+                                <div class="flex flex-col mb-5">
+                                    <h3>Event Date and Time</h3>
+                                    <div class="flex flex-row">
+                                        <input type="date" wire:model="event_date" class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                        <input type="time" wire:model="event_time" class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                     </div>
                                 </div>
-                                <h3>Event Place or Link</h3>
-                                <input type="text" wire:model="event_place-link" class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Enter Event Place or Link...">
-                            </div>
-                            <div class="flex flex-col">
-                                <h2>Event Category</h2>
-                                <select wire:model="event_category" class="block w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                    <option value="academic">Academic</option>
-                                    <option value="sports">Sports</option>
-                                    <option value="cultural">Cultural</option>
-                                </select>
-                            </div>
-                            <div class="flex flex-col">
-                                <h2>Event Description</h2>
-                                <input type="text" wire:model="event_description" class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Enter Event Description...">
-                            </div>
-                            <div class="flex flex-col">
-                                <h2>Event Banner</h2>
-                                <div class="flex items-center justify-center w-full">
-                                    <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-64 bg-neutral-secondary-medium border border-dashed border-default-strong rounded-base cursor-pointer hover:bg-neutral-tertiary-medium">
-                                        <div class="flex flex-col items-center justify-center text-body pt-5 pb-6">
-                                            <svg class="w-8 h-8 mb-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h3a3 3 0 0 0 0-6h-.025a5.56 5.56 0 0 0 .025-.5A5.5 5.5 0 0 0 7.207 9.021C7.137 9.017 7.071 9 7 9a4 4 0 1 0 0 8h2.167M12 19v-9m0 0-2 2m2-2 2 2"/></svg>
-                                            <p class="mb-2 text-sm"><span class="font-semibold">Click to upload</span> or drag and drop</p>
-                                            <p class="text-xs">JPG or PNG (MAX. 2MB)</p>
+                                <div class="flex flex-col mb-5">
+                                    <h3>Event Type</h3>
+                                    <div class="flex flex-row">
+                                        <div class="flex items-center mb-4">
+                                            <input id="default-radio-1" type="radio" value="online" name="default-radio" class="w-4 h-4 text-neutral-primary border-default-medium bg-neutral-secondary-medium rounded-full checked:border-brand focus:ring-2 focus:outline-none focus:ring-brand-subtle border border-default appearance-none mx-3">
+                                            <label for="default-radio-1" class="select-none ms-2 text-sm font-medium text-heading">Online</label>
                                         </div>
-                                        <input id="dropzone-file" type="file" class="hidden" />
-                                    </label>
+                                        <div class="flex items-center mb-4">
+                                            <input id="default-radio-2" type="radio" value="face-to-face" name="default-radio" class="w-4 h-4 text-neutral-primary border-default-medium bg-neutral-secondary-medium rounded-full checked:border-brand focus:ring-2 focus:outline-none focus:ring-brand-subtle border border-default appearance-none mx-3">
+                                            <label for="default-radio-2" class="select-none ms-2 text-sm font-medium text-heading">Face-to-face</label>
+                                        </div>
+                                    </div>
+                                    <h3>Event Place or Link</h3>
+                                    <input type="text" wire:model="event_place-link" class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Enter Event Place or Link...">
                                 </div>
-                            </div>
-                            <div class="flex items-center mb-4">
-                                <input id="default-checkbox" type="checkbox" value="" class="w-4 h-4 border border-default-medium rounded-xs bg-neutral-secondary-medium focus:ring-2 focus:ring-brand-soft">
-                                <label for="default-checkbox" class="select-none ms-2 text-sm font-medium text-heading">Require Payment</label>
-                            </div>
-                            <div class="flex flex-col">
-                                <label for="number-input" class="block mb-2.5 text-sm font-medium text-heading">Payment Amount</label>
-                                <input type="number" id="number-input" aria-describedby="helper-text-explanation" class="block w-full px-3 py-2.5 bg-neutral-secondary-medium border border-gray-300 rounded-md shadow-sm text-heading text-sm rounded-base focus:ring-brand focus:border-brand placeholder:text-body" placeholder="Enter Amount in whole numbers..." required />
-                            </div>
-                            <div class="mt-4 flex justify-end">
-                                <button wire:click="saveEvent" class="w-full px-4 py-2 bg-blue-600 text-white rounded">Publish Event</button>
-                            </div>
+                                <div class="flex flex-col mb-5">
+                                    <h2>Event Category</h2>
+                                    <select wire:model="event_category" class="block w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                        <option value="academic">Academic</option>
+                                        <option value="sports">Sports</option>
+                                        <option value="cultural">Cultural</option>
+                                    </select>
+                                </div>
+                                <div class="flex flex-col mb-5">
+                                    <h2>Event Description</h2>
+                                    <input type="text" wire:model="event_description" class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Enter Event Description...">
+                                </div>
+                                <div class="flex flex-col mb-5">
+                                    <h2>Event Banner</h2>
+                                    <div class="flex items-center justify-center w-full">
+                                        <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-64 bg-neutral-secondary-medium border border-dashed border-default-strong rounded-base cursor-pointer hover:bg-neutral-tertiary-medium">
+                                            <div class="flex flex-col items-center justify-center text-body pt-5 pb-6">
+                                                <svg class="w-8 h-8 mb-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h3a3 3 0 0 0 0-6h-.025a5.56 5.56 0 0 0 .025-.5A5.5 5.5 0 0 0 7.207 9.021C7.137 9.017 7.071 9 7 9a4 4 0 1 0 0 8h2.167M12 19v-9m0 0-2 2m2-2 2 2"/></svg>
+                                                <p class="mb-2 text-sm"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                                                <p class="text-xs">JPG or PNG (MAX. 2MB)</p>
+                                            </div>
+                                            <input id="dropzone-file" type="file" class="hidden" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="flex items-center mb-5">
+                                    <input id="default-checkbox" type="checkbox" value="" class="w-4 h-4 border border-default-medium rounded-xs bg-neutral-secondary-medium focus:ring-2 focus:ring-brand-soft">
+                                    <label for="default-checkbox" class="select-none ms-2 text-sm font-medium text-heading">Require Payment</label>
+                                </div>
+                                <div class="flex flex-col mb-5">
+                                    <label for="number-input" class="block mb-2.5 text-sm font-medium text-heading">Payment Amount</label>
+                                    <input type="number" id="number-input" aria-describedby="helper-text-explanation" class="block w-full px-3 py-2.5 bg-neutral-secondary-medium border border-gray-300 rounded-md shadow-sm text-heading text-sm rounded-base focus:ring-brand focus:border-brand placeholder:text-body" placeholder="Enter Amount in whole numbers..." required />
+                                </div>
+                                <div class="mb-5">
+                                    <button type="submit" wire:click="saveEvent" class="w-full px-4 py-2 bg-blue-600 text-white rounded">Publish Event</button>
+                                </div>
+                            </form>
                         </x-custom-modal>
                         <button wire:click="openCreateModal" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">Create Event</button>
                     </div>
@@ -213,6 +217,9 @@
                         <button @click="activeTab = 'events'" :class="activeTab === 'events' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'" class="px-4 py-2 font-medium text-sm transition-colors">
                             Events
                         </button>
+                        <button @click="activeTab = 'event_updates'" :class="activeTab === 'event_updates' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'" class="px-4 py-2 font-medium text-sm transition-colors">
+                            Event Updates
+                        </button>
                         <button @click="activeTab = 'roles'" :class="activeTab === 'roles' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'" class="px-4 py-2 font-medium text-sm transition-colors">
                             Role Changes
                         </button>
@@ -261,8 +268,124 @@
                         </table>
                     </div>
 
-                    <!-- Event Updates Table -->
+                    <!-- Events Table -->
+                    <x-custom-modal model="showEditModal">
+                        <h1 class="text-xl text-center font-bold">Edit Event</h1>
+                        <form class="max-w-md mx-auto">
+                            <div class="mb-5">
+                                <label for="title" class="block mb-2.5 text-sm font-medium text-heading">Event Title</label>
+                                <input type="text" id="title" wire:model="event_title" class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Enter Event Title...">
+                            </div>
+                            <div class="flex flex-col mb-5">
+                                <h3>Event Date and Time</h3>
+                                <div class="flex flex-row">
+                                    <input type="date" wire:model="event_date" class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    <input type="time" wire:model="event_time" class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                </div>
+                            </div>
+                            <div class="flex flex-col mb-5">
+                                <h3>Event Type</h3>
+                                <div class="flex flex-row">
+                                    <div class="flex items-center mb-4">
+                                        <input id="default-radio-1" type="radio" value="online" name="default-radio" class="w-4 h-4 text-neutral-primary border-default-medium bg-neutral-secondary-medium rounded-full checked:border-brand focus:ring-2 focus:outline-none focus:ring-brand-subtle border border-default appearance-none mx-3">
+                                        <label for="default-radio-1" class="select-none ms-2 text-sm font-medium text-heading">Online</label>
+                                    </div>
+                                    <div class="flex items-center mb-4">
+                                        <input id="default-radio-2" type="radio" value="face-to-face" name="default-radio" class="w-4 h-4 text-neutral-primary border-default-medium bg-neutral-secondary-medium rounded-full checked:border-brand focus:ring-2 focus:outline-none focus:ring-brand-subtle border border-default appearance-none mx-3">
+                                        <label for="default-radio-2" class="select-none ms-2 text-sm font-medium text-heading">Face-to-face</label>
+                                    </div>
+                                </div>
+                                <h3>Event Place or Link</h3>
+                                <input type="text" wire:model="event_place-link" class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Enter Event Place or Link...">
+                            </div>
+                            <div class="flex flex-col mb-5">
+                                <h2>Event Category</h2>
+                                <select wire:model="event_category" class="block w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    <option value="academic">Academic</option>
+                                    <option value="sports">Sports</option>
+                                    <option value="cultural">Cultural</option>
+                                </select>
+                            </div>
+                            <div class="flex flex-col mb-5">
+                                <h2>Event Description</h2>
+                                <input type="text" wire:model="event_description" class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Enter Event Description...">
+                            </div>
+                            <div class="flex flex-col mb-5">
+                                <h2>Event Banner</h2>
+                                <div class="flex items-center justify-center w-full">
+                                    <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-64 bg-neutral-secondary-medium border border-dashed border-default-strong rounded-base cursor-pointer hover:bg-neutral-tertiary-medium">
+                                        <div class="flex flex-col items-center justify-center text-body pt-5 pb-6">
+                                            <svg class="w-8 h-8 mb-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h3a3 3 0 0 0 0-6h-.025a5.56 5.56 0 0 0 .025-.5A5.5 5.5 0 0 0 7.207 9.021C7.137 9.017 7.071 9 7 9a4 4 0 1 0 0 8h2.167M12 19v-9m0 0-2 2m2-2 2 2"/></svg>
+                                            <p class="mb-2 text-sm"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                                            <p class="text-xs">JPG or PNG (MAX. 2MB)</p>
+                                        </div>
+                                        <input id="dropzone-file" type="file" class="hidden" />
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="flex items-center mb-5">
+                                <input id="default-checkbox" type="checkbox" value="" class="w-4 h-4 border border-default-medium rounded-xs bg-neutral-secondary-medium focus:ring-2 focus:ring-brand-soft">
+                                <label for="default-checkbox" class="select-none ms-2 text-sm font-medium text-heading">Require Payment</label>
+                            </div>
+                            <div class="flex flex-col mb-5">
+                                <label for="number-input" class="block mb-2.5 text-sm font-medium text-heading">Payment Amount</label>
+                                <input type="number" id="number-input" aria-describedby="helper-text-explanation" class="block w-full px-3 py-2.5 bg-neutral-secondary-medium border border-gray-300 rounded-md shadow-sm text-heading text-sm rounded-base focus:ring-brand focus:border-brand placeholder:text-body" placeholder="Enter Amount in whole numbers..." required />
+                            </div>
+                            <div class="mb-5">
+                                <button type="submit" wire:click="saveEvent" class="w-full px-4 py-2 bg-blue-600 text-white rounded">Publish Changes</button>
+                            </div>
+                        </form>   
+                    </x-custom-modal>
+                    <x-custom-modal model="showDeleteModal">
+                        <form class="max-w-md mx-auto">
+                            <h1 class="text-xl text-center font-bold">Delete Event</h1>
+                            <h3 class="text-center mb-6">Are you sure to delete this event?</h3>
+                            <div class="flex flex-row gap-1">
+                                <button wire:click="" class="w-full px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-xs font-medium">Cancel</button>
+                                <button wire:click="" class="w-full px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs font-medium">Confirm</button>
+                            </div>
+                        </form>
+                    </x-custom-modal>
                     <div x-show="activeTab === 'events'" x-transition>
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                    <th class="px-4 py-3 text-left text-xs font-small text-gray-500 uppercase tracking-wider">Time</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Place/Link</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Banner</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Paid/Free</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount(if paid)</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-4 py-3 text-sm text-gray-900">Laravel Workshop</td>
+                                    <td class="px-4 py-3 text-sm text-gray-600">11/24/25</td>
+                                    <td class="px-4 py-3 text-sm text-gray-600">1:00 PM</td>
+                                    <td class="px-4 py-3 text-sm text-gray-600">Face-to-face</td>
+                                    <td class="px-4 py-3 text-sm text-gray-600">AVR</td>
+                                    <td class="px-4 py-3 text-sm text-gray-600">Academic</td>
+                                    <td class="px-4 py-3 text-sm text-gray-600">Laravel tutorials.</td>
+                                    <td class="px-4 py-3 text-sm text-gray-600">banner.png</td>
+                                    <td class="px-4 py-3 text-sm text-gray-600">Free</td>
+                                    <td class="px-4 py-3 text-sm text-gray-600">N/A</td>
+                                    <td class="flex flex-row items-center px-4 py-3">
+                                        <button wire:click="openEditModal" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-xs font-medium">Edit</button>
+                                        <button wire:click="openDeleteModal" class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs font-medium">Delete</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Event Updates Table -->
+                    <div x-show="activeTab === 'event_updates'" x-transition>
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
