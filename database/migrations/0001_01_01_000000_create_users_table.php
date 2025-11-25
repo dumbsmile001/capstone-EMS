@@ -13,7 +13,10 @@ return new class extends Migration{
             $table->string('middle_name');
             $table->string('last_name');
             $table->string('email')->unique();
-            $table->integer('student_id')->unique();
+            $table->integer('grade_level')->nullable();//if student, senior high
+            $table->integer('year_level')->nullable();//if student, college
+            $table->string('program')->nullable();//if student
+            $table->integer('student_id')->unique()->nullable();//if student
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

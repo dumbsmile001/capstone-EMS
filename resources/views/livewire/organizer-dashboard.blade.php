@@ -85,13 +85,13 @@
                         <form class="max-w-md mx-auto">
                             <div class="mb-5">
                                 <label for="title" class="block mb-2.5 text-sm font-medium text-heading">Event Title</label>
-                                <input type="text" id="title" wire:model="event_title" class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Enter Event Title...">
+                                <input type="text" id="title" class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Enter Event Title...">
                             </div>
                             <div class="flex flex-col mb-5">
                                 <h3>Event Date and Time</h3>
                                 <div class="flex flex-row">
-                                    <input type="date" wire:model="event_date" class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                    <input type="time" wire:model="event_time" class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    <input type="date" class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    <input type="time" class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                 </div>
                             </div>
                             <div class="flex flex-col mb-5">
@@ -107,11 +107,11 @@
                                     </div>
                                 </div>
                                 <h3>Event Place or Link</h3>
-                                <input type="text" wire:model="event_place-link" class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Enter Event Place or Link...">
+                                <input type="text" class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Enter Event Place or Link...">
                             </div>
                             <div class="flex flex-col mb-5">
                                 <h2>Event Category</h2>
-                                <select wire:model="event_category" class="block w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <select class="block w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                     <option value="academic">Academic</option>
                                     <option value="sports">Sports</option>
                                     <option value="cultural">Cultural</option>
@@ -119,7 +119,7 @@
                             </div>
                             <div class="flex flex-col mb-5">
                                 <h2>Event Description</h2>
-                                <input type="text" wire:model="event_description" class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Enter Event Description...">
+                                <input type="text" class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Enter Event Description...">
                             </div>
                             <div class="flex flex-col mb-5">
                                 <h2>Event Banner</h2>
@@ -160,6 +160,9 @@
                         </button>
                         <button @click="activeTab = 'events'" :class="activeTab === 'events' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'" class="px-4 py-2 font-medium text-sm transition-colors">
                             Events
+                        </button>
+                        <button @click="activeTab = 'event_updates'" :class="activeTab === 'event_updates' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'" class="px-4 py-2 font-medium text-sm transition-colors">
+                            Event Updates
                         </button>
                     </nav>
                 </div>
@@ -265,13 +268,13 @@
                         <form class="max-w-md mx-auto">
                             <div class="mb-5">
                                 <label for="title" class="block mb-2.5 text-sm font-medium text-heading">Event Title</label>
-                                <input type="text" id="title" wire:model="event_title" class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Enter Event Title...">
+                                <input type="text" id="title" class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Enter Event Title...">
                             </div>
                             <div class="flex flex-col mb-5">
                                 <h3>Event Date and Time</h3>
                                 <div class="flex flex-row">
-                                    <input type="date" wire:model="event_date" class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                    <input type="time" wire:model="event_time" class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    <input type="date" class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    <input type="time" class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                 </div>
                             </div>
                             <div class="flex flex-col mb-5">
@@ -287,11 +290,11 @@
                                     </div>
                                 </div>
                                 <h3>Event Place or Link</h3>
-                                <input type="text" wire:model="event_place-link" class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Enter Event Place or Link...">
+                                <input type="text" class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Enter Event Place or Link...">
                             </div>
                             <div class="flex flex-col mb-5">
                                 <h2>Event Category</h2>
-                                <select wire:model="event_category" class="block w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <select class="block w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                     <option value="academic">Academic</option>
                                     <option value="sports">Sports</option>
                                     <option value="cultural">Cultural</option>
@@ -299,7 +302,7 @@
                             </div>
                             <div class="flex flex-col mb-5">
                                 <h2>Event Description</h2>
-                                <input type="text" wire:model="event_description" class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Enter Event Description...">
+                                <input type="text" class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Enter Event Description...">
                             </div>
                             <div class="flex flex-col mb-5">
                                 <h2>Event Banner</h2>
@@ -374,38 +377,37 @@
                             </tbody>
                         </table>
                     </div>
+
+                     <!-- Event Updates Table -->
+                    <div x-show="activeTab === 'event_updates'" x-transition>
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Event</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Updated By</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                                </tr>
+                            </thead>
+                            <!--Dynamically loaded data-->
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr class="hover:bg-gray-50">
+                                    <!--events.title-->
+                                    <td class="px-4 py-3 text-sm text-gray-900">Laravel Workshop</td>
+                                    <!--users.first_name + users.last_name-->
+                                    <td class="px-4 py-3 text-sm text-gray-600">Lance De Felipe</td>
+                                    <!--current_date-->
+                                    <td class="px-4 py-3 text-sm text-gray-600">November 25, 2025</td>
+                                    <!--Created, Updated, Deleted-->
+                                    <td class="px-4 py-3 text-sm">
+                                        <span class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">Updated</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-@push('scripts')
-<script>
-    // Chart.js will be initialized here when the package is installed
-    // For now, this is a placeholder
-    document.addEventListener('DOMContentLoaded', function() {
-        // Pie Chart for Participant Report
-        const participantCtx = document.getElementById('participantChart');
-        if (participantCtx) {
-            // Chart.js code will go here
-            // Example:
-            // new Chart(participantCtx, {
-            //     type: 'pie',
-            //     data: { ... }
-            // });
-        }
-
-        // Bar Chart for Events per Month
-        const eventsCtx = document.getElementById('eventsPerMonthChart');
-        if (eventsCtx) {
-            // Chart.js code will go here
-            // Example:
-            // new Chart(eventsCtx, {
-            //     type: 'bar',
-            //     data: { ... }
-            // });
-        }
-    });
-</script>
-@endpush
