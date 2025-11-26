@@ -14,6 +14,7 @@ class AdminDashboard extends Component
     public $showEditUserModal = false;
     public $showDeleteUserModal = false;
     public $showGenerateReportModal = false;
+    public $showArchiveModal = false;
     
     public function viewUser($userId)
     {
@@ -46,6 +47,9 @@ class AdminDashboard extends Component
     }
     public function openGenerateReportModal(){
         $this->showGenerateReportModal = true;
+    }
+    public function openArchiveModal(){
+        $this->showArchiveModal = true;
     }
     public function saveUser(){
         $this->showEditUserModal = false;

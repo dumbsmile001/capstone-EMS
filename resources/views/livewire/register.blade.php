@@ -7,7 +7,7 @@
         <h2 class="text-3xl font-bold text-center mb-2 bg-gradient-to-r from-blue-600 to-yellow-500 bg-clip-text text-transparent">
             Create Account
         </h2>
-        <p class="text-center text-gray-600 mb-6">Register as a new student</p>
+        <p class="text-center text-gray-600 mb-6">Register to the system.</p>
 
         <x-validation-errors class="mb-4" />
 
