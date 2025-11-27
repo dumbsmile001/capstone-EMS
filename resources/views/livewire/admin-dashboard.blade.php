@@ -101,95 +101,128 @@
                 <div class="bg-white rounded-lg shadow-md p-6">
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-xl font-semibold text-gray-800">Upcoming Events</h2>
-                        <!--Will share features through a create-edit component-->
+                        <!--LOOK HERE DEEPSEEK-->
                         <x-custom-modal model="showCreateModal">
-                            <h1 class="text-xl text-center font-bold">Create Event</h1>
+                            <h1 class="text-xl text-center font-bold mb-4">Create Event</h1>
                             @if (session()->has('success'))
-                                <div class="text-gree-600">{{ session('success') }}</div>
+                                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                                    {{ session('success') }}
+                                </div>
                             @endif
                             <form wire:submit.prevent="createEvent" class="max-w-md mx-auto">
                                 <div class="mb-5">
-                                    <label for="title" class="block mb-2.5 text-sm font-medium text-heading">Event
-                                        Title</label>
+                                    <label for="title" class="block mb-2.5 text-sm font-medium text-heading">Event Title</label>
                                     <input type="text" id="title" wire:model="title"
                                         class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                         placeholder="Enter Event Title...">
+                                    @error('title') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                                 </div>
+                                
                                 <div class="flex flex-col mb-5">
-                                    <h3>Event Date and Time</h3>
-                                    <div class="flex flex-row">
-                                        <input type="date" wire:model="date"
-                                            class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                        <input type="time" wire:model="time"
-                                            class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    <h3 class="font-medium text-gray-700 mb-2">Event Date and Time</h3>
+                                    <div class="flex flex-row gap-2">
+                                        <div class="w-1/2">
+                                            <input type="date" wire:model="date"
+                                                class="w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                            @error('date') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                                        </div>
+                                        <div class="w-1/2">
+                                            <input type="time" wire:model="time"
+                                                class="w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                            @error('time') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                                        </div>
                                     </div>
                                 </div>
+                                
                                 <div class="flex flex-col mb-5">
-                                    <h2>Event Type</h2>
+                                    <h2 class="font-medium text-gray-700 mb-2">Event Type</h2>
                                     <select wire:model="type"
-                                        class="block w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                        class="block w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                        <option value="">Select Type</option>
                                         <option value="online">Online</option>
                                         <option value="face-to-face">Face-to-face</option>
                                     </select>
-                                    <h3>Event Place or Link</h3>
-                                    <input type="text"
-                                        class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                    @error('type') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                                    
+                                    <h3 class="font-medium text-gray-700 mt-3 mb-2">Event Place or Link</h3>
+                                    <input type="text" wire:model="place_link"
+                                        class="w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                         placeholder="Enter Event Place or Link...">
+                                    @error('place_link') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                                 </div>
+                                
                                 <div class="flex flex-col mb-5">
-                                    <h2>Event Category</h2>
+                                    <h2 class="font-medium text-gray-700 mb-2">Event Category</h2>
                                     <select wire:model="category"
-                                        class="block w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                        class="block w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                        <option value="">Select Category</option>
                                         <option value="academic">Academic</option>
                                         <option value="sports">Sports</option>
                                         <option value="cultural">Cultural</option>
                                     </select>
+                                    @error('category') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                                 </div>
+                                
                                 <div class="flex flex-col mb-5">
-                                    <h2>Event Description</h2>
-                                    <input type="text" wire:model="description"
-                                        class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                        placeholder="Enter Event Description...">
+                                    <h2 class="font-medium text-gray-700 mb-2">Event Description</h2>
+                                    <textarea wire:model="description" rows="3"
+                                        class="w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                        placeholder="Enter Event Description..."></textarea>
+                                    @error('description') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                                 </div>
+                                
                                 <div class="flex flex-col mb-5">
-                                    <h2>Event Banner</h2>
+                                    <h2 class="font-medium text-gray-700 mb-2">Event Banner</h2>
                                     <div class="flex items-center justify-center w-full">
                                         <label for="dropzone-file"
-                                            class="flex flex-col items-center justify-center w-full h-64 bg-neutral-secondary-medium border border-dashed border-default-strong rounded-base cursor-pointer hover:bg-neutral-tertiary-medium">
-                                            <div class="flex flex-col items-center justify-center text-body pt-5 pb-6">
-                                                <svg class="w-8 h-8 mb-4" aria-hidden="true"
-                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                    fill="none" viewBox="0 0 24 24">
-                                                    <path stroke="currentColor" stroke-linecap="round"
-                                                        stroke-linejoin="round" stroke-width="2"
-                                                        d="M15 17h3a3 3 0 0 0 0-6h-.025a5.56 5.56 0 0 0 .025-.5A5.5 5.5 0 0 0 7.207 9.021C7.137 9.017 7.071 9 7 9a4 4 0 1 0 0 8h2.167M12 19v-9m0 0-2 2m2-2 2 2" />
+                                            class="flex flex-col items-center justify-center w-full h-32 bg-neutral-secondary-medium border border-dashed border-default-strong rounded-base cursor-pointer hover:bg-neutral-tertiary-medium">
+                                            <div class="flex flex-col items-center justify-center text-body">
+                                                <svg class="w-8 h-8 mb-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h3a3 3 0 0 0 0-6h-.025a5.56 5.56 0 0 0 .025-.5A5.5 5.5 0 0 0 7.207 9.021C7.137 9.017 7.071 9 7 9a4 4 0 1 0 0 8h2.167M12 19v-9m0 0-2 2m2-2 2 2"/>
                                                 </svg>
-                                                <p class="mb-2 text-sm"><span class="font-semibold">Click to
-                                                        upload</span>
-                                                    or drag and drop</p>
+                                                <p class="mb-1 text-sm">
+                                                    <span class="font-semibold">Click to upload</span> or drag and drop
+                                                </p>
                                                 <p class="text-xs">JPG or PNG (MAX. 2MB)</p>
                                             </div>
-                                            <input id="dropzone-file" type="file" class="hidden" />
+                                            <input id="dropzone-file" type="file" class="hidden" wire:model="banner" />
                                         </label>
                                     </div>
+                                    @error('banner') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                                    @if ($banner)
+                                        <p class="text-xs text-green-600 mt-1">File selected: {{ $banner->getClientOriginalName() }}</p>
+                                    @endif
                                 </div>
+                                
                                 <div class="flex items-center mb-5">
                                     <input id="default-checkbox" type="checkbox" wire:model="require_payment"
                                         class="w-4 h-4 border border-default-medium rounded-xs bg-neutral-secondary-medium focus:ring-2 focus:ring-brand-soft">
-                                    <label for="default-checkbox"
-                                        class="select-none ms-2 text-sm font-medium text-heading">Require
-                                        Payment</label>
+                                    <label for="default-checkbox" class="select-none ms-2 text-sm font-medium text-heading">
+                                        Require Payment
+                                    </label>
                                 </div>
+                                
+                                @if($require_payment)
                                 <div class="flex flex-col mb-5">
-                                    <label for="number-input"
-                                        class="block mb-2.5 text-sm font-medium text-heading">Payment Amount</label>
-                                    <input type="number" id="number-input"
-                                        aria-describedby="helper-text-explanation"
-                                        class="block w-full px-3 py-2.5 bg-neutral-secondary-medium border border-gray-300 rounded-md shadow-sm text-heading text-sm rounded-base focus:ring-brand focus:border-brand placeholder:text-body"
-                                        placeholder="Enter Amount in whole numbers..." />
+                                    <label for="payment_amount" class="block mb-2.5 text-sm font-medium text-heading">
+                                        Payment Amount
+                                    </label>
+                                    <input type="number" id="payment_amount" wire:model="payment_amount" step="0.01" min="0"
+                                        class="block w-full px-3 py-2.5 bg-white border border-gray-300 rounded-md shadow-sm text-heading text-sm focus:ring-brand focus:border-brand placeholder:text-body"
+                                        placeholder="Enter amount (e.g., 50.00)" />
+                                    @error('payment_amount') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                                 </div>
-                                <div class="mb-5">
-                                    <button class="w-full px-4 py-2 bg-blue-600 text-white rounded">Publish Event</button>
+                                @endif
+                                
+                                <div class="mb-5 flex gap-2">
+                                    <button type="button" wire:click="closeCreateModal" 
+                                        class="w-1/2 px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition-colors">
+                                        Cancel
+                                    </button>
+                                    <button type="submit" 
+                                        class="w-1/2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
+                                        Publish Event
+                                    </button>
                                 </div>
                             </form>
                         </x-custom-modal>
@@ -331,7 +364,7 @@
                             <div class="flex flex-col mb-5">
                                 <label for="number-input"
                                     class="block mb-2.5 text-sm font-medium text-heading">Student ID</label>
-                                <input type="number" id="number-input" wire:model="studentId" aria-describedby="helper-text-explanation"
+                                <input type="number" id="number-input" wire:model="student_id" aria-describedby="helper-text-explanation"
                                     class="block w-full px-3 py-2.5 bg-neutral-secondary-medium border border-gray-300 rounded-md shadow-sm text-heading text-sm rounded-base focus:ring-brand focus:border-brand placeholder:text-body"
                                     placeholder="Enter Student ID..." required />
                             </div>
@@ -503,9 +536,9 @@
                                 <div class="flex flex-col mb-5">
                                     <h3>Event Date and Time</h3>
                                     <div class="flex flex-row">
-                                        <input type="date" wire:model="date"
+                                        <input type="date"
                                             class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                        <input type="time" wire:model="time"
+                                        <input type="time"
                                             class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                     </div>
                                 </div>
