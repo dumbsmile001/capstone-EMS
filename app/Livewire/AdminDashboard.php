@@ -2,15 +2,26 @@
 
 namespace App\Livewire;
 
+use App\Models\Event;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 
 class AdminDashboard extends Component
 {
+    //User properties
+    //Events properties
+    public $title;
+    public $date;
+    public $time;
+    public $type;
+    public $category;
+    public $description;
+    public $require_payment = false;
+
+    //Modal flags
     public $showCreateModal = false;
     public $showEditModal = false;
     public $showDeleteModal = false;
-
     public $showEditUserModal = false;
     public $showDeleteUserModal = false;
     public $showGenerateReportModal = false;
@@ -27,7 +38,28 @@ class AdminDashboard extends Component
     }
     public function createEvent()
     {
-        $this->dispatch('open-modal', modal: 'create-event');
+        //$this->dispatch('open-modal', modal: 'create-event');
+
+        $data = $this->validate([
+            'title' => 'required',
+            'date' => 'required',
+            'time' => 'required',
+            'type' => 'required',
+            'category' => 'required',
+            'description' => 'required',
+        ]);
+        Event::create([
+            'title' => $this->title,
+            'date' => $this->date,
+            'time' => $this->time,
+            'type' => $this->type,
+            'category' => $this->category,
+            'description' => $this->description,
+            'require_payment' => $this->require_payment
+        ]);
+        $this->reset(['title', 'date', 'time', 'type', 'category', 'description', 'require_payment']);
+
+        session()->flash('success', 'Event created successfully');
     }
 
     public function openCreateModal(){
@@ -57,6 +89,7 @@ class AdminDashboard extends Component
     public function saveEvent(){
         $this->showCreateModal = false;
     }
+
     public function render()
     {
         $user = Auth::user();
