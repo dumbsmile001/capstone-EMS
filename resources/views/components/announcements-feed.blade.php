@@ -44,15 +44,37 @@
     </div>
     <div class="space-y-4">
         @forelse($announcements as $announcement)
-            <div class="border-l-4 border-blue-500 pl-4 pb-4">
-                <h4 class="font-semibold text-gray-800 mb-1">{{ $announcement['title'] ?? 'Announcement' }}</h4>
-                <p class="text-sm text-gray-600 mb-2">{{ $announcement['category'] ?? '' }}</p>
-                <p class="text-xs text-gray-500">{{ $announcement['detscription'] ?? 'Posted recently' }}</p>
-                <p class="text-xs text-gray-500">{{ $announcement['created_at'] ?? 'Date' }}</p>
+            <div class="border-l-4 
+                @switch($announcement->category)
+                    @case('event') border-green-500 @break
+                    @case('reminder') border-yellow-500 @break
+                    @default border-blue-500
+                @endswitch
+                pl-4 pb-4">
+                <h4 class="font-semibold text-gray-800 mb-1">{{ $announcement->title }}</h4>
+                <p class="text-sm text-gray-600 mb-2">
+                    <span class="inline-block px-2 py-1 text-xs font-semibold rounded 
+                        @switch($announcement->category)
+                            @case('event') bg-green-100 text-green-800 @break
+                            @case('reminder') bg-yellow-100 text-yellow-800 @break
+                            @default bg-blue-100 text-blue-800
+                        @endswitch">
+                        {{ ucfirst($announcement->category) }}
+                    </span>
+                </p>
+                <p class="text-gray-600 mb-2">{{ $announcement->description }}</p>
+                <p class="text-xs text-gray-500">
+                    Posted by {{ $announcement->user->first_name ?? 'User' }} {{ $announcement->user->last_name ?? '' }} • 
+                    {{ $announcement->created_at->diffForHumans() }}
+                </p>
             </div>
         @empty
             <div class="text-sm text-gray-500">No announcements at this time.</div>
         @endforelse
+        @if($announcements instanceof \Illuminate\Pagination\LengthAwarePaginator && $announcements->hasPages())
+            <div class="mt-6">
+                {{ $announcements->links() }}
+            </div>
+        @endif
     </div>
 </div>
-

@@ -4,10 +4,13 @@ namespace App\Livewire;
 
 use App\Models\Announcement;
 use Livewire\Component;
+use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
 
 class Home extends Component
 {
+    use WithPagination;
+    
     //Announcement properties
     public string $title = '';
     public string $category = 'general';
@@ -15,7 +18,8 @@ class Home extends Component
 
     //Modal flags
     public $showAnnouncementModal = false;
-   public function createAnnouncement()
+
+    public function createAnnouncement()
     {
         $data = $this->validate([
             'title' => 'required|string|max:255',
@@ -29,7 +33,7 @@ class Home extends Component
             'title' => $this->title,
             'category' => $category,
             'description' => $this->description,
-            'user_id' => Auth::id(), // Add the user_id
+            'user_id' => Auth::id(),
         ]);
 
         $this->reset('title', 'category', 'description');
@@ -37,9 +41,11 @@ class Home extends Component
 
         session()->flash('success', 'Announcement created successfully!');
     }   
+    
     public function openAnnouncementModal(){
         $this->showAnnouncementModal = true;
     }
+    
     public function closeAnnouncementModal(){
         $this->showAnnouncementModal = false;
         $this->reset([
@@ -48,16 +54,22 @@ class Home extends Component
         $this->category = 'general'; 
         $this->resetErrorBag();
     }
+    
     public function render()
     {
         $user = Auth::user();
         $userInitials = strtoupper(substr($user->first_name ?? 'U', 0, 1) . substr($user->last_name ?? 'S', 0, 1));
         $userRole = $user->getRoleNames()->first() ?? 'User';
         
+        // Get announcements from database, ordered by latest first
+        $announcements = Announcement::with('user')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+        
         return view('livewire.home', [
             'userInitials' => $userInitials,
             'userRole' => ucfirst($userRole),
+            'announcements' => $announcements, // Pass announcements to the view
         ])->layout('layouts.app');
     }
 }
-
