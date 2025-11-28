@@ -2,14 +2,51 @@
 
 namespace App\Livewire;
 
+use App\Models\Announcement;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 
 class Home extends Component
 {
+    //Announcement properties
+    public string $title = '';
+    public string $category = 'general';
+    public string $description = '';
+
+    //Modal flags
     public $showAnnouncementModal = false;
+   public function createAnnouncement()
+    {
+        $data = $this->validate([
+            'title' => 'required|string|max:255',
+            'category' => 'required|in:general,event,reminder',
+            'description' => 'required|string|min:10'
+        ]);
+
+        $category = $this->category ?: 'general';
+
+        Announcement::create([
+            'title' => $this->title,
+            'category' => $category,
+            'description' => $this->description,
+            'user_id' => Auth::id(), // Add the user_id
+        ]);
+
+        $this->reset('title', 'category', 'description');
+        $this->showAnnouncementModal = false;
+
+        session()->flash('success', 'Announcement created successfully!');
+    }   
     public function openAnnouncementModal(){
         $this->showAnnouncementModal = true;
+    }
+    public function closeAnnouncementModal(){
+        $this->showAnnouncementModal = false;
+        $this->reset([
+            'title', 'category', 'description'
+        ]);
+        $this->category = 'general'; 
+        $this->resetErrorBag();
     }
     public function render()
     {

@@ -48,7 +48,9 @@ class User extends Authenticatable{
     public function registrations(){
         return $this->hasMany(Registration::class);
     }
-    public function announcements(){
-        return $this->hasMany(Announcement::class);
+    // In User.php model
+    public function announcements()
+    {
+        return $this->belongsToMany(Announcement::class)->withTimestamps();
     }
 }
