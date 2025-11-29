@@ -100,7 +100,6 @@
                 <div class="bg-white rounded-lg shadow-md p-6">
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-xl font-semibold text-gray-800">Upcoming Events</h2>
-                        <!--LOOK HERE DEEPSEEK-->
                         <x-custom-modal model="showCreateModal">
                             <h1 class="text-xl text-center font-bold mb-4">Create Event</h1>
                             @if (session()->has('success'))
@@ -229,38 +228,167 @@
                             class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">Create
                             Event</button>
                     </div>
+                    <!-- UPCOMING EVENTS HERE - DYNAMIC CONTENT -->
                     <div class="space-y-4">
-                        <div class="flex items-center space-x-4 p-3 border-l-4 border-blue-500 bg-blue-50 rounded">
-                            <div class="text-center">
-                                <div class="text-2xl font-bold text-blue-600">15</div>
-                                <div class="text-xs text-gray-600 uppercase">JUN</div>
+                        @forelse($upcomingEventsData as $event)
+                            @php
+                                $eventDate = \Carbon\Carbon::parse($event->date);
+                                $borderColor = match($loop->index % 3) {
+                                    0 => 'border-blue-500',
+                                    1 => 'border-green-500', 
+                                    2 => 'border-orange-500',
+                                    default => 'border-blue-500'
+                                };
+                                $bgColor = match($loop->index % 3) {
+                                    0 => 'bg-blue-50',
+                                    1 => 'bg-green-50',
+                                    2 => 'bg-orange-50',
+                                    default => 'bg-blue-50'
+                                };
+                            @endphp
+                            
+                            <div class="flex items-center space-x-4 p-4 border-l-4 {{ $borderColor }} {{ $bgColor }} rounded-lg hover:shadow-md transition-all cursor-pointer transform hover:scale-[1.02]"
+                                wire:click="openEventDetailsModal({{ $event->id }})">
+                                <div class="text-center min-w-12">
+                                    <div class="text-2xl font-bold text-gray-800">{{ $eventDate->format('d') }}</div>
+                                    <div class="text-xs text-gray-600 uppercase">{{ $eventDate->format('M') }}</div>
+                                </div>
+                                <div class="flex-1">
+                                    <h3 class="font-semibold text-gray-800">{{ $event->title }}</h3>
+                                    <p class="text-sm text-gray-600">
+                                        {{ \Carbon\Carbon::parse($event->time)->format('g:i A') }} • 
+                                        {{ $event->type === 'online' ? 'Online' : 'In-person' }}
+                                    </p>
+                                    @if($event->require_payment)
+                                        <p class="text-xs text-red-600 font-medium mt-1">
+                                            Paid Event - ₱{{ number_format($event->payment_amount, 2) }}
+                                        </p>
+                                    @else
+                                        <p class="text-xs text-green-600 font-medium mt-1">Free Event</p>
+                                    @endif
+                                </div>
+                                <div class="text-gray-400">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                </div>
                             </div>
-                            <div class="flex-1">
-                                <h3 class="font-semibold text-gray-800">Annual Tech Conference</h3>
-                                <p class="text-sm text-gray-600">10:00 AM - 4:00 PM</p>
+                        @empty
+                            <div class="text-center py-8 text-gray-500 bg-gray-50 rounded-lg">
+                                <svg class="w-12 h-12 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                                <p class="mt-2 text-gray-600">No upcoming events</p>
+                                <p class="text-sm text-gray-500 mt-1">Create your first event to get started</p>
                             </div>
-                        </div>
-                        <div class="flex items-center space-x-4 p-3 border-l-4 border-green-500 bg-green-50 rounded">
-                            <div class="text-center">
-                                <div class="text-2xl font-bold text-green-600">22</div>
-                                <div class="text-xs text-gray-600 uppercase">JUN</div>
-                            </div>
-                            <div class="flex-1">
-                                <h3 class="font-semibold text-gray-800">Web Development Workshop</h3>
-                                <p class="text-sm text-gray-600">2:00 PM - 5:00 PM</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center space-x-4 p-3 border-l-4 border-orange-500 bg-orange-50 rounded">
-                            <div class="text-center">
-                                <div class="text-2xl font-bold text-orange-600">05</div>
-                                <div class="text-xs text-gray-600 uppercase">JUL</div>
-                            </div>
-                            <div class="flex-1">
-                                <h3 class="font-semibold text-gray-800">Data Science Summit</h3>
-                                <p class="text-sm text-gray-600">9:00 AM - 6:00 PM</p>
-                            </div>
-                        </div>
+                        @endforelse
                     </div>
+                    <!-- Event Details Modal -->
+                    <!-- Event Details Modal -->
+                    <x-custom-modal model="showEventDetailsModal">
+                        @if($selectedEvent)
+                            <div class="max-w-2xl mx-auto bg-white rounded-lg">
+                                <!-- Banner Section -->
+                                <div class="mb-6">
+                                    @if($selectedEvent->banner)
+                                        <img src="{{ asset('storage/' . $selectedEvent->banner) }}" 
+                                            alt="{{ $selectedEvent->title }}" 
+                                            class="w-full h-48 object-cover rounded-t-lg">
+                                    @else
+                                        <div class="w-full h-48 bg-gray-200 rounded-t-lg flex items-center justify-center">
+                                            <div class="text-center text-gray-500">
+                                                <svg class="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                                </svg>
+                                                <p class="text-sm">No banner available</p>
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
+
+                                <!-- Content Section -->
+                                <div class="px-6 pb-6">
+                                    <!-- Event Title -->
+                                    <h1 class="text-2xl font-bold text-gray-800 mb-4 text-center">{{ $selectedEvent->title }}</h1>
+
+                                    <!-- Event Description -->
+                                    <p class="text-gray-600 text-center mb-6 leading-relaxed">{{ $selectedEvent->description }}</p>
+
+                                    <!-- Divider -->
+                                    <div class="border-t border-gray-300 my-6"></div>
+
+                                    <!-- Event Details -->
+                                    <div class="space-y-4 mb-6">
+                                        <!-- Date -->
+                                        <div>
+                                            <h3 class="font-semibold text-gray-700 mb-1">Date</h3>
+                                            <p class="text-gray-600">{{ \Carbon\Carbon::parse($selectedEvent->date)->format('F j, Y') }}</p>
+                                        </div>
+
+                                        <!-- Time -->
+                                        <div>
+                                            <h3 class="font-semibold text-gray-700 mb-1">Time</h3>
+                                            <p class="text-gray-600">{{ \Carbon\Carbon::parse($selectedEvent->time)->format('g:i A') }}</p>
+                                        </div>
+
+                                        <!-- Location/Link -->
+                                        <div>
+                                            <h3 class="font-semibold text-gray-700 mb-1">
+                                                {{ $selectedEvent->type === 'online' ? 'Event Link' : 'Location' }}
+                                            </h3>
+                                            <p class="text-gray-600 break-words">
+                                                @if($selectedEvent->type === 'online' && filter_var($selectedEvent->place_link, FILTER_VALIDATE_URL))
+                                                    <a href="{{ $selectedEvent->place_link }}" target="_blank" class="text-blue-600 hover:underline">
+                                                        {{ $selectedEvent->place_link }}
+                                                    </a>
+                                                @else
+                                                    {{ $selectedEvent->place_link }}
+                                                @endif
+                                            </p>
+                                        </div>
+
+                                        <!-- Event Type -->
+                                        <div>
+                                            <h3 class="font-semibold text-gray-700 mb-1">Event Type</h3>
+                                            <p class="text-gray-600 capitalize">{{ str_replace('-', ' ', $selectedEvent->type) }}</p>
+                                        </div>
+
+                                        <!-- Category -->
+                                        <div>
+                                            <h3 class="font-semibold text-gray-700 mb-1">Category</h3>
+                                            <p class="text-gray-600 capitalize">{{ $selectedEvent->category }}</p>
+                                        </div>
+
+                                        <!-- Payment Information -->
+                                        <div>
+                                            <h3 class="font-semibold text-gray-700 mb-1">Payment</h3>
+                                            <p class="text-gray-600">
+                                                @if($selectedEvent->require_payment)
+                                                    <span class="text-red-600 font-semibold">
+                                                        Paid Event - ₱{{ number_format($selectedEvent->payment_amount, 2) }}
+                                                    </span>
+                                                @else
+                                                    <span class="text-green-600 font-semibold">Free Event</span>
+                                                @endif
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Action Buttons -->
+                                    <div class="flex gap-3 pt-4 border-t border-gray-200">
+                                        <button type="button" wire:click="closeEventDetailsModal" 
+                                            class="flex-1 px-6 py-3 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors font-medium">
+                                            Close
+                                        </button>
+                                        <button type="button" wire:click="openEditModal({{ $selectedEvent->id }})" 
+                                            class="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
+                                            Edit Event
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                    </x-custom-modal>
                 </div>
             </div>
 

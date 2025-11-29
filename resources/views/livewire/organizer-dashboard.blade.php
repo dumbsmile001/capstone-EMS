@@ -26,31 +26,13 @@
             </div>
 
             <!-- Charts Section -->
+            <!-- Charts Section -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
                 <!-- Participant Report (Pie Chart) -->
                 <div class="bg-white rounded-lg shadow-md p-6">
                     <h2 class="text-xl font-semibold text-gray-800 mb-4">Participant Report</h2>
                     <div class="h-64 flex items-center justify-center">
-                        <!-- Chart.js Pie Chart Placeholder - Replace with actual Chart.js implementation -->
-                        <canvas id="participantChart" class="max-h-full"></canvas>
-                    </div>
-                    <div class="mt-4 flex justify-center space-x-6 text-sm">
-                        <div class="flex items-center">
-                            <div class="w-4 h-4 bg-blue-500 rounded mr-2"></div>
-                            <span>1st Year</span>
-                        </div>
-                        <div class="flex items-center">
-                            <div class="w-4 h-4 bg-blue-300 rounded mr-2"></div>
-                            <span>2nd Year</span>
-                        </div>
-                        <div class="flex items-center">
-                            <div class="w-4 h-4 bg-orange-500 rounded mr-2"></div>
-                            <span>3rd Year</span>
-                        </div>
-                        <div class="flex items-center">
-                            <div class="w-4 h-4 bg-pink-500 rounded mr-2"></div>
-                            <span>4th Year</span>
-                        </div>
+                        <div id="participantPieChart"></div>
                     </div>
                 </div>
 
@@ -58,8 +40,7 @@
                 <div class="bg-white rounded-lg shadow-md p-6">
                     <h2 class="text-xl font-semibold text-gray-800 mb-4">Events per Month</h2>
                     <div class="h-64 flex items-center justify-center">
-                        <!-- Chart.js Bar Chart Placeholder - Replace with actual Chart.js implementation -->
-                        <canvas id="eventsPerMonthChart" class="max-h-full"></canvas>
+                        <div id="eventsBarChart"></div>
                     </div>
                 </div>
             </div>
@@ -661,3 +642,63 @@
         </div>
     </div>
 </div>
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script>
+    // Participant Report Pie Chart
+    document.addEventListener('DOMContentLoaded', function() {
+        // Pie Chart for Participant Report
+        var pieOptions = {
+            series: [30, 24, 18, 32, 26],
+            chart: {
+                type: 'pie',
+                height: 380
+            },
+            labels: ['Computer Science', 'Information Systems', 'Software Engineering', 'Data Science', 'IT'],
+            colors: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'],
+            responsive: [{
+                breakpoint: 480,
+                options: {
+                    chart: {
+                        width: 300
+                    },
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }]
+        };
+
+        var pieChart = new ApexCharts(document.querySelector("#participantPieChart"), pieOptions);
+        pieChart.render();
+
+        // Bar Chart for Events per Month
+        var barOptions = {
+            series: [{
+                name: 'Events',
+                data: [5, 3, 8, 2, 7, 4, 6, 3, 5, 4, 7, 9]
+            }],
+            chart: {
+                type: 'bar',
+                height: 280
+            },
+            plotOptions: {
+                bar: {
+                    borderRadius: 4,
+                    horizontal: false,
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            xaxis: {
+                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            },
+            colors: ['#3B82F6']
+        };
+
+        var barChart = new ApexCharts(document.querySelector("#eventsBarChart"), barOptions);
+        barChart.render();
+    });
+</script>
+@endpush

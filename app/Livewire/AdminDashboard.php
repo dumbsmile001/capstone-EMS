@@ -2,12 +2,13 @@
 
 namespace App\Livewire;
 
-use App\Models\Event;
+use Carbon\Carbon;
 use App\Models\User;
+use App\Models\Event;
 use Livewire\Component;
-use Illuminate\Support\Facades\Auth;
 use Livewire\WithFileUploads;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Auth;
 
 class AdminDashboard extends Component
 {
@@ -55,6 +56,10 @@ class AdminDashboard extends Component
     public $users;
     public $userUpdates;
     public $systemLogins;
+
+    //Event details
+    public $showEventDetailsModal = false;
+    public $selectedEvent = null;
 
     public function mount()
     {
@@ -271,6 +276,28 @@ class AdminDashboard extends Component
         session()->flash('success', 'Event created successfully!');
     }
 
+    public function getUpcomingEvents()
+    {
+        return Event::where('date', '>=', Carbon::today())
+            ->where('status', 'published') // Only published events
+            ->orderBy('date', 'asc')
+            ->orderBy('time', 'asc')
+            ->limit(3)
+            ->get();
+    }
+
+    public function openEventDetailsModal($eventId)
+    {
+        $this->selectedEvent = Event::findOrFail($eventId);
+        $this->showEventDetailsModal = true;
+    }
+
+     public function closeEventDetailsModal()
+    {
+        $this->showEventDetailsModal = false;
+        $this->selectedEvent = null;
+    }
+
     public function openCreateModal(){
         $this->showCreateModal = true;
     }
@@ -351,6 +378,9 @@ class AdminDashboard extends Component
                       ->orderBy('created_at', 'desc')
                       ->get();
 
+        // Get upcoming events
+        $upcomingEventsData = $this->getUpcomingEvents();
+
         // Get counts for overview cards
         $usersCount = User::count();
         $eventsCount = Event::count();
@@ -364,6 +394,7 @@ class AdminDashboard extends Component
             'eventsCount' => $eventsCount,
             'archivedEvents' => $archivedEvents,
             'upcomingEvents' => $upcomingEvents,
+            'upcomingEventsData' => $upcomingEventsData, // Pass upcoming events to view
         ])->layout('layouts.app');
     }
 }
