@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Venue;
 use App\Models\Registration;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -42,13 +41,16 @@ class Event extends Model{
     {
         return $this->belongsTo(User::class, 'created_by');
     }
-    public function attachments(){
-        return $this->morphMany(Attachment::class, 'attachable');
-    }
-    public function registrations(){
+    // In Event.php model, add:
+    public function registrations()
+    {
         return $this->hasMany(Registration::class);
     }
-    public function venue(){
-        return $this->hasOne(Venue::class);
+
+    public function registeredUsers()
+    {
+        return $this->belongsToMany(User::class, 'registrations')
+                    ->withPivot('status', 'registered_at')
+                    ->withTimestamps();
     }
 }

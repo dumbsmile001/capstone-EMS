@@ -48,12 +48,22 @@ class User extends Authenticatable{
             'password' => 'hashed',
         ];
     }
-    public function registrations(){
-        return $this->hasMany(Registration::class);
-    }
-    // In User.php model
     public function announcements()
     {
         return $this->belongsToMany(Announcement::class)->withTimestamps();
+    }
+    //Event registration
+    public function registrations(){
+        return $this->hasMany(Registration::class);
+    }
+    public function events(){
+        return $this->hasMany(Event::class, 'created_by');
+    }
+    // In User.php model, add:
+    public function registeredEvents()
+    {
+        return $this->belongsToMany(Event::class, 'registrations')
+                    ->withPivot('status', 'registered_at')
+                    ->withTimestamps();
     }
 }

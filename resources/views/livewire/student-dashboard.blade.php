@@ -40,55 +40,9 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <!-- Main Content Area -->
                 <div class="lg:col-span-2 space-y-6">
-                    <!-- Upcoming Events Section -->
+                    <!-- Events Section, scrollable -->
                     <div class="bg-white rounded-lg shadow-md p-6">
-                        <h2 class="text-xl font-semibold text-gray-800 mb-4">Upcoming Events</h2>
-                        <div class="space-y-4">
-                            <!-- Event Card 1 -->
-                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow">
-                                <h3 class="text-lg font-semibold text-gray-800 mb-2">Annual Tech Conference</h3>
-                                <p class="text-sm text-gray-600 mb-3">Join us for the biggest tech event of the year with keynote speakers and workshops.</p>
-                                <div class="flex flex-wrap gap-2 text-sm text-gray-600 mb-3">
-                                    <span class="flex items-center"><svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>June 15, 2023</span>
-                                    <span class="flex items-center"><svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>10:00 AM - 4:00 PM</span>
-                                    <span class="flex items-center"><svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>University Auditorium</span>
-                                </div>
-                                <div class="flex items-center justify-between">
-                                    <span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-semibold">Registration Open</span>
-                                    <button wire:click="registerForEvent(1)" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">Register</button>
-                                </div>
-                            </div>
-
-                            <!-- Event Card 2 -->
-                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow">
-                                <h3 class="text-lg font-semibold text-gray-800 mb-2">Web Development Workshop</h3>
-                                <p class="text-sm text-gray-600 mb-3">Learn the latest web development techniques and frameworks in this hands-on workshop.</p>
-                                <div class="flex flex-wrap gap-2 text-sm text-gray-600 mb-3">
-                                    <span class="flex items-center"><svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>June 22, 2023</span>
-                                    <span class="flex items-center"><svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>2:00 PM - 5:00 PM</span>
-                                    <span class="flex items-center"><svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>Computer Lab B</span>
-                                </div>
-                                <div class="flex items-center justify-between">
-                                    <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-semibold">Registered</span>
-                                    <button wire:click="cancelRegistration(2)" class="px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition-colors text-sm font-medium">Cancel</button>
-                                </div>
-                            </div>
-
-                            <!-- Event Card 3 -->
-                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow">
-                                <h3 class="text-lg font-semibold text-gray-800 mb-2">Data Science Summit</h3>
-                                <p class="text-sm text-gray-600 mb-3">Explore the world of data science with industry experts and practical applications.</p>
-                                <div class="flex flex-wrap gap-2 text-sm text-gray-600 mb-3">
-                                    <span class="flex items-center"><svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>July 5, 2023</span>
-                                    <span class="flex items-center"><svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>9:00 AM - 6:00 PM</span>
-                                    <span class="flex items-center"><svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>Conference Center</span>
-                                </div>
-                                <div class="flex items-center justify-between">
-                                    <span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-semibold">Registration Open</span>
-                                    <button wire:click="registerForEvent(3)" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">Register</button>
-                                </div>
-                            </div>
-                        </div>
+                        <livewire:event-registration />
                     </div>
 
                     <!-- Tabbed Tables Section -->

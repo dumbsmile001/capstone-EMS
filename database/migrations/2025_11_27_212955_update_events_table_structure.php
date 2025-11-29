@@ -9,10 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('events', function (Blueprint $table) {
-            // Drop old columns that are no longer needed
             $table->dropColumn(['event_date', 'duration', 'scope', 'registered_participants', 'attended_participants']);
-            
-            // Add new columns
             $table->date('date')->after('title');
             $table->time('time')->after('date');
             $table->enum('type', ['online', 'face-to-face'])->after('time');
@@ -20,12 +17,8 @@ return new class extends Migration
             $table->string('banner')->nullable()->after('description');
             $table->decimal('payment_amount', 10, 2)->nullable()->after('require_payment');
             $table->unsignedBigInteger('created_by')->after('status');
-            
-            // Modify existing columns if needed
             $table->string('title', 255)->change(); // Increase length from 50 to 255
             $table->enum('status', ['published', 'drafted', 'cancelled', 'archived'])->default('published')->change();
-            
-            // Add foreign key
             $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
         });
     }

@@ -11,6 +11,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Registration extends Model{
     use HasFactory;
+    protected $fillable = [
+        'event_id',
+        'user_id',
+        'status',
+        'registered_at'
+    ];
+
+    protected $casts = [
+        'registered_at' => 'datetime',
+    ];
 
     public function payment(){
         return $this->hasOne(Payment::class);
@@ -18,10 +28,13 @@ class Registration extends Model{
     public function ticket(){
         return $this->hasOne(Ticket::class);
     }
-    public function events(){
-        return $this->belongsToMany(Event::class);
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
-    public function users(){
-        return $this->belongsToMany(User::class);
+    public function event()
+    {
+        return $this->belongsTo(Event::class);
     }
 }
