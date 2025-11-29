@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 class EventRegistration extends Component
 {
     public $events;
+     /** @var \Illuminate\Support\Collection */
     public $userRegistrations = [];
     
     public function mount()
