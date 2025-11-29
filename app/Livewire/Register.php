@@ -19,6 +19,9 @@ class Register extends Component
     public string $email = '';
     public string $password = '';
     public string $password_confirmation = '';
+    public ?int $grade_level = null;
+    public ?int $year_level = null;
+    public ?string $program = null;
     public bool $terms = false;
 
     protected function rules(): array
@@ -30,6 +33,9 @@ class Register extends Component
             'student_id' => ['required', 'integer', 'unique:users,student_id'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', Password::defaults(), 'confirmed'],
+            'grade_level' => ['nullable', 'integer', 'min:11', 'max:12'],
+            'year_level' => ['nullable', 'integer', 'min:1', 'max:5'],
+            'program' => ['nullable', 'string', 'max:255'],
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : [],
         ];
     }
@@ -44,6 +50,9 @@ class Register extends Component
             'last_name' => $this->last_name,
             'student_id' => $this->student_id,
             'email' => $this->email,
+            'grade_level' => $this->grade_level,
+            'year_level' => $this->year_level,
+            'program' => $this->program,
             'password' => Hash::make($this->password),
         ]);
 
@@ -63,4 +72,3 @@ class Register extends Component
         return view('livewire.register');
     }
 }
-

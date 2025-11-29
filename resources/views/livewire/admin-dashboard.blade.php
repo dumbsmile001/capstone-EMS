@@ -12,21 +12,20 @@
             <!-- Overview Cards -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                 <!--Count all users in the system-->
-                <x-overview-card title="Total Users" value="[users_count]"
+                <x-overview-card title="Total Users" value="{{ $usersCount }}"
                     icon='<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>'
                     iconColor="blue" />
                 <!--Count all events in the system-->
-                <x-overview-card title="Total Events" value="[events_count]"
+                <x-overview-card title="Total Events" value="{{ $eventsCount }}"
                     icon='<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>'
                     iconColor="green" />
-                <x-overview-card title="Archived Events" value="[archived_events]"
+                <x-overview-card title="Archived Events" value="{{ $archivedEvents }}"
                     icon='<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>'
                     iconColor="yellow" />
-                <x-overview-card title="Upcoming Events" value="[calendar_popup]"
+                <x-overview-card title="Upcoming Events" value="{{ $upcomingEvents }}"
                     icon='<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>'
                     iconColor="orange" />
             </div>
-
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
                 <!-- Recent Activity Card, cards switch order according to activity date and time-->
                 <div class="bg-white rounded-lg shadow-md p-6">
@@ -337,6 +336,7 @@
 
                 <!-- Tab Content -->
                 <div class="overflow-x-auto">
+                    <!-- UPDATING USER INFORMATION -->
                     <x-custom-modal model="showEditUserModal">
                         <h1 class="text-xl text-center font-bold">Edit User</h1>
                         <form class="max-w-md mx-auto">
@@ -390,77 +390,89 @@
                             </div>
                         </form>
                     </x-custom-modal>
+                    <!-- DELETING USER INFORMATION -->
                     <x-custom-modal model="showDeleteUserModal">
                         <form class="max-w-md mx-auto">
                             <h1 class="text-xl text-center font-bold">Delete User</h1>
                             <h3 class="text-center mb-6">Are you sure to delete this user?</h3>
+                            @if($deletingUser)
+                                <p class="text-center text-gray-600 mb-4">
+                                    User: <strong>{{ $deletingUser->first_name }} {{ $deletingUser->last_name }}</strong>
+                                </p>
+                            @endif
                             <div class="flex flex-row gap-1">
-                                <button wire:click=""
-                                    class="w-full px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-xs font-medium">Cancel</button>
-                                <button wire:click=""
+                                <button type="button" wire:click="closeDeleteUserModal"
+                                    class="w-full px-3 py-1 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 text-xs font-medium">Cancel</button>
+                                <button type="button" wire:click="deleteUser"
                                     class="w-full px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs font-medium">Confirm</button>
                             </div>
                         </form>
                     </x-custom-modal>
-                    <!-- Users Table, pulls data from users -->
+                    <!-- THIS IS THE USERS TABLE-->
                     <div class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default"
                         x-show="activeTab === 'users'" x-transition>
                         <table class="min-w-max divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
-                                    <th
-                                        class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Name</th>
-                                    <th
-                                        class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Email</th>
-                                    <th
-                                        class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Grade Level</th>
-                                    <th
-                                        class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Year Level</th>
-                                    <th
-                                        class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Program</th>
-                                    <th
-                                        class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Student ID</th>
-                                    <th
-                                        class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Role</th>
-                                    <th
-                                        class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Actions</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Grade Level</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Year Level</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Program</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student ID</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                                 </tr>
                             </thead>
                             <!--Dynamically loaded data-->
                             <tbody class="bg-white divide-y divide-gray-200">
-                                <tr class="hover:bg-gray-50">
-                                    <!--users.first_name + users.last_name-->
-                                    <td class="px-4 py-3 text-sm text-gray-900">Zed Villanueva</td>
-                                    <!--users.email-->
-                                    <td class="px-4 py-3 text-sm text-gray-600">zed_villanueva@gmail.com</td>
-                                    <!--users.grade_level,only if student and senior high, N/A if not-->
-                                    <td class="px-4 py-3 text-sm text-gray-600">N/A</td>
-                                    <!--users.year_level, only if student and college, N/A if not-->
-                                    <td class="px-4 py-3 text-sm text-gray-600">4</td>
-                                    <!--users.program, only if student, N/A if not-->
-                                    <td class="px-4 py-3 text-sm text-gray-600">BSIT</td>
-                                    <!--users.student_id, only if student, N/A if not-->
-                                    <td class="px-4 py-3 text-sm text-gray-600">123456789</td>
-                                    <!--Spatie Roles-->
-                                    <td class="px-4 py-3 text-sm text-gray-600">Student</td>
-                                    <!--Edit, Delete-->
-                                    <td class="flex flex-row items-center px-4 py-3">
-                                        <!--Edit User Modal-->
-                                        <button wire:click="openEditUserModal"
-                                            class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-xs font-medium">Edit</button>
-                                        <!--Delete User Modal-->
-                                        <button wire:click="openDeleteUserModal"
-                                            class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs font-medium">Delete</button>
-                                    </td>
-                                </tr>
+                                @forelse($users as $user)
+                                    <tr class="hover:bg-gray-50">
+                                        <!--users.first_name + users.last_name-->
+                                        <td class="px-4 py-3 text-sm text-gray-900">{{ $user->first_name }} {{ $user->last_name }}</td>
+                                        <!--users.email-->
+                                        <td class="px-4 py-3 text-sm text-gray-600">{{ $user->email }}</td>
+                                        <!--users.grade_level,only if student and senior high, N/A if not-->
+                                        <td class="px-4 py-3 text-sm text-gray-600">
+                                            {{ $user->grade_level ? 'Grade ' . $user->grade_level : 'N/A' }}
+                                        </td>
+                                        <!--users.year_level, only if student and college, N/A if not-->
+                                        <td class="px-4 py-3 text-sm text-gray-600">
+                                            {{ $user->year_level ? 'Year ' . $user->year_level : 'N/A' }}
+                                        </td>
+                                        <!--users.program, only if student, N/A if not-->
+                                        <td class="px-4 py-3 text-sm text-gray-600">
+                                            {{ $user->program ?? 'N/A' }}
+                                        </td>
+                                        <!--users.student_id, only if student, N/A if not-->
+                                        <td class="px-4 py-3 text-sm text-gray-600">
+                                            {{ $user->student_id ?? 'N/A' }}
+                                        </td>
+                                        <!--Spatie Roles-->
+                                        <td class="px-4 py-3 text-sm text-gray-600">
+                                            @foreach($user->roles as $role)
+                                                <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs capitalize">
+                                                    {{ $role->name }}
+                                                </span>
+                                            @endforeach
+                                        </td>
+                                        <!--Edit, Delete-->
+                                        <td class="flex flex-row items-center px-4 py-3 space-x-2">
+                                            <!--Edit User Modal-->
+                                            <button wire:click="openEditUserModal({{ $user->id }})"
+                                                class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-xs font-medium">Edit</button>
+                                            <!--Delete User Modal-->
+                                            <button wire:click="openDeleteUserModal({{ $user->id }})"
+                                                class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs font-medium">Delete</button>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="8" class="px-4 py-3 text-sm text-gray-500 text-center">
+                                            No users found.
+                                        </td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>

@@ -3,9 +3,11 @@
 namespace App\Livewire;
 
 use App\Models\Event;
+use App\Models\User;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use Livewire\WithFileUploads;
+use Spatie\Permission\Models\Role;
 
 class AdminDashboard extends Component
 {
@@ -18,6 +20,9 @@ class AdminDashboard extends Component
     public $student_id;
     public $email;
     public $role;
+    public $grade_level;
+    public $year_level;
+    public $program;
     
     // Events properties
     public string $title = '';
@@ -40,19 +45,154 @@ class AdminDashboard extends Component
     public $showGenerateReportModal = false;
     public $showArchiveModal = false;
 
-    //Edit or delete
+    // Edit or delete
     public $editingEvent = null;
     public $deletingEvent = null;
+    public $editingUser = null;
+    public $deletingUser = null;
 
-    public function viewUser($userId)
+    // Users data
+    public $users;
+    public $userUpdates;
+    public $systemLogins;
+
+    public function mount()
     {
-        $this->dispatch('open-modal', modal: 'view-user', userId: $userId);
+        $this->loadUsers();
+        $this->loadUserUpdates();
+        $this->loadSystemLogins();
     }
 
-    public function editUser($userId)
+    public function loadUsers()
     {
-        $this->dispatch('open-modal', modal: 'edit-user', userId: $userId);
+        $this->users = User::with('roles')->get();
     }
+
+    public function loadUserUpdates()
+    {
+        // This would typically come from an audit log or similar
+        // For now, we'll use a placeholder
+        $this->userUpdates = [];
+    }
+
+    public function loadSystemLogins()
+    {
+        // This would typically come from login logs
+        // For now, we'll use recent users as placeholder
+        $this->systemLogins = User::with('roles')
+            ->orderBy('updated_at', 'desc')
+            ->limit(10)
+            ->get();
+    }
+
+    public function openEditUserModal($userId = null)
+    {
+        if ($userId) {
+            $this->editingUser = User::with('roles')->findOrFail($userId);
+            
+            // Populate form fields with existing user data
+            $this->first_name = $this->editingUser->first_name;
+            $this->middle_name = $this->editingUser->middle_name;
+            $this->last_name = $this->editingUser->last_name;
+            $this->student_id = $this->editingUser->student_id;
+            $this->email = $this->editingUser->email;
+            $this->grade_level = $this->editingUser->grade_level;
+            $this->year_level = $this->editingUser->year_level;
+            $this->program = $this->editingUser->program;
+            
+            // Get the first role name (assuming users have one primary role)
+            $this->role = $this->editingUser->roles->first()->name ?? 'student';
+        }
+        
+        $this->showEditUserModal = true;
+    }
+
+    public function closeEditUserModal()
+    {
+        $this->showEditUserModal = false;
+        $this->editingUser = null;
+        $this->resetUserForm();
+    }
+
+    public function openDeleteUserModal($userId = null)
+    {
+        if ($userId) {
+            $this->deletingUser = User::findOrFail($userId);
+        }
+        $this->showDeleteUserModal = true;
+    }
+
+    public function closeDeleteUserModal()
+    {
+        $this->showDeleteUserModal = false;
+        $this->deletingUser = null;
+    }
+
+    public function saveUser()
+    {
+        $this->validate([
+            'first_name' => 'required|string|max:255',
+            'middle_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'student_id' => 'required|integer|unique:users,student_id,' . ($this->editingUser ? $this->editingUser->id : ''),
+            'email' => 'required|email|unique:users,email,' . ($this->editingUser ? $this->editingUser->id : ''),
+            'grade_level' => 'nullable|integer|min:11|max:12',
+            'year_level' => 'nullable|integer|min:1|max:5',
+            'program' => 'nullable|string|max:255',
+            'role' => 'required|in:admin,organizer,student',
+        ]);
+
+        if ($this->editingUser) {
+            // Update existing user
+            $this->editingUser->update([
+                'first_name' => $this->first_name,
+                'middle_name' => $this->middle_name,
+                'last_name' => $this->last_name,
+                'student_id' => $this->student_id,
+                'email' => $this->email,
+                'grade_level' => $this->grade_level,
+                'year_level' => $this->year_level,
+                'program' => $this->program,
+            ]);
+
+            // Update role
+            $this->editingUser->syncRoles([$this->role]);
+
+            session()->flash('success', 'User updated successfully!');
+        }
+
+        $this->closeEditUserModal();
+        $this->loadUsers(); // Refresh the users list
+    }
+
+    public function deleteUser()
+    {
+        if ($this->deletingUser) {
+            // Prevent admin from deleting themselves
+            if ($this->deletingUser->id === Auth::id()) {
+                session()->flash('error', 'You cannot delete your own account!');
+                $this->closeDeleteUserModal();
+                return;
+            }
+
+            $this->deletingUser->delete();
+            session()->flash('success', 'User deleted successfully!');
+        }
+
+        $this->closeDeleteUserModal();
+        $this->loadUsers(); // Refresh the users list
+    }
+
+    private function resetUserForm()
+    {
+        $this->reset([
+            'first_name', 'middle_name', 'last_name', 'student_id', 
+            'email', 'role', 'grade_level', 'year_level', 'program'
+        ]);
+        $this->resetErrorBag();
+    }
+
+    // Existing event methods remain the same...
     public function updateEvent()
     {
         if ($this->editingEvent) {
@@ -123,10 +263,7 @@ class AdminDashboard extends Component
         ]);
 
         // Reset form fields
-        $this->reset([
-            'title', 'date', 'time', 'type', 'place_link', 
-            'category', 'description', 'banner', 'require_payment', 'payment_amount'
-        ]);
+        $this->resetForm();
 
         // Close modal
         $this->showCreateModal = false;
@@ -143,6 +280,7 @@ class AdminDashboard extends Component
         $this->showCreateModal = false;
         $this->resetForm();
     }
+
     public function openEditModal($eventId = null)
     {
         if ($eventId) {
@@ -186,24 +324,12 @@ class AdminDashboard extends Component
         $this->deletingEvent = null;
     }
     
-    public function openEditUserModal(){
-        $this->showEditUserModal = true;
-    }
-    
-    public function openDeleteUserModal(){
-        $this->showDeleteUserModal = true;
-    }
-    
     public function openGenerateReportModal(){
         $this->showGenerateReportModal = true;
     }
     
     public function openArchiveModal(){
         $this->showArchiveModal = true;
-    }
-    
-    public function saveUser(){
-        $this->showEditUserModal = false;
     }
 
     private function resetForm()
@@ -220,14 +346,24 @@ class AdminDashboard extends Component
         $user = Auth::user();
         $userInitials = strtoupper(substr($user->first_name ?? 'A', 0, 1) . substr($user->last_name ?? 'U', 0, 1));
 
-        // Fetch events from database - you can add filters/pagination as needed
+        // Fetch events from database
         $events = Event::where('created_by', Auth::id())
                       ->orderBy('created_at', 'desc')
                       ->get();
+
+        // Get counts for overview cards
+        $usersCount = User::count();
+        $eventsCount = Event::count();
+        $archivedEvents = Event::where('status', 'archived')->count();
+        $upcomingEvents = Event::where('date', '>=', now()->format('Y-m-d'))->count();
         
         return view('livewire.admin-dashboard', [
             'userInitials' => $userInitials,
             'events' => $events,
+            'usersCount' => $usersCount,
+            'eventsCount' => $eventsCount,
+            'archivedEvents' => $archivedEvents,
+            'upcomingEvents' => $upcomingEvents,
         ])->layout('layouts.app');
     }
 }
