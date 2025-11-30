@@ -46,7 +46,11 @@ class Event extends Model{
     {
         return $this->hasMany(Registration::class);
     }
-
+    // In Event.php model
+    public function scopeCreatedBy($query, $userId)
+    {
+        return $query->where('created_by', $userId);
+    }
     public function registeredUsers()
     {
         return $this->belongsToMany(User::class, 'registrations')

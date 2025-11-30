@@ -236,59 +236,9 @@
 
                 <!-- Tab Content -->
                 <div class="overflow-x-auto">
-                    <!-- Recent Registrations Table -->
+                    <!-- Registrations Table for Organizer,  -->
                     <div x-show="activeTab === 'registrations'" x-transition>
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th
-                                        class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Full Name</th>
-                                    <th
-                                        class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Student ID</th>
-                                    <th
-                                        class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Year Level</th>
-                                    <th
-                                        class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Course</th>
-                                    <th
-                                        class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Role</th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-3 text-sm text-gray-900">Alex Johnson</td>
-                                    <td class="px-4 py-3 text-sm text-gray-600">S12345</td>
-                                    <td class="px-4 py-3 text-sm text-gray-600">3rd Year</td>
-                                    <td class="px-4 py-3 text-sm text-gray-600">Computer Science</td>
-                                    <td class="px-4 py-3 text-sm text-gray-600">Student</td>
-                                </tr>
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-3 text-sm text-gray-900">Maria Garcia</td>
-                                    <td class="px-4 py-3 text-sm text-gray-600">S12346</td>
-                                    <td class="px-4 py-3 text-sm text-gray-600">2nd Year</td>
-                                    <td class="px-4 py-3 text-sm text-gray-600">Information Systems</td>
-                                    <td class="px-4 py-3 text-sm text-gray-600">Student</td>
-                                </tr>
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-3 text-sm text-gray-900">David Wilson</td>
-                                    <td class="px-4 py-3 text-sm text-gray-600">S12347</td>
-                                    <td class="px-4 py-3 text-sm text-gray-600">4th Year</td>
-                                    <td class="px-4 py-3 text-sm text-gray-600">Software Engineering</td>
-                                    <td class="px-4 py-3 text-sm text-gray-600">Student</td>
-                                </tr>
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-3 text-sm text-gray-900">Lisa Chen</td>
-                                    <td class="px-4 py-3 text-sm text-gray-600">S12348</td>
-                                    <td class="px-4 py-3 text-sm text-gray-600">1st Year</td>
-                                    <td class="px-4 py-3 text-sm text-gray-600">Data Science</td>
-                                    <td class="px-4 py-3 text-sm text-gray-600">Student</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <livewire:organizer-registrations />
                     </div>
 
                     <!-- Payments Table -->
@@ -298,7 +248,7 @@
                                 <tr>
                                     <th
                                         class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Student</th>
+                                        Student Name</th>
                                     <th
                                         class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Event</th>
@@ -318,33 +268,6 @@
                                     <td class="px-4 py-3 text-sm">
                                         <span
                                             class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-medium">Paid</span>
-                                    </td>
-                                </tr>
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-3 text-sm text-gray-900">Maria Garcia</td>
-                                    <td class="px-4 py-3 text-sm text-gray-600">Data Science Summit</td>
-                                    <td class="px-4 py-3 text-sm text-gray-600">₱750.00</td>
-                                    <td class="px-4 py-3 text-sm">
-                                        <span
-                                            class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs font-medium">Pending</span>
-                                    </td>
-                                </tr>
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-3 text-sm text-gray-900">David Wilson</td>
-                                    <td class="px-4 py-3 text-sm text-gray-600">Annual Tech Conference</td>
-                                    <td class="px-4 py-3 text-sm text-gray-600">₱1,000.00</td>
-                                    <td class="px-4 py-3 text-sm">
-                                        <span
-                                            class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-medium">Paid</span>
-                                    </td>
-                                </tr>
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-3 text-sm text-gray-900">Lisa Chen</td>
-                                    <td class="px-4 py-3 text-sm text-gray-600">Web Development Workshop</td>
-                                    <td class="px-4 py-3 text-sm text-gray-600">₱500.00</td>
-                                    <td class="px-4 py-3 text-sm">
-                                        <span
-                                            class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs font-medium">Pending</span>
                                     </td>
                                 </tr>
                             </tbody>
