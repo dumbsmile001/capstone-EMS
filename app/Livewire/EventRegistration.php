@@ -37,25 +37,27 @@ class EventRegistration extends Component
     }
 
     public function registerForEvent($eventId)
-    {
+{
         $event = Event::findOrFail($eventId);
         
-        // Check if already registered
-        if ($this->userRegistrations->has($eventId)) {
-            $existingRegistration = $this->userRegistrations->get($eventId);
-            if ($existingRegistration->status === 'registered') {
-                session()->flash('error', 'You are already registered for this event.');
-                return;
-            }
+        // Check if already actively registered
+        if ($this->isRegistered($eventId)) {
+            session()->flash('error', 'You are already registered for this event.');
+            return;
         }
 
         try {
-            Registration::create([
-                'event_id' => $eventId,
-                'user_id' => Auth::id(),
-                'status' => 'registered',
-                'registered_at' => now(),
-            ]);
+            // Update existing registration or create new one
+            Registration::updateOrCreate(
+                [
+                    'event_id' => $eventId,
+                    'user_id' => Auth::id(),
+                ],
+                [
+                    'status' => 'registered',
+                    'registered_at' => now(),
+                ]
+            );
 
             // Reload data
             $this->loadUserRegistrations();
@@ -87,8 +89,12 @@ class EventRegistration extends Component
 
     public function isRegistered($eventId)
     {
-        return $this->userRegistrations->has($eventId) && 
-               $this->userRegistrations->get($eventId)->status === 'registered';
+        if (!$this->userRegistrations->has($eventId)) {
+            return false;
+        }
+        
+        $registration = $this->userRegistrations->get($eventId);
+        return in_array($registration->status, ['registered', 'attended']);
     }
 
     public function render()

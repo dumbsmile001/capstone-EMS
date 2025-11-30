@@ -10,33 +10,7 @@
         <!-- Dashboard Content -->
         <div class="flex-1 p-6">
             <!-- Overview Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                <x-overview-card 
-                    title="My Events" 
-                    value="5" 
-                    icon='<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>'
-                    iconColor="blue"
-                />
-                <x-overview-card 
-                    title="My Tickets" 
-                    value="3" 
-                    icon='<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path></svg>'
-                    iconColor="green"
-                />
-                <x-overview-card 
-                    title="Pending Payments" 
-                    value="2" 
-                    icon='<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>'
-                    iconColor="yellow"
-                />
-                <x-overview-card 
-                    title="Upcoming Events" 
-                    value="8" 
-                    icon='<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>'
-                    iconColor="orange"
-                />
-            </div>
-
+            <livewire:dashboard-stats />
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <!-- Main Content Area -->
                 <div class="lg:col-span-2 space-y-6">
@@ -69,63 +43,9 @@
 
                         <!-- Tab Content -->
                         <div class="overflow-x-auto">
-                            <!-- Registration History Table -->
+                            <!-- Replace the Registration History Table section with: -->
                             <div x-show="activeTab === 'registrations'" x-transition>
-                                <table class="min-w-full divide-y divide-gray-200">
-                                    <thead class="bg-gray-50">
-                                        <tr>
-                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Event Name</th>
-                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duration</th>
-                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="bg-white divide-y divide-gray-200">
-                                        <tr class="hover:bg-gray-50">
-                                            <td class="px-4 py-3 text-sm text-gray-900">Web Development Workshop</td>
-                                            <td class="px-4 py-3 text-sm text-gray-600">Workshop</td>
-                                            <td class="px-4 py-3 text-sm text-gray-600">June 22, 2023</td>
-                                            <td class="px-4 py-3 text-sm text-gray-600">3 hours</td>
-                                            <td class="px-4 py-3 text-sm text-blue-600 font-medium">Registered</td>
-                                        </tr>
-                                        <tr class="hover:bg-gray-50">
-                                            <td class="px-4 py-3 text-sm text-gray-900">AI and Machine Learning Seminar</td>
-                                            <td class="px-4 py-3 text-sm text-gray-600">Seminar</td>
-                                            <td class="px-4 py-3 text-sm text-gray-600">May 15, 2023</td>
-                                            <td class="px-4 py-3 text-sm text-gray-600">2 hours</td>
-                                            <td class="px-4 py-3 text-sm text-blue-600 font-medium">Attended</td>
-                                        </tr>
-                                        <tr class="hover:bg-gray-50">
-                                            <td class="px-4 py-3 text-sm text-gray-900">Cybersecurity Conference</td>
-                                            <td class="px-4 py-3 text-sm text-gray-600">Conference</td>
-                                            <td class="px-4 py-3 text-sm text-gray-600">April 10, 2023</td>
-                                            <td class="px-4 py-3 text-sm text-gray-600">6 hours</td>
-                                            <td class="px-4 py-3 text-sm text-pink-600 font-medium">Cancelled</td>
-                                        </tr>
-                                        <tr class="hover:bg-gray-50">
-                                            <td class="px-4 py-3 text-sm text-gray-900">Mobile App Development</td>
-                                            <td class="px-4 py-3 text-sm text-gray-600">Workshop</td>
-                                            <td class="px-4 py-3 text-sm text-gray-600">March 5, 2023</td>
-                                            <td class="px-4 py-3 text-sm text-gray-600">4 hours</td>
-                                            <td class="px-4 py-3 text-sm text-blue-600 font-medium">Attended</td>
-                                        </tr>
-                                        <tr class="hover:bg-gray-50">
-                                            <td class="px-4 py-3 text-sm text-gray-900">Database Management Workshop</td>
-                                            <td class="px-4 py-3 text-sm text-gray-600">Workshop</td>
-                                            <td class="px-4 py-3 text-sm text-gray-600">February 20, 2023</td>
-                                            <td class="px-4 py-3 text-sm text-gray-600">3 hours</td>
-                                            <td class="px-4 py-3 text-sm text-blue-600 font-medium">Attended</td>
-                                        </tr>
-                                        <tr class="hover:bg-gray-50">
-                                            <td class="px-4 py-3 text-sm text-gray-900">Cloud Computing Seminar</td>
-                                            <td class="px-4 py-3 text-sm text-gray-600">Seminar</td>
-                                            <td class="px-4 py-3 text-sm text-gray-600">January 18, 2023</td>
-                                            <td class="px-4 py-3 text-sm text-gray-600">2 hours</td>
-                                            <td class="px-4 py-3 text-sm text-blue-600 font-medium">Attended</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                <livewire:registration-history />
                             </div>
 
                             <!-- Payments Table -->
