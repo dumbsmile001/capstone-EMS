@@ -107,6 +107,59 @@ class OrganizerRegistrations extends Component
         return ucfirst($registration->payment_status);
     }
 
+    public function regenerateTicket($registrationId)
+    {
+        $registration = Registration::with(['user', 'ticket'])->find($registrationId);
+        
+        if ($registration && $registration->ticket) {
+            $registration->regenerateTicket();
+            $this->loadRegistrations();
+            session()->flash('success', 'Ticket regenerated for ' . $registration->user->first_name . ' ' . $registration->user->last_name);
+        } else {
+            session()->flash('error', 'Ticket not found for regeneration.');
+        }
+    }
+    
+    // In OrganizerRegistrations.php - add these methods:
+
+    public function generateTicket($registrationId)
+    {
+        $registration = Registration::with(['user', 'event', 'ticket'])->find($registrationId);
+        
+        if (!$registration->ticket) {
+            // Create ticket if it doesn't exist
+            try {
+                \App\Models\Ticket::create([
+                    'registration_id' => $registration->id,
+                    'ticket_number' => \App\Models\Registration::generateTicketNumber(),
+                    'status' => $registration->isPaymentVerified() ? 'active' : 'pending_payment',
+                    'generated_at' => now(),
+                ]);
+                
+                session()->flash('success', 'Ticket generated for ' . $registration->user->first_name);
+                
+            } catch (\Exception $e) {
+                session()->flash('error', 'Failed to generate ticket: ' . $e->getMessage());
+            }
+        } else {
+            session()->flash('info', 'Ticket already exists for this registration');
+        }
+        
+        $this->loadRegistrations();
+    }
+
+    public function viewTicket($registrationId)
+    {
+        $registration = Registration::with(['ticket'])->find($registrationId);
+        
+        if ($registration->ticket) {
+            // Placeholder for ticket view modal
+            session()->flash('info', 'Ticket view for: ' . $registration->ticket->ticket_number);
+        } else {
+            session()->flash('error', 'No ticket found for this registration');
+        }
+    }
+
     public function render()
     {
         return view('livewire.organizer-registrations');

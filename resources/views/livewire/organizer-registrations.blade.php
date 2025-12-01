@@ -86,6 +86,8 @@
                         Status
                     </th>
                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Ticket</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Payment
                     </th>
                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -130,6 +132,23 @@
                                 </span>
                             @endif
                         </td>
+
+                        <td class="px-4 py-3 text-sm">
+                            @if($registration->ticket)
+                                @if($registration->ticket->isActive())
+                                    <span class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-medium">Active</span>
+                                @elseif($registration->ticket->isPendingPayment())
+                                    <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs font-medium">Pending Payment</span>
+                                @elseif($registration->ticket->isUsed())
+                                    <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded text-xs font-medium">Used</span>
+                                @endif
+                                <div class="text-xs text-gray-500 mt-1">
+                                    {{ $registration->ticket->ticket_number }}
+                                </div>
+                            @else
+                                <span class="px-2 py-1 bg-red-100 text-red-800 rounded text-xs font-medium">No Ticket</span>
+                            @endif
+                        </td>
                         
                         <!-- Payment Status -->
                         <td class="px-4 py-3 text-sm">
@@ -160,6 +179,7 @@
                         </td>
                         
                         <!-- Actions -->
+                        <!-- In the Actions column, update the buttons: -->
                         <td class="px-4 py-3 text-sm space-x-2">
                             @if($registration->event->require_payment)
                                 @if($registration->status === 'registered')
@@ -183,18 +203,31 @@
                                         >
                                             Reset
                                         </button>
-                                        <button 
-                                            wire:click="generateTicket({{ $registration->id }})"
-                                            class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-xs font-medium transition-colors"
-                                        >
-                                            Generate Ticket
-                                        </button>
                                     @endif
-                                @else
-                                    <span class="text-gray-400 text-xs">No actions available</span>
                                 @endif
+                            @endif
+                            
+                            <!-- Always show ticket actions -->
+                            @if($registration->ticket)
+                                <button 
+                                    wire:click="viewTicket({{ $registration->id }})"
+                                    class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-xs font-medium transition-colors"
+                                >
+                                    View Ticket
+                                </button>
+                                <button 
+                                    wire:click="regenerateTicket({{ $registration->id }})"
+                                    class="px-3 py-1 bg-orange-600 text-white rounded hover:bg-orange-700 text-xs font-medium transition-colors"
+                                >
+                                    Regenerate
+                                </button>
                             @else
-                                <span class="text-gray-400 text-xs">No actions required</span>
+                                <button 
+                                    wire:click="generateTicket({{ $registration->id }})"
+                                    class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-xs font-medium transition-colors"
+                                >
+                                    Generate Ticket
+                                </button>
                             @endif
                         </td>
                     </tr>

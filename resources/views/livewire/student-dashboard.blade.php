@@ -154,35 +154,9 @@
                 <!-- Right Sidebar -->
                 <div class="space-y-6">
                     <!-- My Tickets Section (Moved Higher) -->
-                    <div class="bg-white rounded-lg shadow-md p-6">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4">My Tickets</h3>
-                        <div class="border-2 border-gray-200 rounded-lg p-4">
-                            <div class="flex justify-between items-start mb-4">
-                                <h4 class="font-semibold text-gray-800">Web Development Workshop</h4>
-                                <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-semibold">Paid</span>
-                            </div>
-                            <div class="space-y-2 mb-4 text-sm text-gray-600">
-                                <div><strong>Date:</strong> June 22, 2023</div>
-                                <div><strong>Time:</strong> 2:00 PM - 5:00 PM</div>
-                                <div><strong>Location:</strong> Computer Lab B</div>
-                                <div><strong>Ticket ID:</strong> TKT-789012</div>
-                            </div>
-                            <!-- QR Code Placeholder -->
-                            <div class="bg-gray-100 rounded-lg p-4 mb-4 flex items-center justify-center">
-                                <div class="w-32 h-32 bg-white border-2 border-gray-300 rounded flex items-center justify-center">
-                                    <svg class="w-24 h-24 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M3 11h8V3H3v8zm2-6h4v4H5V5zM13 3v8h8V3h-8zm6 6h-4V5h4v4zM3 21h8v-8H3v8zm2-6h4v4H5v-4zM16 13h2v2h-2zM18 15h2v2h-2zM16 17h2v2h-2zM13 13h2v2h-2zM15 15h2v2h-2zM13 17h2v2h-2zM18 17h2v2h-2zM21 13h-2v2h2zM21 17h-2v2h2z"/>
-                                    </svg>
-                                </div>
-                            </div>
-                            <div class="text-sm text-gray-700 mb-4"><strong>Student Name:</strong> {{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</div>
-                            <button wire:click="downloadTicket(1)" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium flex items-center justify-center">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                                </svg>
-                                Download
-                            </button>
-                        </div>
+                    <!-- Replace the entire Tickets Table section with: -->
+                    <div x-show="activeTab === 'tickets'" x-transition>
+                        <livewire:student-tickets />
                     </div>
                 </div>
             </div>
