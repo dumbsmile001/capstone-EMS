@@ -66,6 +66,10 @@ class Ticket extends Model
 
     public function regenerateTicketNumber()
     {
+        if (!$this->canRegenerate()) {
+            throw new \Exception('Cannot regenerate a used ticket');
+        }
+        
         $this->update([
             'ticket_number' => $this->generateNewTicketNumber(),
         ]);
@@ -78,5 +82,13 @@ class Ticket extends Model
         } while (self::where('ticket_number', $ticketNumber)->exists());
 
         return $ticketNumber;
+    }
+
+    // Add this method to your Ticket.php model
+    public function canRegenerate()
+    {
+        // You can add logic here to restrict regeneration
+        // For example, don't allow regeneration for used tickets
+        return $this->status !== 'used';
     }
 }

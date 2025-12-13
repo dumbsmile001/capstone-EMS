@@ -73,6 +73,18 @@ class Registration extends Model
         });
     }
 
+    // Add this method to your Registration.php model
+    public function isEligibleForTicket()
+    {
+        // For free events, always eligible
+        if (!$this->event->require_payment) {
+            return true;
+        }
+        
+        // For paid events, only eligible if payment is verified
+        return $this->isPaymentVerified();
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

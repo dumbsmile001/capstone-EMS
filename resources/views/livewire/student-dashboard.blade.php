@@ -100,63 +100,9 @@
 
                             <!-- Tickets Table -->
                             <div x-show="activeTab === 'tickets'" x-transition>
-                                <table class="min-w-full divide-y divide-gray-200">
-                                    <thead class="bg-gray-50">
-                                        <tr>
-                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Event</th>
-                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ticket ID</th>
-                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="bg-white divide-y divide-gray-200">
-                                        <tr class="hover:bg-gray-50">
-                                            <td class="px-4 py-3 text-sm text-gray-900">Web Development Workshop</td>
-                                            <td class="px-4 py-3 text-sm text-gray-600">TKT-789012</td>
-                                            <td class="px-4 py-3 text-sm text-gray-600">June 22, 2023</td>
-                                            <td class="px-4 py-3 text-sm">
-                                                <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-medium">Valid</span>
-                                            </td>
-                                            <td class="px-4 py-3 text-sm">
-                                                <button wire:click="downloadTicket(1)" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-xs font-medium">Download</button>
-                                            </td>
-                                        </tr>
-                                        <tr class="hover:bg-gray-50">
-                                            <td class="px-4 py-3 text-sm text-gray-900">AI and Machine Learning Seminar</td>
-                                            <td class="px-4 py-3 text-sm text-gray-600">TKT-456789</td>
-                                            <td class="px-4 py-3 text-sm text-gray-600">May 15, 2023</td>
-                                            <td class="px-4 py-3 text-sm">
-                                                <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded text-xs font-medium">Used</span>
-                                            </td>
-                                            <td class="px-4 py-3 text-sm">
-                                                <button wire:click="viewTicket(2)" class="px-3 py-1 bg-gray-600 text-white rounded hover:bg-gray-700 text-xs font-medium">View</button>
-                                            </td>
-                                        </tr>
-                                        <tr class="hover:bg-gray-50">
-                                            <td class="px-4 py-3 text-sm text-gray-900">Mobile App Development</td>
-                                            <td class="px-4 py-3 text-sm text-gray-600">TKT-123456</td>
-                                            <td class="px-4 py-3 text-sm text-gray-600">March 5, 2023</td>
-                                            <td class="px-4 py-3 text-sm">
-                                                <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded text-xs font-medium">Used</span>
-                                            </td>
-                                            <td class="px-4 py-3 text-sm">
-                                                <button wire:click="viewTicket(3)" class="px-3 py-1 bg-gray-600 text-white rounded hover:bg-gray-700 text-xs font-medium">View</button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                <livewire:student-tickets />
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Right Sidebar -->
-                <div class="space-y-6">
-                    <!-- My Tickets Section (Moved Higher) -->
-                    <!-- Replace the entire Tickets Table section with: -->
-                    <div x-show="activeTab === 'tickets'" x-transition>
-                        <livewire:student-tickets />
                     </div>
                 </div>
             </div>
