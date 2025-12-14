@@ -41,6 +41,10 @@ class Event extends Model{
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+    public function user()
+    {
+        return $this->creator();
+    }
     // In Event.php model, add:
     public function registrations()
     {

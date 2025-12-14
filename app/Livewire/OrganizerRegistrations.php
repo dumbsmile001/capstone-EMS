@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Models\Registration;
 use App\Models\Event;
 use App\Models\Ticket;
+use App\Services\TicketPdfService;
 use Illuminate\Support\Facades\Auth;
 
 class OrganizerRegistrations extends Component
@@ -17,6 +18,10 @@ class OrganizerRegistrations extends Component
     public $showPaymentModal = false;
     public $selectedRegistration;
     public $verificationNotes = '';
+    
+    // For ticket view modal
+    public $showTicketModal = false;
+    public $selectedTicketRegistration = null;
 
     public function mount()
     {
@@ -179,15 +184,24 @@ class OrganizerRegistrations extends Component
 
     public function viewTicket($registrationId)
     {
-        $registration = Registration::with(['ticket'])->find($registrationId);
-        
-        if ($registration->ticket) {
-            // You can implement modal or redirect to ticket view page here
-            // For now, just show a message
-            session()->flash('info', 'Ticket view for: ' . $registration->ticket->ticket_number);
+        $this->selectedTicketRegistration = Registration::with(['event', 'user', 'ticket'])
+            ->where('id', $registrationId)
+            ->whereHas('event', function($query) {
+                $query->where('created_by', Auth::id());
+            })
+            ->first();
+
+        if ($this->selectedTicketRegistration && $this->selectedTicketRegistration->ticket) {
+            $this->showTicketModal = true;
         } else {
-            session()->flash('error', 'No ticket found for this registration');
+            session()->flash('error', 'Ticket not found or you do not have permission to view it.');
         }
+    }
+
+    public function closeTicketModal()
+    {
+        $this->showTicketModal = false;
+        $this->selectedTicketRegistration = null;
     }
 
     // Helper method to check if registration is eligible for ticket
@@ -250,6 +264,30 @@ class OrganizerRegistrations extends Component
         }
         
         return $buttons;
+    }
+
+    public function downloadTicketAsPdf($registrationId)
+    {
+        $registration = Registration::with(['event', 'ticket'])
+            ->where('id', $registrationId)
+            ->whereHas('event', function($query) {
+                $query->where('created_by', Auth::id());
+            })
+            ->first();
+
+        if ($registration && $registration->ticket && $registration->ticket->isActive()) {
+            try {
+                $pdfService = new TicketPdfService();
+                return $pdfService->downloadPdf($registration->ticket);
+                
+            } catch (\Exception $e) {
+                session()->flash('error', 'Failed to generate PDF: ' . $e->getMessage());
+                return null;
+            }
+        } else {
+            session()->flash('error', 'Ticket not found, inactive, or you do not have permission to download it.');
+            return null;
+        }
     }
 
     public function render()

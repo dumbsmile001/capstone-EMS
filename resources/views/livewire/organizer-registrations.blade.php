@@ -17,6 +17,216 @@
             {{ session('info') }}
         </div>
     @endif
+    <!-- Ticket View Modal -->
+    @if ($showTicketModal && $selectedTicketRegistration)
+        <x-custom-modal model="showTicketModal">
+            <div class="max-w-2xl mx-auto">
+                <!-- Modal Header -->
+                <div class="mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800 text-center">Event Ticket</h2>
+                    <p class="text-center text-gray-600 mt-1">Ticket for
+                        {{ $selectedTicketRegistration->user->first_name }}
+                        {{ $selectedTicketRegistration->user->last_name }}</p>
+                </div>
+
+                <!-- Ticket Content -->
+                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border-2 border-blue-200">
+                    <!-- Ticket Header -->
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-900">{{ $selectedTicketRegistration->event->title }}
+                            </h3>
+                            <p class="text-sm text-gray-600">{{ $selectedTicketRegistration->event->category }} Event
+                            </p>
+                            <p class="text-sm text-gray-600 mt-1">Organized by: {{ Auth::user()->first_name }}
+                                {{ Auth::user()->last_name }}</p>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-lg font-bold text-blue-700">
+                                {{ $selectedTicketRegistration->ticket->ticket_number }}</div>
+                            <div class="text-xs text-gray-500 mt-1">Ticket ID</div>
+                        </div>
+                    </div>
+
+                    <!-- Ticket Details Grid -->
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <div class="space-y-2">
+                            <div>
+                                <p class="text-xs text-gray-500">Event Date</p>
+                                <p class="font-medium">
+                                    {{ \Carbon\Carbon::parse($selectedTicketRegistration->event->date)->format('F j, Y') }}
+                                </p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500">Event Time</p>
+                                <p class="font-medium">
+                                    {{ \Carbon\Carbon::parse($selectedTicketRegistration->event->time)->format('g:i A') }}
+                                </p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500">Event Type</p>
+                                <p class="font-medium">
+                                    {{ ucfirst($selectedTicketRegistration->event->type) }}
+                                    @if ($selectedTicketRegistration->event->type === 'face-to-face')
+                                        <span class="text-xs text-gray-600 block">
+                                            {{ Str::limit($selectedTicketRegistration->event->place_link, 40) }}
+                                        </span>
+                                    @endif
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <div>
+                                <p class="text-xs text-gray-500">Attendee</p>
+                                <p class="font-medium">
+                                    {{ $selectedTicketRegistration->user->first_name }}
+                                    {{ $selectedTicketRegistration->user->last_name }}
+                                </p>
+                                @if ($selectedTicketRegistration->user->student_id)
+                                    <p class="text-xs text-gray-600">Student ID:
+                                        {{ $selectedTicketRegistration->user->student_id }}</p>
+                                @endif
+                                <p class="text-xs text-gray-600">Email: {{ $selectedTicketRegistration->user->email }}
+                                </p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500">Registration Date</p>
+                                <p class="font-medium">
+                                    {{ \Carbon\Carbon::parse($selectedTicketRegistration->registered_at)->format('M j, Y g:i A') }}
+                                </p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500">Ticket Status</p>
+                                <p class="font-medium">
+                                    @if ($selectedTicketRegistration->ticket->isActive())
+                                        <span class="text-green-600">Active</span>
+                                    @elseif($selectedTicketRegistration->ticket->isPendingPayment())
+                                        <span class="text-yellow-600">Pending Payment</span>
+                                    @elseif($selectedTicketRegistration->ticket->isUsed())
+                                        <span class="text-gray-600">Used</span>
+                                    @endif
+                                </p>
+                            </div>
+                            @if ($selectedTicketRegistration->event->require_payment)
+                                <div>
+                                    <p class="text-xs text-gray-500">Payment Status</p>
+                                    <p class="font-medium">
+                                        @if ($selectedTicketRegistration->payment_status === 'verified')
+                                            <span class="text-green-600">Verified ✓</span>
+                                            @if ($selectedTicketRegistration->payment_verified_at)
+                                                <div class="text-xs text-gray-600">
+                                                    Verified on:
+                                                    {{ $selectedTicketRegistration->payment_verified_at->format('M j, Y g:i A') }}
+                                                </div>
+                                                @if ($selectedTicketRegistration->payment_verified_by)
+                                                    <div class="text-xs text-gray-600">
+                                                        Verified by:
+                                                        {{ $selectedTicketRegistration->paymentVerifier->first_name ?? 'Admin' }}
+                                                    </div>
+                                                @endif
+                                            @endif
+                                        @elseif($selectedTicketRegistration->payment_status === 'pending')
+                                            <span class="text-yellow-600">Pending</span>
+                                        @elseif($selectedTicketRegistration->payment_status === 'rejected')
+                                            <span class="text-red-600">Rejected</span>
+                                        @endif
+                                    </p>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+
+                    <!-- QR Code Section -->
+                    <div class="border-t border-gray-200 pt-6 mb-6">
+                        <h4 class="text-center font-medium text-gray-700 mb-4">Scan QR Code for Entry</h4>
+                        <div class="flex justify-center">
+                            <div class="bg-white p-4 rounded-lg border">
+                                <!-- Placeholder QR Code -->
+                                <div
+                                    class="w-48 h-48 flex items-center justify-center bg-gray-100 border border-gray-300 rounded">
+                                    <div class="text-center">
+                                        <svg class="w-16 h-16 mx-auto text-gray-400 mb-2" fill="none"
+                                            stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z">
+                                            </path>
+                                        </svg>
+                                        <p class="text-xs text-gray-500">QR Code Placeholder</p>
+                                        <p class="text-xs text-gray-400 mt-1">
+                                            {{ $selectedTicketRegistration->ticket->ticket_number }}</p>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-center text-gray-500 mt-2">
+                                    Scan this code at the event entrance
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Event Description -->
+                    @if ($selectedTicketRegistration->event->description)
+                        <div class="border-t border-gray-200 pt-4 mb-6">
+                            <h4 class="font-medium text-gray-700 mb-2">Event Description</h4>
+                            <p class="text-sm text-gray-600">{{ $selectedTicketRegistration->event->description }}</p>
+                        </div>
+                    @endif
+
+                    <!-- Ticket Information -->
+                    <div class="border-t border-gray-200 pt-4 mb-6">
+                        <h4 class="font-medium text-gray-700 mb-2">Ticket Information</h4>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-xs text-gray-500">Generated At</p>
+                                <p class="text-sm font-medium">
+                                    {{ $selectedTicketRegistration->ticket->generated_at->format('M j, Y g:i A') }}</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500">Event Price</p>
+                                <p class="text-sm font-medium">
+                                    @if ($selectedTicketRegistration->event->require_payment)
+                                        ₱{{ number_format($selectedTicketRegistration->event->payment_amount, 2) }}
+                                    @else
+                                        Free
+                                    @endif
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal Actions -->
+                    <div class="flex justify-center space-x-4 pt-4 border-t border-gray-200">
+                        <button wire:click="closeTicketModal" type="button"
+                            class="px-6 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors font-medium">
+                            Close
+                        </button>
+                        @if ($selectedTicketRegistration->ticket->isActive())
+                            <!-- In organizer-registrations.blade.php modal, change the download button: -->
+                            <button 
+                                wire:click="downloadTicketAsPdf({{ $selectedTicketRegistration->id }})"
+                                type="button"
+                                class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2"
+                            >
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                </svg>
+                                Download Ticket (PDF)
+                            </button>
+                            <button wire:click="regenerateTicket({{ $selectedTicketRegistration->id }})" type="button"
+                                class="px-6 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors font-medium flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+                                    </path>
+                                </svg>
+                                Regenerate Ticket
+                            </button>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </x-custom-modal>
+    @endif
 
     <!-- Payment Verification Modal -->
     @if ($showPaymentModal && $selectedRegistration)

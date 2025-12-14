@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\Registration;
 use Illuminate\Support\Facades\Auth;
+use App\Services\TicketPdfService;
 
 class StudentTickets extends Component
 {
@@ -40,27 +41,27 @@ class StudentTickets extends Component
         }
     }
 
+    // In StudentTickets.php component, update the downloadTicket method:
+
     public function downloadTicket($registrationId)
     {
-        // Placeholder for PDF download
-        // You can implement PDF generation using DomPDF or similar
-        
         $registration = Registration::with(['event', 'ticket'])
             ->where('id', $registrationId)
             ->where('user_id', Auth::id())
             ->first();
 
-        if ($registration && $registration->ticket) {
-            // Here you would generate and download the PDF
-            // For now, show a success message
-            session()->flash('success', 'Ticket download started for ' . $registration->event->title);
-            
-            // You can trigger a browser download like this:
-            // return response()->streamDownload(function () use ($registration) {
-            //     echo $this->generateTicketPdf($registration);
-            // }, 'ticket-' . $registration->ticket->ticket_number . '.pdf');
+        if ($registration && $registration->ticket && $registration->ticket->isActive()) {
+            try {
+                $pdfService = new TicketPdfService();
+                return $pdfService->downloadPdf($registration->ticket);
+                
+            } catch (\Exception $e) {
+                session()->flash('error', 'Failed to generate PDF: ' . $e->getMessage());
+                return null;
+            }
         } else {
-            session()->flash('error', 'Ticket not found or you do not have permission to download it.');
+            session()->flash('error', 'Ticket not found, inactive, or you do not have permission to download it.');
+            return null;
         }
     }
 
