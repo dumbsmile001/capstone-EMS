@@ -276,14 +276,8 @@ class OrganizerRegistrations extends Component
             ->first();
 
         if ($registration && $registration->ticket && $registration->ticket->isActive()) {
-            try {
-                $pdfService = new TicketPdfService();
-                return $pdfService->downloadPdf($registration->ticket);
-                
-            } catch (\Exception $e) {
-                session()->flash('error', 'Failed to generate PDF: ' . $e->getMessage());
-                return null;
-            }
+            // Redirect to the download route
+            return $this->redirect(route('ticket.download', $registration->ticket->id), navigate: false);
         } else {
             session()->flash('error', 'Ticket not found, inactive, or you do not have permission to download it.');
             return null;

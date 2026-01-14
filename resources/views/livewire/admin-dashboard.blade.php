@@ -744,8 +744,18 @@
 
                             <div class="flex flex-col mb-5">
                                 <h2 class="font-medium text-gray-700 mb-2">Event Banner</h2>
+                                
+                                @if($editingEvent && $editingEvent->banner && !$banner)
+                                    <div class="mb-3">
+                                        <p class="text-sm text-gray-600 mb-2">Current Banner:</p>
+                                        <img src="{{ asset('storage/' . $editingEvent->banner) }}" 
+                                            alt="Current Banner" 
+                                            class="w-full h-48 object-cover rounded-lg border border-gray-300">
+                                    </div>
+                                @endif
+                                
                                 <div class="flex items-center justify-center w-full">
-                                    <label for="dropzone-file"
+                                    <label for="dropzone-file-edit"
                                         class="flex flex-col items-center justify-center w-full h-32 bg-neutral-secondary-medium border border-dashed border-default-strong rounded-base cursor-pointer hover:bg-neutral-tertiary-medium">
                                         <div class="flex flex-col items-center justify-center text-body">
                                             <svg class="w-8 h-8 mb-2" aria-hidden="true"
@@ -760,7 +770,7 @@
                                             </p>
                                             <p class="text-xs">JPG or PNG (MAX. 2MB)</p>
                                         </div>
-                                        <input id="dropzone-file" type="file" class="hidden"
+                                        <input id="dropzone-file-edit" type="file" class="hidden"
                                             wire:model="banner" />
                                     </label>
                                 </div>
@@ -768,7 +778,7 @@
                                     <span class="text-red-500 text-xs">{{ $message }}</span>
                                 @enderror
                                 @if ($banner)
-                                    <p class="text-xs text-green-600 mt-1">File selected:
+                                    <p class="text-xs text-green-600 mt-1">New file selected:
                                         {{ $banner->getClientOriginalName() }}</p>
                                 @endif
                             </div>

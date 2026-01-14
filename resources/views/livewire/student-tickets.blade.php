@@ -123,15 +123,15 @@
                                         
                                         <!-- Download Button (only for active tickets) -->
                                         @if($registration->ticket->isActive())
-                                            <button 
-                                                wire:click="downloadTicket({{ $registration->id }})"
+                                            <a 
+                                                href="{{ route('ticket.download', $registration->ticket->id) }}"
                                                 class="px-3 py-1.5 bg-green-600 text-white rounded hover:bg-green-700 text-xs font-medium transition-colors flex items-center gap-1"
                                             >
                                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
                                                 </svg>
                                                 Download
-                                            </button>
+                                            </a>
                                         @endif
                                     </div>
                                 </td>
@@ -145,152 +145,57 @@
         <!-- Ticket View Modal -->
         @if($showTicketModal && $selectedTicket)
             <x-custom-modal model="showTicketModal">
-                <div class="max-w-2xl mx-auto">
+                <div class="max-w-6xl mx-auto">
                     <!-- Modal Header -->
-                    <div class="mb-6">
-                        <h2 class="text-2xl font-bold text-gray-800 text-center">Event Ticket</h2>
-                        <p class="text-center text-gray-600 mt-1">Your digital ticket for admission</p>
+                    <div class="mb-4 flex justify-between items-center">
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-800">Event Ticket Preview</h2>
+                            <p class="text-sm text-gray-600 mt-1">Ticket: {{ $selectedTicket->ticket->ticket_number }}</p>
+                        </div>
+                        @if($selectedTicket->ticket->isActive())
+                            <a 
+                                href="{{ route('ticket.download', $selectedTicket->ticket->id) }}"
+                                target="_blank"
+                                class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2"
+                            >
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                </svg>
+                                Download PDF
+                            </a>
+                        @endif
                     </div>
                     
-                    <!-- Ticket Content -->
-                    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border-2 border-blue-200">
-                        <!-- Ticket Header -->
-                        <div class="flex justify-between items-start mb-6">
-                            <div>
-                                <h3 class="text-xl font-bold text-gray-900">{{ $selectedTicket->event->title }}</h3>
-                                <p class="text-sm text-gray-600">{{ $selectedTicket->event->category }} Event</p>
-                            </div>
-                            <div class="text-right">
-                                <div class="text-lg font-bold text-blue-700">{{ $selectedTicket->ticket->ticket_number }}</div>
-                                <div class="text-xs text-gray-500 mt-1">Ticket ID</div>
-                            </div>
-                        </div>
-                        
-                        <!-- Ticket Details Grid -->
-                        <div class="grid grid-cols-2 gap-4 mb-6">
-                            <div class="space-y-2">
-                                <div>
-                                    <p class="text-xs text-gray-500">Event Date</p>
-                                    <p class="font-medium">
-                                        {{ \Carbon\Carbon::parse($selectedTicket->event->date)->format('F j, Y') }}
-                                    </p>
-                                </div>
-                                <div>
-                                    <p class="text-xs text-gray-500">Event Time</p>
-                                    <p class="font-medium">
-                                        {{ \Carbon\Carbon::parse($selectedTicket->event->time)->format('g:i A') }}
-                                    </p>
-                                </div>
-                                <div>
-                                    <p class="text-xs text-gray-500">Event Type</p>
-                                    <p class="font-medium">
-                                        {{ ucfirst($selectedTicket->event->type) }}
-                                        @if($selectedTicket->event->type === 'face-to-face')
-                                            <span class="text-xs text-gray-600 block">
-                                                {{ Str::limit($selectedTicket->event->place_link, 40) }}
-                                            </span>
-                                        @endif
-                                    </p>
-                                </div>
-                            </div>
-                            
-                            <div class="space-y-2">
-                                <div>
-                                    <p class="text-xs text-gray-500">Attendee</p>
-                                    <p class="font-medium">
-                                        {{ Auth::user()->first_name }} {{ Auth::user()->last_name }}
-                                    </p>
-                                    @if(Auth::user()->student_id)
-                                        <p class="text-xs text-gray-600">ID: {{ Auth::user()->student_id }}</p>
-                                    @endif
-                                </div>
-                                <div>
-                                    <p class="text-xs text-gray-500">Registration Date</p>
-                                    <p class="font-medium">
-                                        {{ \Carbon\Carbon::parse($selectedTicket->registered_at)->format('M j, Y') }}
-                                    </p>
-                                </div>
-                                <div>
-                                    <p class="text-xs text-gray-500">Ticket Status</p>
-                                    <p class="font-medium">
-                                        @if($selectedTicket->ticket->isActive())
-                                            <span class="text-green-600">Active</span>
-                                        @elseif($selectedTicket->ticket->isPendingPayment())
-                                            <span class="text-yellow-600">Pending Payment</span>
-                                        @elseif($selectedTicket->ticket->isUsed())
-                                            <span class="text-gray-600">Used</span>
-                                        @endif
-                                    </p>
-                                </div>
-                                @if($selectedTicket->event->require_payment)
-                                    <div>
-                                        <p class="text-xs text-gray-500">Payment Status</p>
-                                        <p class="font-medium">
-                                            @if($selectedTicket->payment_status === 'verified')
-                                                <span class="text-green-600">Verified ✓</span>
-                                            @elseif($selectedTicket->payment_status === 'pending')
-                                                <span class="text-yellow-600">Pending</span>
-                                            @elseif($selectedTicket->payment_status === 'rejected')
-                                                <span class="text-red-600">Rejected</span>
-                                            @endif
-                                        </p>
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
-                        
-                        <!-- QR Code Section -->
-                        <div class="border-t border-gray-200 pt-6 mb-6">
-                            <h4 class="text-center font-medium text-gray-700 mb-4">Scan QR Code for Entry</h4>
-                            <div class="flex justify-center">
-                                <div class="bg-white p-4 rounded-lg border">
-                                    <!-- Placeholder QR Code -->
-                                    <div class="w-48 h-48 flex items-center justify-center bg-gray-100 border border-gray-300 rounded">
-                                        <div class="text-center">
-                                            <svg class="w-16 h-16 mx-auto text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"></path>
-                                            </svg>
-                                            <p class="text-xs text-gray-500">QR Code Placeholder</p>
-                                            <p class="text-xs text-gray-400 mt-1">{{ $selectedTicket->ticket->ticket_number }}</p>
-                                        </div>
-                                    </div>
-                                    <p class="text-xs text-center text-gray-500 mt-2">
-                                        Present this code at the event entrance
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Event Description -->
-                        @if($selectedTicket->event->description)
-                            <div class="border-t border-gray-200 pt-4 mb-6">
-                                <h4 class="font-medium text-gray-700 mb-2">Event Description</h4>
-                                <p class="text-sm text-gray-600">{{ $selectedTicket->event->description }}</p>
-                            </div>
-                        @endif
-                        
-                        <!-- Modal Actions -->
-                        <div class="flex justify-center space-x-4 pt-4 border-t border-gray-200">
-                            <button 
-                                wire:click="closeTicketModal"
-                                type="button"
-                                class="px-6 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors font-medium"
+                    <!-- PDF Preview iframe -->
+                    <div class="border-2 border-gray-300 rounded-lg overflow-hidden bg-gray-100" style="height: 800px;">
+                        <iframe 
+                            src="{{ route('ticket.view', $selectedTicket->ticket->id) }}"
+                            class="w-full h-full"
+                            frameborder="0"
+                            title="Ticket PDF Preview"
+                        ></iframe>
+                    </div>
+                    
+                    <!-- Modal Footer Actions -->
+                    <div class="flex justify-end space-x-4 mt-4 pt-4 border-t border-gray-200">
+                        <button 
+                            wire:click="closeTicketModal"
+                            type="button"
+                            class="px-6 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors font-medium"
+                        >
+                            Close
+                        </button>
+                        @if($selectedTicket->ticket->isActive())
+                            <a 
+                                href="{{ route('ticket.download', $selectedTicket->ticket->id) }}"
+                                class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2"
                             >
-                                Close
-                            </button>
-                            @if($selectedTicket->ticket->isActive())
-                                <button 
-                                    wire:click="downloadTicket({{ $selectedTicket->id }})"
-                                    type="button"
-                                    class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2"
-                                >
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                                    </svg>
-                                    Download Ticket (PDF)
-                                </button>
-                            @endif
-                        </div>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                </svg>
+                                Download Ticket (PDF)
+                            </a>
+                        @endif
                     </div>
                 </div>
             </x-custom-modal>
