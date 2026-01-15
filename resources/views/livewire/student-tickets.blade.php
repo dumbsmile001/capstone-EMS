@@ -211,9 +211,6 @@
             <p class="text-gray-500 max-w-md mx-auto">
                 You haven't registered for any events with tickets. Register for an event to receive your digital ticket!
             </p>
-            <a href="{{ route('events') }}" class="mt-4 inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors text-sm font-medium">
-                Browse Events
-            </a>
         </div>
     @endif
     
