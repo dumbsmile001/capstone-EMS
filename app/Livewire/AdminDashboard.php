@@ -6,13 +6,15 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Event;
 use Livewire\Component;
+use Livewire\WithPagination;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 
 class AdminDashboard extends Component
 {
-    use WithFileUploads;
+    use WithFileUploads, WithPagination;
 
     // User properties
     public $first_name;
@@ -24,6 +26,13 @@ class AdminDashboard extends Component
     public $grade_level;
     public $year_level;
     public $program;
+
+    // Search and filter properties
+    public $search = '';
+    public $filterGradeLevel = '';
+    public $filterYearLevel = '';
+    public $filterProgram = '';
+    public $filterRole = '';
     
     // Events properties
     public string $title = '';
@@ -52,42 +61,75 @@ class AdminDashboard extends Component
     public $editingUser = null;
     public $deletingUser = null;
 
-    // Users data
-    public $users;
-    public $userUpdates;
-    public $systemLogins;
-
     //Event details
     public $showEventDetailsModal = false;
     public $selectedEvent = null;
 
+     // Available programs and roles for filters
+    public $availablePrograms = [];
+    public $availableRoles = [];
+    protected $paginationTheme = 'bootstrap';
+    public $perPage = 10;
+
     public function mount()
     {
-        $this->loadUsers();
-        $this->loadUserUpdates();
-        $this->loadSystemLogins();
+        $this->loadFilterOptions();
     }
 
-    public function loadUsers()
+    public function loadFilterOptions()
     {
-        $this->users = User::with('roles')->get();
+        // Load distinct programs from users
+        $this->availablePrograms = User::whereNotNull('program')
+            ->distinct()
+            ->pluck('program')
+            ->filter()
+            ->toArray();
+        
+        // Load available roles
+        $this->availableRoles = Role::pluck('name')->toArray();
     }
 
-    public function loadUserUpdates()
+    // Computed property for users with search and filters
+    public function getUsersProperty()
     {
-        // This would typically come from an audit log or similar
-        // For now, we'll use a placeholder
-        $this->userUpdates = [];
+        return User::with('roles')
+            ->when($this->search, function ($query) {
+                $query->where(function ($q) {
+                    $q->where('first_name', 'like', '%' . $this->search . '%')
+                      ->orWhere('last_name', 'like', '%' . $this->search . '%')
+                      ->orWhere('email', 'like', '%' . $this->search . '%')
+                      ->orWhere('student_id', 'like', '%' . $this->search . '%');
+                });
+            })
+            ->when($this->filterGradeLevel, function ($query) {
+                $query->where('grade_level', $this->filterGradeLevel);
+            })
+            ->when($this->filterYearLevel, function ($query) {
+                $query->where('year_level', $this->filterYearLevel);
+            })
+            ->when($this->filterProgram, function ($query) {
+                $query->where('program', $this->filterProgram);
+            })
+            ->when($this->filterRole, function ($query) {
+                $query->whereHas('roles', function ($q) {
+                    $q->where('name', $this->filterRole);
+                });
+            })
+            ->orderBy('created_at', 'desc')
+            ->paginate($this->perPage);
     }
 
-    public function loadSystemLogins()
+    // Reset filters
+    public function resetFilters()
     {
-        // This would typically come from login logs
-        // For now, we'll use recent users as placeholder
-        $this->systemLogins = User::with('roles')
-            ->orderBy('updated_at', 'desc')
-            ->limit(10)
-            ->get();
+        $this->reset(['search', 'filterGradeLevel', 'filterYearLevel', 'filterProgram', 'filterRole']);
+        $this->gotoPage(1); // Use gotoPage instead of resetPage
+    }
+
+    // Apply filters
+    public function applyFilters()
+    {
+        $this->resetPage();
     }
 
     public function openEditUserModal($userId = null)
@@ -395,6 +437,7 @@ class AdminDashboard extends Component
             'archivedEvents' => $archivedEvents,
             'upcomingEvents' => $upcomingEvents,
             'upcomingEventsData' => $upcomingEventsData, // Pass upcoming events to view
+            'users' => $this->users, // Use the computed property
         ])->layout('layouts.app');
     }
 }

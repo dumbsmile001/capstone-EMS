@@ -3,13 +3,16 @@
 namespace App\Livewire;
 
 use App\Models\Event;
+use App\Models\Registration;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Livewire\WithPagination; // Add this
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class OrganizerDashboard extends Component
 {
-    use WithFileUploads;
+    use WithFileUploads, WithPagination;
     
     public string $title = '';
     public $date;
@@ -30,6 +33,129 @@ class OrganizerDashboard extends Component
     // Add these properties for editing
     public $editingEvent = null;
     public $deletingEvent = null;
+
+    // Add computed properties for dynamic card data
+    public $eventRegistrationsCount;
+    public $ongoingEventsCount;
+    public $upcomingEventsCount;
+    public $pendingPaymentsCount;
+
+    // Add these properties to the OrganizerDashboard class
+    public $paymentSearch = '';
+    public $filterPaymentEvent = '';
+    public $filterPaymentStatus = '';
+    public $paymentsPerPage = 10;
+    
+    // Add this property to control payments tab
+    public $activeTab = 'registrations';
+
+    // Initialize or update the card data
+    public function mount()
+    {
+        $this->updateCardData();
+    }
+
+    // Method to update all card data
+    public function updateCardData()
+    {
+        $userId = Auth::id();
+        $today = now()->format('Y-m-d');
+        
+        // 1. Total Event Registrations (all registrations for organizer's events)
+        $this->eventRegistrationsCount = Registration::whereHas('event', function($query) use ($userId) {
+            $query->where('created_by', $userId);
+        })->count();
+
+        // 2. Ongoing Events (events happening today)
+        $this->ongoingEventsCount = Event::where('created_by', $userId)
+            ->where('date', $today)
+            ->where('status', 'published')
+            ->count();
+
+        // 3. Upcoming Events (events with future dates)
+        $this->upcomingEventsCount = Event::where('created_by', $userId)
+            ->where('date', '>', $today)
+            ->where('status', 'published')
+            ->count();
+
+        // 4. Pending Payments - ONLY for paid events
+        // Option 1: Using Registration model with event join
+        $this->pendingPaymentsCount = Registration::whereHas('event', function($query) use ($userId) {
+                $query->where('created_by', $userId)
+                    ->where('require_payment', true); // Only count registrations for paid events
+            })
+            ->where('payment_status', 'pending') // Only count pending payments
+            ->count();
+    }
+     // Update the loadPayments method to be a computed property
+    public function getPaymentsProperty()
+    {
+        $userId = Auth::id();
+        
+        $paymentsQuery = Registration::with(['user', 'event', 'ticket'])
+            ->whereHas('event', function($query) use ($userId) {
+                $query->where('created_by', $userId)
+                    ->where('require_payment', true);
+            })
+            ->whereNotNull('payment_status')
+            ->where('payment_status', '!=', '');
+        
+        // Apply search filter
+        if ($this->paymentSearch) {
+            $paymentsQuery->where(function ($query) {
+                $query->whereHas('user', function ($userQuery) {
+                    $userQuery->where('first_name', 'like', '%' . $this->paymentSearch . '%')
+                            ->orWhere('last_name', 'like', '%' . $this->paymentSearch . '%')
+                            ->orWhere('email', 'like', '%' . $this->paymentSearch . '%')
+                            ->orWhere('student_id', 'like', '%' . $this->paymentSearch . '%');
+                });
+            });
+        }
+        
+        // Apply event filter
+        if ($this->filterPaymentEvent) {
+            $paymentsQuery->where('event_id', $this->filterPaymentEvent);
+        }
+        
+        // Apply status filter
+        if ($this->filterPaymentStatus) {
+            $paymentsQuery->where('payment_status', $this->filterPaymentStatus);
+        }
+        
+        return $paymentsQuery
+            ->orderBy('registered_at', 'desc')
+            ->paginate($this->paymentsPerPage);
+    }
+
+   // Add reset filters method for payments
+    public function resetPaymentFilters()
+    {
+        $this->reset(['paymentSearch', 'filterPaymentEvent', 'filterPaymentStatus', 'paymentsPerPage']);
+        $this->resetPage();
+    }
+
+    // Refresh card data after creating/updating/deleting events
+    public function updated($propertyName)
+    {
+        // If any event-related operation happened, refresh card data
+        if (in_array($propertyName, ['showCreateModal', 'showEditModal', 'showDeleteModal'])) {
+            $this->updateCardData();
+            $this->loadPayments();
+        }
+    }
+
+    // Add a refresh method that can be called from the frontend
+    public function refreshCards()
+    {
+        $this->updateCardData();
+        $this->dispatch('cards-refreshed');
+    }
+    // Add a refresh method for payments
+    public function refreshPayments()
+    {
+        $this->loadPayments();
+        $this->dispatch('payments-refreshed');
+    }
 
     public function viewAllRegistrations()
     {
@@ -67,6 +193,7 @@ class OrganizerDashboard extends Component
         if ($this->deletingEvent) {
             $this->deletingEvent->delete();
             session()->flash('success', 'Event deleted successfully!');
+            $this->updateCardData(); // Refresh card data
         }
         $this->showDeleteModal = false;
         $this->deletingEvent = null;
@@ -96,6 +223,7 @@ class OrganizerDashboard extends Component
 
             $this->editingEvent->update($data);
             session()->flash('success', 'Event updated successfully!');
+            $this->updateCardData(); // Refresh card data
         }
 
         $this->showEditModal = false;
@@ -144,6 +272,7 @@ class OrganizerDashboard extends Component
         // Reset form fields
         $this->resetForm();
         $this->showCreateModal = false;
+        $this->updateCardData(); // Refresh card data
 
         session()->flash('success', 'Event created successfully!');
     }
@@ -181,19 +310,31 @@ class OrganizerDashboard extends Component
         $this->resetErrorBag();
     }
 
-    public function render()
+     public function render()
     {
         $user = Auth::user();
         $userInitials = strtoupper(substr($user->first_name ?? 'O', 0, 1) . substr($user->last_name ?? 'U', 0, 1));
         
-        // Fetch events from database - you can add filters/pagination as needed
+        // Fetch events from database
         $events = Event::where('created_by', Auth::id())
                       ->orderBy('created_at', 'desc')
                       ->get();
         
+        // Get events for payment filter dropdown (only paid events)
+        $paidEvents = Event::where('created_by', Auth::id())
+            ->where('require_payment', true)
+            ->orderBy('title')
+            ->get();
+        
         return view('livewire.organizer-dashboard', [
             'userInitials' => $userInitials,
             'events' => $events,
+            'paidEvents' => $paidEvents, // Add this for payment filter
+            'eventRegistrationsCount' => $this->eventRegistrationsCount,
+            'ongoingEventsCount' => $this->ongoingEventsCount,
+            'upcomingEventsCount' => $this->upcomingEventsCount,
+            'pendingPaymentsCount' => $this->pendingPaymentsCount,
+            'payments' => $this->payments, // This will use the computed property
         ])->layout('layouts.app');
     }
 }

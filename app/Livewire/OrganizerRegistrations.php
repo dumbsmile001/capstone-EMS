@@ -3,21 +3,33 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use Livewire\WithPagination;
 use App\Models\Registration;
 use App\Models\Event;
 use App\Models\Ticket;
-use App\Services\TicketPdfService;
 use Illuminate\Support\Facades\Auth;
 
 class OrganizerRegistrations extends Component
 {
-    public $registrations;
+    use WithPagination;
     public $events;
+
+    // Search and filter properties
+    public $search = '';
+    public $filterEvent = '';
+    public $filterPaymentStatus = '';
+    public $filterTicketStatus = '';
+    public $perPage = 10;
     
     // For payment verification modal
     public $showPaymentModal = false;
     public $selectedRegistration;
     public $verificationNotes = '';
+
+     // Available filters
+    public $availableEvents = [];
+    public $availablePaymentStatuses = ['pending', 'verified', 'rejected'];
+    public $availableTicketStatuses = ['active', 'pending_payment', 'used'];
     
     // For ticket view modal
     public $showTicketModal = false;
@@ -25,23 +37,59 @@ class OrganizerRegistrations extends Component
 
     public function mount()
     {
-        $this->loadRegistrations();
-        $this->loadEvents();
+        // Load available events for the filter dropdown
+        $this->availableEvents = Event::where('created_by', auth()->id())
+            ->orderBy('title')
+            ->get()
+            ->mapWithKeys(function ($event) {
+                return [$event->id => $event->title];
+            })
+            ->toArray();
     }
 
-    public function loadRegistrations()
+    // Computed property for registrations with search and filters
+    public function getRegistrationsProperty()
     {
-        $this->registrations = Registration::with(['event', 'user', 'ticket'])
+        return Registration::with(['event', 'user', 'ticket'])
             ->whereHas('event', function($query) {
                 $query->where('created_by', auth()->id());
             })
+            ->when($this->search, function ($query) {
+                $query->where(function ($q) {
+                    $q->whereHas('user', function ($userQuery) {
+                        $userQuery->where('first_name', 'like', '%' . $this->search . '%')
+                                  ->orWhere('last_name', 'like', '%' . $this->search . '%')
+                                  ->orWhere('email', 'like', '%' . $this->search . '%')
+                                  ->orWhere('student_id', 'like', '%' . $this->search . '%');
+                    });
+                });
+            })
+            ->when($this->filterEvent, function ($query) {
+                $query->where('event_id', $this->filterEvent);
+            })
+            ->when($this->filterPaymentStatus, function ($query) {
+                $query->where('payment_status', $this->filterPaymentStatus);
+            })
+            ->when($this->filterTicketStatus, function ($query) {
+                $query->whereHas('ticket', function ($ticketQuery) {
+                    $ticketQuery->where('status', $this->filterTicketStatus);
+                });
+            })
             ->orderBy('registered_at', 'desc')
-            ->get();
+            ->paginate($this->perPage);
     }
 
-    public function loadEvents()
+    // Reset filters
+    public function resetFilters()
     {
-        $this->events = Event::where('created_by', auth()->id())->get();
+        $this->reset(['search', 'filterEvent', 'filterPaymentStatus', 'filterTicketStatus']);
+        $this->gotoPage(1);
+    }
+
+    // Apply filters
+    public function applyFilters()
+    {
+        $this->resetPage();
     }
 
     public function verifyPayment($registrationId)
@@ -64,8 +112,6 @@ class OrganizerRegistrations extends Component
         ]);
 
         $this->showPaymentModal = false;
-        $this->loadRegistrations();
-        
         session()->flash('success', 'Payment verified successfully for ' . $this->selectedRegistration->user->first_name . ' ' . $this->selectedRegistration->user->last_name);
     }
 
@@ -86,7 +132,6 @@ class OrganizerRegistrations extends Component
             ]);
         }
 
-        $this->loadRegistrations();
         session()->flash('info', 'Payment rejected for ' . $registration->user->first_name . ' ' . $registration->user->last_name);
     }
 
@@ -107,7 +152,7 @@ class OrganizerRegistrations extends Component
             ]);
         }
 
-        $this->loadRegistrations();
+        // No need to manually load registrations
         session()->flash('info', 'Payment status reset to pending for ' . $registration->user->first_name . ' ' . $registration->user->last_name);
     }
 
@@ -154,8 +199,6 @@ class OrganizerRegistrations extends Component
         } catch (\Exception $e) {
             session()->flash('error', 'Failed to generate ticket: ' . $e->getMessage());
         }
-        
-        $this->loadRegistrations();
     }
 
     public function regenerateTicket($registrationId)
@@ -178,8 +221,6 @@ class OrganizerRegistrations extends Component
         } else {
             session()->flash('error', 'No ticket found to regenerate');
         }
-        
-        $this->loadRegistrations();
     }
 
     public function viewTicket($registrationId)
@@ -286,6 +327,8 @@ class OrganizerRegistrations extends Component
 
     public function render()
     {
-        return view('livewire.organizer-registrations');
+        return view('livewire.organizer-registrations', [
+            'registrations' => $this->registrations,
+        ]);
     }
 }

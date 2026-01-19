@@ -435,29 +435,11 @@
                             class="px-4 py-2 font-medium text-sm transition-colors">
                             Users
                         </button>
-                        <button @click="activeTab = 'user_updates'"
-                            :class="activeTab === 'user_updates' ? 'border-b-2 border-blue-600 text-blue-600' :
-                                'text-gray-500 hover:text-gray-700'"
-                            class="px-4 py-2 font-medium text-sm transition-colors">
-                            User Updates
-                        </button>
                         <button @click="activeTab = 'events'"
                             :class="activeTab === 'events' ? 'border-b-2 border-blue-600 text-blue-600' :
                                 'text-gray-500 hover:text-gray-700'"
                             class="px-4 py-2 font-medium text-sm transition-colors">
                             Events
-                        </button>
-                        <button @click="activeTab = 'event_updates'"
-                            :class="activeTab === 'event_updates' ? 'border-b-2 border-blue-600 text-blue-600' :
-                                'text-gray-500 hover:text-gray-700'"
-                            class="px-4 py-2 font-medium text-sm transition-colors">
-                            Event Updates
-                        </button>
-                        <button @click="activeTab = 'system_logins'"
-                            :class="activeTab === 'system_logins' ? 'border-b-2 border-blue-600 text-blue-600' :
-                                'text-gray-500 hover:text-gray-700'"
-                            class="px-4 py-2 font-medium text-sm transition-colors">
-                            Logins
                         </button>
                     </nav>
                 </div>
@@ -539,7 +521,93 @@
                     <!-- THIS IS THE USERS TABLE-->
                     <div class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default"
                         x-show="activeTab === 'users'" x-transition>
-                        <table class="min-w-max divide-y divide-gray-200">
+                        
+                       <!-- Search and Filter Controls -->
+                        <div class="p-4 bg-gray-50 border-b border-gray-200">
+                            <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
+                                <!-- Search Box -->
+                                <div class="md:col-span-2">
+                                    <div class="relative">
+                                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                            <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                                            </svg>
+                                        </div>
+                                        <input type="text" wire:model.live.debounce.300ms="search" 
+                                            class="block w-full pl-10 pr-4 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500"
+                                            placeholder="Search by name, email, or student ID...">
+                                    </div>
+                                </div>
+
+                                <!-- Grade Level Filter -->
+                                <div>
+                                    <select wire:model.live="filterGradeLevel"
+                                        class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500">
+                                        <option value="">All Grade Levels</option>
+                                        <option value="11">Grade 11</option>
+                                        <option value="12">Grade 12</option>
+                                    </select>
+                                </div>
+
+                                <!-- Year Level Filter -->
+                                <div>
+                                    <select wire:model.live="filterYearLevel"
+                                        class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500">
+                                        <option value="">All Year Levels</option>
+                                        <option value="1">Year 1</option>
+                                        <option value="2">Year 2</option>
+                                        <option value="3">Year 3</option>
+                                        <option value="4">Year 4</option>
+                                        <option value="5">Year 5</option>
+                                    </select>
+                                </div>
+
+                                <!-- Program Filter -->
+                                <div>
+                                    <select wire:model.live="filterProgram"
+                                        class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500">
+                                        <option value="">All Programs</option>
+                                        @foreach($availablePrograms as $program)
+                                            <option value="{{ $program }}">{{ $program }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <!-- Role Filter -->
+                                <div>
+                                    <select wire:model.live="filterRole"
+                                        class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500">
+                                        <option value="">All Roles</option>
+                                        @foreach($availableRoles as $role)
+                                            <option value="{{ $role }}">{{ ucfirst($role) }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <!-- Results Per Page -->
+                                <div>
+                                    <select wire:model.live="perPage"
+                                        class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500">
+                                        <option value="10">10 per page</option>
+                                        <option value="25">25 per page</option>
+                                        <option value="50">50 per page</option>
+                                        <option value="100">100 per page</option>
+                                    </select>
+                                </div>
+
+                                <!-- Reset Filters Button -->
+                                <div>
+                                    <button wire:click="resetFilters"
+                                        class="w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                        Reset All Filters
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Users Table -->
+                        <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
                                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
@@ -596,69 +664,34 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="8" class="px-4 py-3 text-sm text-gray-500 text-center">
-                                            No users found.
+                                        <td colspan="8" class="px-4 py-8 text-center text-gray-500">
+                                            <div class="flex flex-col items-center justify-center">
+                                                <svg class="w-12 h-12 mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                                <p class="text-lg font-medium text-gray-600">No users found</p>
+                                                <p class="text-sm text-gray-500 mt-1">
+                                                    @if($search || $filterGradeLevel || $filterYearLevel || $filterProgram || $filterRole)
+                                                        Try adjusting your search or filters
+                                                    @else
+                                                        No users in the system yet
+                                                    @endif
+                                                </p>
+                                            </div>
                                         </td>
                                     </tr>
                                 @endforelse
                             </tbody>
                         </table>
+
+                       <!-- Pagination - Simplified version -->
+                   <!-- Simple Pagination -->
+                        @if($users && method_exists($users, 'links'))
+                            <div class="px-4 py-3 bg-gray-50 border-t border-gray-200">
+                                {{ $users->links() }}
+                            </div>
+                        @endif
                     </div>
-                    <!-- User Updates Table -->
-                    <div x-show="activeTab === 'user_updates'" x-transition>
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th
-                                        class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        User</th>
-                                    <th
-                                        class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Role</th>
-                                    <th
-                                        class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Permissions</th>
-                                    <th
-                                        class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Updated By</th>
-                                    <th
-                                        class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Date</th>
-                                    <th
-                                        class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Action</th>
-                                </tr>
-                            </thead>
-                            <!--Dynamically loaded data-->
-                            <tbody class="bg-white divide-y divide-gray-200">
-                                <tr class="hover:bg-gray-50">
-                                    <!--users.first_name + users.last_name-->
-                                    <td class="px-4 py-3 text-sm text-gray-900">Zed Villanueva</td>
-                                    <!--Spatie Roles-->
-                                    <td class="px-4 py-3 text-sm text-gray-600">Student</td>
-                                    <!--Spatie Permissions-->
-                                    <td class="px-4 py-3 text-sm text-gray-600">
-                                        <span
-                                            class="px-2 py-1 bg-yellow-100 text-green-800 rounded text-xs">view-events</span>
-                                        <span
-                                            class="px-2 py-1 bg-yellow-100 text-green-800 rounded text-xs">view-announcements</span>
-                                        <span
-                                            class="px-2 py-1 bg-yellow-100 text-green-800 rounded text-xs">events-registration</span>
-                                    </td>
-                                    <!--users.first_name + users.last_name-->
-                                    <td class="px-4 py-3 text-sm text-gray-900">Lance De Felipe</td>
-                                    <!--users.updated_at-->
-                                    <td class="px-4 py-3 text-sm text-gray-900">November 25, 2025</td>
-                                    <!--Updated, Deleted-->
-                                    <td class="px-4 py-3 text-sm">
-                                        <span
-                                            class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">Updated</span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <!--Will share features through a create-edit component-->
                     <x-custom-modal model="showEditModal">
                         <h1 class="text-xl text-center font-bold mb-4">Edit Event</h1>
                         @if (session()->has('success'))
@@ -913,72 +946,6 @@
                                         </td>
                                     </tr>
                                 @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                    <!-- Event Updates Table -->
-                    <div x-show="activeTab === 'event_updates'" x-transition>
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th
-                                        class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Event</th>
-                                    <th
-                                        class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Updated By</th>
-                                    <th
-                                        class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Date</th>
-                                    <th
-                                        class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Action</th>
-                                </tr>
-                            </thead>
-                            <!--Dynamically loaded data-->
-                            <tbody class="bg-white divide-y divide-gray-200">
-                                <tr class="hover:bg-gray-50">
-                                    <!--events.title-->
-                                    <td class="px-4 py-3 text-sm text-gray-900">Laravel Workshop</td>
-                                    <!--users.first_name + users.last_name-->
-                                    <td class="px-4 py-3 text-sm text-gray-600">Lance De Felipe</td>
-                                    <!--current_date-->
-                                    <td class="px-4 py-3 text-sm text-gray-600">November 25, 2025</td>
-                                    <!--Created, Updated, Deleted-->
-                                    <td class="px-4 py-3 text-sm">
-                                        <span
-                                            class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">Updated</span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <!-- Logins Table -->
-                    <div x-show="activeTab === 'system_logins'" x-transition>
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th
-                                        class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Name</th>
-                                    <th
-                                        class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Role</th>
-                                    <th
-                                        class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Date</th>
-                                </tr>
-                            </thead>
-                            <!--Dynamically loaded data-->
-                            <tbody class="bg-white divide-y divide-gray-200">
-                                <tr class="hover:bg-gray-50">
-                                    <!--users.first_name + users.last_name-->
-                                    <td class="px-4 py-3 text-sm text-gray-900">Don Alba</td>
-                                    <!--Spatie Roles-->
-                                    <td class="px-4 py-3 text-sm text-gray-600">Student</td>
-                                    <!--current_server_date-->
-                                    <td class="px-4 py-3 text-sm text-gray-600">November 25, 2025</td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>

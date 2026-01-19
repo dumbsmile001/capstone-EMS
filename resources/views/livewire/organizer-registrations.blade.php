@@ -17,6 +17,79 @@
             {{ session('info') }}
         </div>
     @endif
+
+    <!-- Search and Filter Controls -->
+    <div class="mb-4 p-4 bg-gray-50 border border-gray-200 rounded-lg">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+            <!-- Search Box -->
+            <div class="md:col-span-2">
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                        </svg>
+                    </div>
+                    <input type="text" wire:model.live.debounce.300ms="search" 
+                        class="block w-full pl-10 pr-4 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="Search by student name, email, or ID...">
+                </div>
+            </div>
+
+           <!-- Event Filter -->
+            <div>
+                <select wire:model.live="filterEvent"
+                    class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500">
+                    <option value="">All Events</option>
+                    @foreach($availableEvents as $id => $title)
+                        <option value="{{ $id }}">{{ $title }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Payment Status Filter -->
+            <div>
+                <select wire:model.live="filterPaymentStatus"
+                    class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500">
+                    <option value="">All Payment Status</option>
+                    <option value="pending">Pending</option>
+                    <option value="verified">Verified</option>
+                    <option value="rejected">Rejected</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <!-- Ticket Status Filter -->
+            <div>
+                <select wire:model.live="filterTicketStatus"
+                    class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500">
+                    <option value="">All Ticket Status</option>
+                    <option value="active">Active</option>
+                    <option value="pending_payment">Pending Payment</option>
+                    <option value="used">Used</option>
+                </select>
+            </div>
+
+            <!-- Results Per Page -->
+            <div>
+                <select wire:model.live="perPage"
+                    class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500">
+                    <option value="10">10 per page</option>
+                    <option value="25">25 per page</option>
+                    <option value="50">50 per page</option>
+                    <option value="100">100 per page</option>
+                </select>
+            </div>
+
+            <!-- Reset Filters Button -->
+            <div class="md:col-span-2">
+                <button wire:click="resetFilters"
+                    class="w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    Reset All Filters
+                </button>
+            </div>
+        </div>
+    </div>
     <!-- Ticket View Modal -->
     @if ($showTicketModal && $selectedTicketRegistration)
         <x-custom-modal model="showTicketModal">
@@ -383,101 +456,119 @@
                             @endif
                         </td>
                         <!-- Actions -->
-                        <td class="px-4 py-3 text-sm space-x-2">
+                        <!-- Actions -->
+                        <td class="px-4 py-3 text-sm">
                             @php
                                 $buttons = $this->getActionButtons($registration);
                             @endphp
 
-                            @if ($registration->event->require_payment)
-                                <!-- Paid Event Buttons -->
-                                @if ($buttons['verify'])
-                                    <button wire:click="verifyPayment({{ $registration->id }})"
-                                        class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-xs font-medium transition-colors"
-                                        title="Verify payment">
-                                        Verify Payment
-                                    </button>
+                            <div class="flex flex-wrap gap-1">
+                                @if ($registration->event->require_payment)
+                                    <!-- Paid Event Buttons -->
+                                    @if ($buttons['verify'])
+                                        <button wire:click="verifyPayment({{ $registration->id }})"
+                                            class="p-1.5 bg-green-100 text-green-700 rounded hover:bg-green-200 transition-colors relative group"
+                                            title="Verify Payment">
+                                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                            </svg>
+                                            <span class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 px-2 py-1 text-xs text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                                Verify Payment
+                                            </span>
+                                        </button>
+                                    @endif
+
+                                    @if ($buttons['reject'])
+                                        <button wire:click="rejectPayment({{ $registration->id }})"
+                                            class="p-1.5 bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors relative group"
+                                            title="Reject Payment">
+                                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                            </svg>
+                                            <span class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 px-2 py-1 text-xs text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                                Reject Payment
+                                            </span>
+                                        </button>
+                                    @endif
+
+                                    @if ($buttons['reset'])
+                                        <button wire:click="resetPaymentStatus({{ $registration->id }})"
+                                            class="p-1.5 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors relative group"
+                                            title="Reset Status">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                            </svg>
+                                            <span class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 px-2 py-1 text-xs text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                                Reset Status
+                                            </span>
+                                        </button>
+                                    @endif
+
                                 @endif
 
-                                @if ($buttons['reject'])
-                                    <button wire:click="rejectPayment({{ $registration->id }})"
-                                        class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs font-medium transition-colors"
-                                        title="Reject payment">
-                                        Reject
-                                    </button>
-                                @endif
-
-                                @if ($buttons['reset'])
-                                    <button wire:click="resetPaymentStatus({{ $registration->id }})"
-                                        class="px-3 py-1 bg-gray-600 text-white rounded hover:bg-gray-700 text-xs font-medium transition-colors"
-                                        title="Reset payment status">
-                                        Reset
-                                    </button>
-                                @endif
-
+                                <!-- Ticket Buttons (Common for both paid and free events) -->
                                 @if ($buttons['generate'])
                                     <button wire:click="generateTicket({{ $registration->id }})"
-                                        class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-xs font-medium transition-colors"
-                                        title="Generate ticket">
-                                        Generate Ticket
+                                        class="p-1.5 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors relative group"
+                                        title="Generate Ticket">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                                        </svg>
+                                        <span class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 px-2 py-1 text-xs text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                            Generate Ticket
+                                        </span>
                                     </button>
                                 @endif
 
                                 @if ($buttons['view'])
                                     <button wire:click="viewTicket({{ $registration->id }})"
-                                        class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-xs font-medium transition-colors"
-                                        title="View ticket">
-                                        View Ticket
+                                        class="p-1.5 bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition-colors relative group"
+                                        title="View Ticket">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                        </svg>
+                                        <span class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 px-2 py-1 text-xs text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                            View Ticket
+                                        </span>
                                     </button>
                                 @endif
 
                                 @if ($buttons['regenerate'])
                                     <button wire:click="regenerateTicket({{ $registration->id }})"
-                                        class="px-3 py-1 bg-orange-600 text-white rounded hover:bg-orange-700 text-xs font-medium transition-colors"
-                                        title="Regenerate ticket">
-                                        Regenerate
+                                        class="p-1.5 bg-orange-100 text-orange-700 rounded hover:bg-orange-200 transition-colors relative group"
+                                        title="Regenerate Ticket">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                        </svg>
+                                        <span class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 px-2 py-1 text-xs text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                            Regenerate Ticket
+                                        </span>
                                     </button>
                                 @endif
 
-                                <!-- Show status for rejected payments -->
-                                @if ($registration->isPaymentRejected() && !$buttons['reset'])
-                                    <span class="text-xs text-red-600">Payment Rejected</span>
+                                <!-- Status messages for edge cases -->
+                                @if ($registration->event->require_payment)
+                                    @if ($registration->isPaymentRejected() && !$buttons['reset'])
+                                        <span class="text-xs text-red-600 bg-red-50 px-2 py-1 rounded">Rejected</span>
+                                    @endif
+                                @else
+                                    @if (!$registration->ticket && !$buttons['generate'])
+                                        <span class="text-xs text-yellow-600 bg-yellow-50 px-2 py-1 rounded">Ticket Error</span>
+                                    @endif
                                 @endif
-                            @else
-                                <!-- Free Event Buttons -->
-                                @if ($buttons['generate'])
-                                    <button wire:click="generateTicket({{ $registration->id }})"
-                                        class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-xs font-medium transition-colors"
-                                        title="Generate ticket">
-                                        Generate Ticket
-                                    </button>
-                                @endif
-
-                                @if ($buttons['view'])
-                                    <button wire:click="viewTicket({{ $registration->id }})"
-                                        class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-xs font-medium transition-colors"
-                                        title="View ticket">
-                                        View Ticket
-                                    </button>
-                                @endif
-
-                                @if ($buttons['regenerate'])
-                                    <button wire:click="regenerateTicket({{ $registration->id }})"
-                                        class="px-3 py-1 bg-orange-600 text-white rounded hover:bg-orange-700 text-xs font-medium transition-colors"
-                                        title="Regenerate ticket">
-                                        Regenerate
-                                    </button>
-                                @endif
-
-                                <!-- Edge case: ticket should exist but doesn't -->
-                                @if (!$registration->ticket && !$buttons['generate'])
-                                    <span class="text-xs text-yellow-600">Ticket Error</span>
-                                @endif
-                            @endif
+                            </div>
                         </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
+        <!-- Pagination -->
+        @if($registrations && method_exists($registrations, 'links'))
+            <div class="px-4 py-3 bg-gray-50 border-t border-gray-200">
+                {{ $registrations->links() }}
+                </div>
+         @endif        
     @else
         <div class="text-center py-8">
             <svg class="w-16 h-16 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -485,7 +576,13 @@
                     d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
                 </path>
             </svg>
-            <p class="mt-4 text-gray-500">No registrations found for your events.</p>
+            <p class="mt-4 text-gray-500">
+                @if($search || $filterEvent || $filterPaymentStatus || $filterTicketStatus)
+                    No registrations found matching your filters.
+                @else
+                    No registrations found for your events.
+                @endif
+            </p>
         </div>
     @endif
 </div>
