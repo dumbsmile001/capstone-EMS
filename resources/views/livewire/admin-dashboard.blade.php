@@ -284,7 +284,6 @@
                         @endforelse
                     </div>
                     <!-- Event Details Modal -->
-                    <!-- Event Details Modal -->
                     <x-custom-modal model="showEventDetailsModal">
                         @if($selectedEvent)
                             <div class="max-w-2xl mx-auto bg-white rounded-lg">
@@ -393,17 +392,50 @@
             </div>
 
             <!-- Tabbed Tables Section -->
+            <!-- Generate Report Modal -->
             <x-custom-modal model="showGenerateReportModal">
-                <form class="max-w-md mx-auto">
-                    <h1 class="text-xl text-center font-bold">Generate Report</h1>
-                    <h3 class="text-center mb-6">This will download an excel file of the current table, continue?</h3>
-                    <div class="flex flex-row gap-1">
-                        <button wire:click=""
-                            class="w-full px-3 py-1 bg-gray-300 text-white rounded hover:bg-gray-300 text-xs font-medium">Cancel</button>
-                        <button wire:click=""
-                            class="w-full px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-xs font-medium">Confirm</button>
+                <div class="max-w-md mx-auto p-6">
+                    <h1 class="text-xl text-center font-bold mb-2">Export Users Report</h1>
+                    <p class="text-center text-gray-600 mb-6">Export current users table data to Excel or CSV format.</p>
+                    
+                    <div class="mb-6">
+                        <p class="text-sm text-gray-700 mb-2">Filters applied:</p>
+                        <ul class="text-sm text-gray-600 space-y-1">
+                            <li>• Search: {{ $search ?: 'None' }}</li>
+                            <li>• Grade Level: {{ $filterGradeLevel ? 'Grade ' . $filterGradeLevel : 'All' }}</li>
+                            <li>• Year Level: {{ $filterYearLevel ? 'Year ' . $filterYearLevel : 'All' }}</li>
+                            <li>• Program: {{ $filterProgram ?: 'All' }}</li>
+                            <li>• Role: {{ $filterRole ? ucfirst($filterRole) : 'All' }}</li>
+                        </ul>
                     </div>
-                </form>
+                    
+                    <div class="mb-6">
+                        <label class="block mb-2 text-sm font-medium text-gray-700">Export Format</label>
+                        <div class="flex space-x-4">
+                            <label class="inline-flex items-center">
+                                <input type="radio" wire:model="exportFormat" value="xlsx" 
+                                    class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                <span class="ml-2 text-sm text-gray-700">Excel (.xlsx)</span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="radio" wire:model="exportFormat" value="csv" 
+                                    class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                <span class="ml-2 text-sm text-gray-700">CSV (.csv)</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-3">
+                        <button type="button" wire:click="closeGenerateReportModal" 
+                            class="flex-1 px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition-colors font-medium">
+                            Cancel
+                        </button>
+                        <button type="button" wire:click="exportUsers" 
+                            class="flex-1 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors font-medium">
+                            Export {{ strtoupper($exportFormat) }}
+                        </button>
+                    </div>
+                </div>
             </x-custom-modal>
             <x-custom-modal model="showArchiveModal">
                 <form class="max-w-md mx-auto">
@@ -419,13 +451,6 @@
                 </form>
             </x-custom-modal>
             <div class="bg-white rounded-lg shadow-md p-6" x-data="{ activeTab: 'users' }">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-xl font-semibold text-gray-800">Monitoring</h2>
-                    <button wire:click="openGenerateReportModal"
-                        class="px-4 py-2 text-sm text-blue-600 hover:text-blue-700 font-medium">Generate
-                        Report</button>
-                </div>
-
                 <!-- Tabs -->
                 <div class="border-b border-gray-200 mb-4">
                     <nav class="flex space-x-4">
@@ -524,6 +549,17 @@
                         
                        <!-- Search and Filter Controls -->
                         <div class="p-4 bg-gray-50 border-b border-gray-200">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-lg font-semibold text-gray-700">Users Management</h3>
+                                <!-- Move Generate Report button here -->
+                                <button wire:click="openGenerateReportModal"
+                                    class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium flex items-center gap-2">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                    Export to Excel/CSV
+                                </button>
+                            </div>
                             <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
                                 <!-- Search Box -->
                                 <div class="md:col-span-2">

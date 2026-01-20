@@ -35,6 +35,9 @@ class OrganizerRegistrations extends Component
     public $showTicketModal = false;
     public $selectedTicketRegistration = null;
 
+    public $showExportModal = false;
+    public $exportFormat = 'xlsx';
+
     public function mount()
     {
         // Load available events for the filter dropdown
@@ -45,6 +48,164 @@ class OrganizerRegistrations extends Component
                 return [$event->id => $event->title];
             })
             ->toArray();
+    }
+
+    public function openExportModal()
+    {
+        $this->exportFormat = 'xlsx';
+        $this->showExportModal = true;
+    }
+
+    public function closeExportModal()
+    {
+        $this->showExportModal = false;
+    }
+
+    public function exportRegistrations()
+    {
+        $this->closeExportModal();
+        
+        $registrations = $this->getExportData();
+        
+        $data = $registrations->map(function ($registration) {
+            return [
+                'Student Name' => $registration->user->first_name . ' ' . $registration->user->last_name,
+                'Student ID' => $registration->user->student_id ?? 'N/A',
+                'Email' => $registration->user->email,
+                'Event' => $registration->event->title,
+                'Event Date' => $registration->event->date ? \Carbon\Carbon::parse($registration->event->date)->format('Y-m-d') : 'N/A',
+                'Event Time' => $registration->event->time ? \Carbon\Carbon::parse($registration->event->time)->format('H:i') : 'N/A',
+                'Registration Date' => $registration->registered_at ? \Carbon\Carbon::parse($registration->registered_at)->format('Y-m-d H:i:s') : 'N/A',
+                'Registration Status' => ucfirst($registration->status ?? 'N/A'),
+                'Ticket Status' => $registration->ticket ? $registration->ticket->status : 'No Ticket',
+                'Ticket Number' => $registration->ticket->ticket_number ?? 'N/A',
+                'Payment Status' => $registration->payment_status ? ucfirst($registration->payment_status) : ($registration->event->require_payment ? 'N/A' : 'Free'),
+                'Payment Verified At' => $registration->payment_verified_at ? \Carbon\Carbon::parse($registration->payment_verified_at)->format('Y-m-d H:i:s') : 'N/A',
+                'Payment Amount' => $registration->event->require_payment ? '₱' . number_format($registration->event->payment_amount, 2) : 'Free',
+            ];
+        })->toArray();
+        
+        return $this->generateExportFile($data, 'event_registrations');
+    }
+
+    private function getExportData()
+    {
+        return Registration::with(['user', 'event', 'ticket'])
+            ->whereHas('event', function($query) {
+                $query->where('created_by', auth()->id());
+            })
+            ->when($this->search, function ($query) {
+                $query->where(function ($q) {
+                    $q->whereHas('user', function ($userQuery) {
+                        $userQuery->where('first_name', 'like', '%' . $this->search . '%')
+                                ->orWhere('last_name', 'like', '%' . $this->search . '%')
+                                ->orWhere('email', 'like', '%' . $this->search . '%')
+                                ->orWhere('student_id', 'like', '%' . $this->search . '%');
+                    });
+                });
+            })
+            ->when($this->filterEvent, function ($query) {
+                $query->where('event_id', $this->filterEvent);
+            })
+            ->when($this->filterPaymentStatus, function ($query) {
+                $query->where('payment_status', $this->filterPaymentStatus);
+            })
+            ->when($this->filterTicketStatus, function ($query) {
+                $query->whereHas('ticket', function ($ticketQuery) {
+                    $ticketQuery->where('status', $this->filterTicketStatus);
+                });
+            })
+            ->orderBy('registered_at', 'desc')
+            ->get();
+    }
+
+    private function generateExportFile($data, $reportType)
+    {
+        // Generate filename with timestamp
+        $filename = $reportType . '_report_' . date('Y-m-d_H-i-s');
+        
+        if ($this->exportFormat === 'csv') {
+            // Export as CSV
+            $filename .= '.csv';
+            $headers = [
+                'Content-Type' => 'text/csv',
+                'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+            ];
+            
+            return response()->streamDownload(function () use ($data) {
+                $output = fopen('php://output', 'w');
+                
+                // Add UTF-8 BOM for Excel compatibility
+                fwrite($output, "\xEF\xBB\xBF");
+                
+                // Add CSV headers if we have data
+                if (!empty($data)) {
+                    fputcsv($output, array_keys($data[0]));
+                }
+                
+                // Add data rows
+                foreach ($data as $row) {
+                    fputcsv($output, $row);
+                }
+                
+                fclose($output);
+            }, $filename, $headers);
+        } else {
+            // Export as Excel using PhpSpreadsheet
+            $filename .= '.xlsx';
+            $headers = [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+            ];
+            
+            return response()->streamDownload(function () use ($data, $reportType) {
+                $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+                $sheet = $spreadsheet->getActiveSheet();
+                
+                // Set document properties
+                $spreadsheet->getProperties()
+                    ->setCreator("Organizer Dashboard")
+                    ->setTitle(ucfirst($reportType) . " Report")
+                    ->setSubject(ucfirst($reportType) . " Data Export")
+                    ->setDescription("Exported " . $reportType . " data from organizer dashboard");
+                
+                // Add headers with styling
+                $headers = !empty($data) ? array_keys($data[0]) : [];
+                $column = 'A';
+                foreach ($headers as $header) {
+                    $sheet->setCellValue($column . '1', $header);
+                    // Style the header
+                    $sheet->getStyle($column . '1')->getFont()->setBold(true);
+                    $sheet->getStyle($column . '1')->getFill()
+                        ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                        ->getStartColor()->setARGB('FFE0E0E0');
+                    $column++;
+                }
+                
+                // Add data
+                $row = 2;
+                foreach ($data as $item) {
+                    $column = 'A';
+                    foreach ($item as $value) {
+                        $sheet->setCellValue($column . $row, $value);
+                        $column++;
+                    }
+                    $row++;
+                }
+                
+                // Auto-size columns
+                $lastColumn = $sheet->getHighestColumn();
+                for ($col = 'A'; $col <= $lastColumn; $col++) {
+                    $sheet->getColumnDimension($col)->setAutoSize(true);
+                }
+                
+                // Add some styling
+                $sheet->getStyle('A1:' . $lastColumn . '1')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM);
+                
+                $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+                $writer->save('php://output');
+            }, $filename, $headers);
+        }
     }
 
     // Computed property for registrations with search and filters

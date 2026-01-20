@@ -55,6 +55,9 @@ class AdminDashboard extends Component
     public $showGenerateReportModal = false;
     public $showArchiveModal = false;
 
+    // Add export format selection
+    public $exportFormat = 'xlsx';
+
     // Edit or delete
     public $editingEvent = null;
     public $deletingEvent = null;
@@ -92,6 +95,12 @@ class AdminDashboard extends Component
     // Computed property for users with search and filters
     public function getUsersProperty()
     {
+        return $this->getFilteredUsersQuery()->paginate($this->perPage);
+    }
+
+    // Add a method to get the query for export (without pagination)
+    public function getFilteredUsersQuery()
+    {
         return User::with('roles')
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
@@ -115,8 +124,7 @@ class AdminDashboard extends Component
                     $q->where('name', $this->filterRole);
                 });
             })
-            ->orderBy('created_at', 'desc')
-            ->paginate($this->perPage);
+            ->orderBy('created_at', 'desc');
     }
 
     // Reset filters
@@ -130,6 +138,121 @@ class AdminDashboard extends Component
     public function applyFilters()
     {
         $this->resetPage();
+    }
+
+    // Export users to Excel/CSV using PhpSpreadsheet
+    public function exportUsers()
+    {
+        $users = $this->getFilteredUsersQuery()->get();
+        
+        // Close the modal
+        $this->showGenerateReportModal = false;
+        
+        // Prepare data for export
+        $data = $users->map(function ($user) {
+            return [
+                'Name' => $user->first_name . ' ' . $user->last_name,
+                'Email' => $user->email,
+                'Student ID' => $user->student_id ?? 'N/A',
+                'Grade Level' => $user->grade_level ? 'Grade ' . $user->grade_level : 'N/A',
+                'Year Level' => $user->year_level ? 'Year ' . $user->year_level : 'N/A',
+                'Program' => $user->program ?? 'N/A',
+                'Role' => $user->roles->first()->name ?? 'N/A',
+                'Created At' => $user->created_at->format('Y-m-d H:i:s'),
+                'Updated At' => $user->updated_at->format('Y-m-d H:i:s'),
+            ];
+        })->toArray();
+        
+        // Generate filename with timestamp
+        $filename = 'users_report_' . date('Y-m-d_H-i-s');
+        
+        // Add filter info to filename if filters are applied
+        if ($this->search || $this->filterGradeLevel || $this->filterYearLevel || $this->filterProgram || $this->filterRole) {
+            $filename .= '_filtered';
+        }
+        
+        if ($this->exportFormat === 'csv') {
+            // Export as CSV
+            $filename .= '.csv';
+            $headers = [
+                'Content-Type' => 'text/csv',
+                'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+            ];
+            
+            return response()->streamDownload(function () use ($data) {
+                $output = fopen('php://output', 'w');
+                
+                // Add UTF-8 BOM for Excel compatibility
+                fwrite($output, "\xEF\xBB\xBF");
+                
+                // Add CSV headers if we have data
+                if (!empty($data)) {
+                    fputcsv($output, array_keys($data[0]));
+                }
+                
+                // Add data rows
+                foreach ($data as $row) {
+                    fputcsv($output, $row);
+                }
+                
+                fclose($output);
+            }, $filename, $headers);
+        } else {
+            // Export as Excel using PhpSpreadsheet
+            $filename .= '.xlsx';
+            $headers = [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+            ];
+            
+            return response()->streamDownload(function () use ($data) {
+                $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+                $sheet = $spreadsheet->getActiveSheet();
+                
+                // Set document properties
+                $spreadsheet->getProperties()
+                    ->setCreator("Admin Dashboard")
+                    ->setTitle("Users Report")
+                    ->setSubject("Users Data Export")
+                    ->setDescription("Exported users data from admin dashboard");
+                
+                // Add headers with styling
+                $headers = !empty($data) ? array_keys($data[0]) : [];
+                $column = 'A';
+                foreach ($headers as $header) {
+                    $sheet->setCellValue($column . '1', $header);
+                    // Style the header
+                    $sheet->getStyle($column . '1')->getFont()->setBold(true);
+                    $sheet->getStyle($column . '1')->getFill()
+                        ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                        ->getStartColor()->setARGB('FFE0E0E0');
+                    $column++;
+                }
+                
+                // Add data
+                $row = 2;
+                foreach ($data as $item) {
+                    $column = 'A';
+                    foreach ($item as $value) {
+                        $sheet->setCellValue($column . $row, $value);
+                        $column++;
+                    }
+                    $row++;
+                }
+                
+                // Auto-size columns
+                $lastColumn = $sheet->getHighestColumn();
+                for ($col = 'A'; $col <= $lastColumn; $col++) {
+                    $sheet->getColumnDimension($col)->setAutoSize(true);
+                }
+                
+                // Add some styling
+                $sheet->getStyle('A1:' . $lastColumn . '1')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM);
+                
+                $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+                $writer->save('php://output');
+            }, $filename, $headers);
+        }
     }
 
     public function openEditUserModal($userId = null)
@@ -393,8 +516,17 @@ class AdminDashboard extends Component
         $this->deletingEvent = null;
     }
     
-    public function openGenerateReportModal(){
+    // Open generate report modal
+    public function openGenerateReportModal()
+    {
+        $this->exportFormat = 'xlsx'; // Reset to default
         $this->showGenerateReportModal = true;
+    }
+
+    // Close generate report modal
+    public function closeGenerateReportModal()
+    {
+        $this->showGenerateReportModal = false;
     }
     
     public function openArchiveModal(){
