@@ -23,4 +23,17 @@ Route::middleware([
         ->name('ticket.download');
     Route::get('/ticket/{ticket}/view', [TicketController::class, 'view'])
         ->name('ticket.view');
+
+    // Public verification route (NO auth middleware)
+    Route::get('/ticket/verify/{ticketNumber}', [App\Http\Controllers\TicketVerificationController::class, 'verify'])
+        ->name('ticket.verify.public');
+        
+    // Protected routes for ticket management
+    Route::middleware(['auth:sanctum'])->group(function () {
+        Route::post('/ticket/{ticketNumber}/use', [App\Http\Controllers\TicketVerificationController::class, 'markAsUsed'])
+            ->name('ticket.mark-used');
+        
+        Route::post('/ticket/{ticketNumber}/reactivate', [App\Http\Controllers\TicketVerificationController::class, 'reactivate'])
+            ->name('ticket.reactivate');
+    });
 });

@@ -66,4 +66,31 @@ class User extends Authenticatable{
                     ->withPivot('status', 'registered_at')
                     ->withTimestamps();
     }
+
+    // Add these methods to your User.php model:
+
+    public function isAdmin()
+    {
+        return $this->hasRole('admin');
+    }
+
+    public function isOrganizer()
+    {
+        return $this->hasRole('organizer');
+    }
+
+    public function isStudent()
+    {
+        return $this->hasRole('student');
+    }
+
+    public function getFullNameAttribute()
+    {
+        $name = $this->first_name;
+        if ($this->middle_name) {
+            $name .= ' ' . $this->middle_name;
+        }
+        $name .= ' ' . $this->last_name;
+        return $name;
+    }
 }

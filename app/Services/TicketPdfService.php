@@ -15,10 +15,14 @@ class TicketPdfService
     /**
      * Generate QR code for the ticket
      */
+    // In TicketPdfService.php, update the generateQrCode method:
     protected function generateQrCode(Ticket $ticket): string
     {
-        // For now, use a test URL - can be changed later to meaningful data
-        $qrData = 'https://example.com/ticket/' . $ticket->ticket_number;
+        // Generate URL to your verification page
+        $qrData = route('ticket.verify.public', ['ticketNumber' => $ticket->ticket_number]);
+        
+        // Alternatively, for local development with QR code scanning:
+        // $qrData = url('/ticket/verify/' . $ticket->ticket_number);
         
         // Create builder instance with constructor parameters
         $builder = new Builder(
