@@ -206,11 +206,41 @@ class OrganizerEvents extends Component
         $this->resetPage();
     }
 
+    // app/Livewire/OrganizerEvents.php
+    // Add these methods:
+
+    public function archiveEvent($eventId)
+    {
+        $event = Event::findOrFail($eventId);
+        
+        if ($event->created_by !== Auth::id()) {
+            session()->flash('error', 'You are not authorized to archive this event.');
+            return;
+        }
+
+        $event->archive(Auth::id());
+        session()->flash('success', 'Event archived successfully!');
+    }
+
+    public function unarchiveEvent($eventId)
+    {
+        $event = Event::findOrFail($eventId);
+        
+        if ($event->created_by !== Auth::id()) {
+            session()->flash('error', 'You are not authorized to unarchive this event.');
+            return;
+        }
+
+        $event->unarchive();
+        session()->flash('success', 'Event unarchived successfully!');
+    }
+
     public function getEventsProperty()
     {
         $userId = Auth::id();
         
         return Event::where('created_by', $userId)
+            ->where('is_archived', false) // Add this
             ->when($this->search, function ($query) {
                 $query->where('title', 'like', '%' . $this->search . '%')
                     ->orWhere('description', 'like', '%' . $this->search . '%');

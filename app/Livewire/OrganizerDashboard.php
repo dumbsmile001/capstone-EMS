@@ -210,8 +210,6 @@ class OrganizerDashboard extends Component
         }
     }
 
-    
-
     // Method to update all card data
     public function updateCardData()
     {

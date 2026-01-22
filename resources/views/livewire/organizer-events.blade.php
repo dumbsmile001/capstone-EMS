@@ -191,6 +191,14 @@
                                         class="flex-1 px-3 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors font-medium">
                                         Edit
                                     </button>
+                                    <!-- Show Archive button for past events -->
+                                    @if($event->canBeArchived())
+                                    <button wire:click="archiveEvent({{ $event->id }})" 
+                                        wire:confirm="Are you sure you want to archive this event?"
+                                        class="flex-1 px-3 py-2 bg-yellow-600 text-white text-sm rounded hover:bg-yellow-700 transition-colors font-medium">
+                                        Archive
+                                    </button>
+                                    @endif
                                     <button wire:click="openDeleteModal({{ $event->id }})"
                                         class="flex-1 px-3 py-2 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition-colors font-medium">
                                         Delete

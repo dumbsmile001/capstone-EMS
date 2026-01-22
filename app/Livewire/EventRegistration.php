@@ -22,6 +22,7 @@ class EventRegistration extends Component
     public function loadEvents()
     {
         $this->events = Event::where('status', 'published')
+            ->where('is_archived', false) // Add this
             ->where('date', '>=', now()->format('Y-m-d'))
             ->orderBy('date')
             ->orderBy('time')
