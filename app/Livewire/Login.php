@@ -17,6 +17,7 @@ class Login extends Component
         'password' => ['required'],
     ];
 
+    // In Login.php login() method
     public function login()
     {
         $this->validate();
@@ -29,7 +30,7 @@ class Login extends Component
 
         session()->regenerate();
 
-        return redirect()->intended(route('home'));
+        return redirect()->intended(route('home')); // This now goes to dashboard
     }
 
     public function render()

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\AnnouncementController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -12,13 +13,16 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/home', \App\Livewire\Home::class)->name('home');
-    Route::get('/dashboard', \App\Livewire\Dashboard::class)->name('dashboard');
+    // Make dashboard the default home page
+    Route::get('/dashboard', \App\Livewire\Home::class)->name('home'); // <-- Dashboard is now home
+    Route::get('/announcements', \App\Livewire\Announcements::class)->name('announcements'); // <-- New announcements page
+    
+    // Role-specific dashboards
     Route::get('/dashboard/admin', \App\Livewire\AdminDashboard::class)->name('dashboard.admin');
     Route::get('/dashboard/organizer', \App\Livewire\OrganizerDashboard::class)->name('dashboard.organizer');
     Route::get('/dashboard/student', \App\Livewire\StudentDashboard::class)->name('dashboard.student');
 
-    //ticket test
+    // Ticket routes
     Route::get('/ticket/{ticket}/download', [TicketController::class, 'download'])
         ->name('ticket.download');
     Route::get('/ticket/{ticket}/view', [TicketController::class, 'view'])

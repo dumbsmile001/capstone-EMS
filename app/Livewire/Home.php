@@ -2,74 +2,31 @@
 
 namespace App\Livewire;
 
-use App\Models\Announcement;
 use Livewire\Component;
-use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
 
 class Home extends Component
 {
-    use WithPagination;
-    
-    //Announcement properties
-    public string $title = '';
-    public string $category = 'general';
-    public string $description = '';
-
-    //Modal flags
-    public $showAnnouncementModal = false;
-
-    public function createAnnouncement()
+    public function mount()
     {
-        $data = $this->validate([
-            'title' => 'required|string|max:255',
-            'category' => 'required|in:general,event,reminder',
-            'description' => 'required|string|min:10'
-        ]);
-
-        $category = $this->category ?: 'general';
-
-        Announcement::create([
-            'title' => $this->title,
-            'category' => $category,
-            'description' => $this->description,
-            'user_id' => Auth::id(),
-        ]);
-
-        $this->reset('title', 'category', 'description');
-        $this->showAnnouncementModal = false;
-
-        session()->flash('success', 'Announcement created successfully!');
-    }   
-    
-    public function openAnnouncementModal(){
-        $this->showAnnouncementModal = true;
-    }
-    
-    public function closeAnnouncementModal(){
-        $this->showAnnouncementModal = false;
-        $this->reset([
-            'title', 'category', 'description'
-        ]);
-        $this->category = 'general'; 
-        $this->resetErrorBag();
+        // Redirect to appropriate dashboard based on role
+        $user = Auth::user();
+        $role = $user->getRoleNames()->first() ?? 'student';
+        
+        switch($role) {
+            case 'admin':
+                return redirect()->route('dashboard.admin');
+            case 'organizer':
+                return redirect()->route('dashboard.organizer');
+            case 'student':
+            default:
+                return redirect()->route('dashboard.student');
+        }
     }
     
     public function render()
     {
-        $user = Auth::user();
-        $userInitials = strtoupper(substr($user->first_name ?? 'U', 0, 1) . substr($user->last_name ?? 'S', 0, 1));
-        $userRole = $user->getRoleNames()->first() ?? 'User';
-        
-        // Get announcements from database, ordered by latest first
-        $announcements = Announcement::with('user')
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
-        
-        return view('livewire.home', [
-            'userInitials' => $userInitials,
-            'userRole' => ucfirst($userRole),
-            'announcements' => $announcements, // Pass announcements to the view
-        ])->layout('layouts.app');
+        // This will rarely be seen as we redirect immediately
+        return view('livewire.home')->layout('layouts.app');
     }
 }
