@@ -22,6 +22,10 @@ Route::middleware([
     Route::get('/dashboard/organizer', \App\Livewire\OrganizerDashboard::class)->name('dashboard.organizer');
     Route::get('/dashboard/student', \App\Livewire\StudentDashboard::class)->name('dashboard.student');
 
+    // Organizer Events Page (NEW ROUTE)
+    Route::get('/organizer/events', \App\Livewire\OrganizerEvents::class)
+    ->name('organizer.events');
+
     // Ticket routes
     Route::get('/ticket/{ticket}/download', [TicketController::class, 'download'])
         ->name('ticket.download');
