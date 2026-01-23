@@ -27,6 +27,18 @@
 
             <!-- Search and Filter -->
             <div class="mb-6 bg-white rounded-lg shadow p-4">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-semibold text-gray-700">Archived Events Management</h2>
+                    <!-- Add Export Button -->
+                    <!-- In the Search and Filter section header -->
+                    <button wire:click="openExportModal"
+                        class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        Export to Excel/CSV
+                    </button>
+                </div>
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <!-- Search -->
                     <div class="md:col-span-2">
@@ -191,6 +203,49 @@
             @endif
         </div>
     </div>
+
+    <x-custom-modal model="showExportModal">
+    <div class="max-w-md mx-auto p-6">
+        <h1 class="text-xl text-center font-bold mb-2">Export Archived Events</h1>
+        <p class="text-center text-gray-600 mb-6">Export current archived events data to Excel or CSV format.</p>
+        
+        <div class="mb-6">
+            <p class="text-sm text-gray-700 mb-2">Current filters applied:</p>
+            <ul class="text-sm text-gray-600 space-y-1">
+                <li>• Search: {{ $search ?: 'None' }}</li>
+                <li>• Category: {{ $filterCategory ? ucfirst($filterCategory) : 'All' }}</li>
+                <li>• Payment: {{ $filterPayment === 'paid' ? 'Paid Only' : ($filterPayment === 'free' ? 'Free Only' : 'All') }}</li>
+            </ul>
+        </div>
+        
+        <div class="mb-6">
+            <label class="block mb-2 text-sm font-medium text-gray-700">Export Format</label>
+            <div class="flex space-x-4">
+                <label class="inline-flex items-center">
+                    <input type="radio" wire:model="exportFormat" value="xlsx" 
+                        class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                    <span class="ml-2 text-sm text-gray-700">Excel (.xlsx)</span>
+                </label>
+                <label class="inline-flex items-center">
+                    <input type="radio" wire:model="exportFormat" value="csv" 
+                        class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                    <span class="ml-2 text-sm text-gray-700">CSV (.csv)</span>
+                </label>
+            </div>
+        </div>
+        
+        <div class="flex gap-3">
+            <button type="button" wire:click="closeExportModal" 
+                class="flex-1 px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition-colors font-medium">
+                Cancel
+            </button>
+            <button type="button" wire:click="exportArchivedEvents" 
+                class="flex-1 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors font-medium">
+                Export {{ strtoupper($exportFormat) }}
+            </button>
+        </div>
+    </div>
+</x-custom-modal>
 
     <!-- Success Messages -->
     @if (session()->has('success'))
