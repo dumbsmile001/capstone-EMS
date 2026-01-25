@@ -6,11 +6,11 @@
         <!-- Logo Image -->
         <div class="mb-4 sm:mb-6 text-center">
             <img 
-                    src="{{ asset('images/spcc-logo.png') }}" 
-                    alt="SPCC Logo" 
-                    class="mx-auto h-24 w-24 sm:h-32 sm:w-32 object-contain mb-4"
-                    onerror="console.error('Logo image failed to load')"
-                >
+                src="{{ asset('images/spcc-logo.png') }}" 
+                alt="SPCC Logo" 
+                class="mx-auto h-24 w-24 sm:h-32 sm:w-32 object-contain mb-4"
+                onerror="console.error('Logo image failed to load')"
+            >
         </div>
 
         <h2 class="text-2xl sm:text-3xl font-bold text-center mb-2 bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">
@@ -47,7 +47,6 @@
                             class="block mt-1 w-full border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-sm sm:text-base" 
                             type="text" 
                             wire:model="middle_name"
-                            required 
                             autocomplete="additional-name" 
                         />
                         @error('middle_name') <span class="text-red-600 text-xs sm:text-sm mt-1">{{ $message }}</span> @enderror
@@ -78,15 +77,14 @@
                         <x-input 
                             id="student_id" 
                             class="block mt-1 w-full border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-sm sm:text-base" 
-                            type="number" 
+                            type="text" 
                             wire:model="student_id"
-                            required 
                             autocomplete="off" 
                         />
                         @error('student_id') <span class="text-red-600 text-xs sm:text-sm mt-1">{{ $message }}</span> @enderror
                     </div>
 
-                    <div class="grid grid-cols-1 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <x-label for="grade_level" value="{{ __('Grade Level (SHS)') }}" class="text-gray-700 font-medium text-sm sm:text-base" />
                             <select 
@@ -119,17 +117,38 @@
                         </div>
                     </div>
 
-                    <div>
-                        <x-label for="program" value="{{ __('Program/Course') }}" class="text-gray-700 font-medium text-sm sm:text-base" />
-                        <x-input 
-                            id="program" 
-                            class="block mt-1 w-full border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-sm sm:text-base" 
-                            type="text" 
-                            wire:model="program"
-                            placeholder="e.g., BS Computer Science, STEM"
-                            autocomplete="off" 
-                        />
-                        @error('program') <span class="text-red-600 text-xs sm:text-sm mt-1">{{ $message }}</span> @enderror
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <x-label for="shs_strand" value="{{ __('SHS Strand') }}" class="text-gray-700 font-medium text-sm sm:text-base" />
+                            <select 
+                                id="shs_strand" 
+                                class="block mt-1 w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm text-sm sm:text-base {{ $year_level ? 'bg-gray-100 cursor-not-allowed' : '' }}"
+                                wire:model="shs_strand"
+                                {{ $year_level ? 'disabled' : '' }}
+                            >
+                                <option value="">Select SHS Strand</option>
+                                <option value="ABM">ABM</option>
+                                <option value="HUMSS">HUMSS</option>
+                                <option value="GAS">GAS</option>
+                                <option value="ICT">ICT</option>
+                            </select>
+                            @error('shs_strand') <span class="text-red-600 text-xs sm:text-sm mt-1">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div>
+                            <x-label for="college_program" value="{{ __('College Program') }}" class="text-gray-700 font-medium text-sm sm:text-base" />
+                            <select 
+                                id="college_program" 
+                                class="block mt-1 w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm text-sm sm:text-base {{ $grade_level ? 'bg-gray-100 cursor-not-allowed' : '' }}"
+                                wire:model="college_program"
+                                {{ $grade_level ? 'disabled' : '' }}
+                            >
+                                <option value="">Select College Program</option>
+                                <option value="BSIT">BSIT</option>
+                                <option value="BSBA">BSBA</option>
+                            </select>
+                            @error('college_program') <span class="text-red-600 text-xs sm:text-sm mt-1">{{ $message }}</span> @enderror
+                        </div>
                     </div>
                 </div>
             </div>
@@ -152,7 +171,7 @@
                         @error('email') <span class="text-red-600 text-xs sm:text-sm mt-1">{{ $message }}</span> @enderror
                     </div>
 
-                    <div class="grid grid-cols-1 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <x-label for="password" value="{{ __('Password') }}" class="text-gray-700 font-medium text-sm sm:text-base" />
                             <x-input 

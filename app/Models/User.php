@@ -28,7 +28,8 @@ class User extends Authenticatable{
         'student_id',
         'grade_level',
         'year_level',
-        'program',
+        'shs_strand',
+        'college_program',  // Changed from 'program'
         'email',
         'password',
     ];
@@ -46,6 +47,8 @@ class User extends Authenticatable{
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'shs_strand' => 'string',
+            'college_program' => 'string',
         ];
     }
     public function announcements()

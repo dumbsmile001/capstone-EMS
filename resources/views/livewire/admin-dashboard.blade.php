@@ -376,11 +376,13 @@
 
                     <div class="mb-6">
                         <p class="text-sm text-gray-700 mb-2">Filters applied:</p>
+                        <!-- In the export modal, update the filter list: -->
                         <ul class="text-sm text-gray-600 space-y-1">
                             <li>• Search: {{ $search ?: 'None' }}</li>
                             <li>• Grade Level: {{ $filterGradeLevel ? 'Grade ' . $filterGradeLevel : 'All' }}</li>
                             <li>• Year Level: {{ $filterYearLevel ? 'Year ' . $filterYearLevel : 'All' }}</li>
-                            <li>• Program: {{ $filterProgram ?: 'All' }}</li>
+                            <li>• SHS Strand: {{ $filterSHSStrand ?: 'All' }}</li>
+                            <li>• College Program: {{ $filterCollegeProgram ?: 'All' }}</li>
                             <li>• Role: {{ $filterRole ? ucfirst($filterRole) : 'All' }}</li>
                         </ul>
                     </div>
@@ -471,6 +473,61 @@
                                 <input type="text" id="last_name" wire:model="last_name"
                                     class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                     placeholder="Enter First Name...">
+                            </div>
+                            <!-- In the edit user modal, update the form fields: -->
+                            <div class="flex flex-col mb-5">
+                                <label class="block mb-2.5 text-sm font-medium text-heading">Academic Information</label>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div>
+                                        <label class="block mb-1 text-xs text-gray-600">Grade Level</label>
+                                        <select wire:model="grade_level"
+                                            class="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500">
+                                            <option value="">Select Grade Level</option>
+                                            <option value="11">Grade 11</option>
+                                            <option value="12">Grade 12</option>
+                                        </select>
+                                        @error('grade_level') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                                    </div>
+                                    <div>
+                                        <label class="block mb-1 text-xs text-gray-600">SHS Strand</label>
+                                        <select wire:model="shs_strand"
+                                            class="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 {{ $year_level ? 'bg-gray-100 cursor-not-allowed' : '' }}"
+                                            {{ $year_level ? 'disabled' : '' }}>
+                                            <option value="">Select SHS Strand</option>
+                                            <option value="ABM">ABM</option>
+                                            <option value="HUMSS">HUMSS</option>
+                                            <option value="GAS">GAS</option>
+                                            <option value="ICT">ICT</option>
+                                        </select>
+                                        @error('shs_strand') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-3 mt-3">
+                                    <div>
+                                        <label class="block mb-1 text-xs text-gray-600">Year Level</label>
+                                        <select wire:model="year_level"
+                                            class="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500">
+                                            <option value="">Select Year Level</option>
+                                            <option value="1">1st Year</option>
+                                            <option value="2">2nd Year</option>
+                                            <option value="3">3rd Year</option>
+                                            <option value="4">4th Year</option>
+                                            <option value="5">5th Year</option>
+                                        </select>
+                                        @error('year_level') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                                    </div>
+                                    <div>
+                                        <label class="block mb-1 text-xs text-gray-600">College Program</label>
+                                        <select wire:model="college_program"
+                                            class="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 {{ $grade_level ? 'bg-gray-100 cursor-not-allowed' : '' }}"
+                                            {{ $grade_level ? 'disabled' : '' }}>
+                                            <option value="">Select College Program</option>
+                                            <option value="BSIT">BSIT</option>
+                                            <option value="BSBA">BSBA</option>
+                                        </select>
+                                        @error('college_program') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                                    </div>
+                                </div>
                             </div>
                             <div class="flex flex-col mb-5">
                                 <label for="number-input"
@@ -584,19 +641,29 @@
                                         </select>
                                     </div>
 
-                                    <!-- Program Filter -->
+                                    <!-- SHS Strand Filter -->
                                     <div>
-                                        <select wire:model.live="filterProgram"
+                                        <select wire:model.live="filterSHSStrand"
                                             class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500">
-                                            <option value="">All Programs</option>
-                                            @foreach ($availablePrograms as $program)
-                                                <option value="{{ $program }}">{{ $program }}</option>
-                                            @endforeach
+                                            <option value="">All SHS Strands</option>
+                                            <option value="ABM">ABM</option>
+                                            <option value="HUMSS">HUMSS</option>
+                                            <option value="GAS">GAS</option>
+                                            <option value="ICT">ICT</option>
                                         </select>
                                     </div>
                                 </div>
 
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                     <!-- College Program Filter -->
+                                        <div>
+                                            <select wire:model.live="filterCollegeProgram"
+                                                class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500">
+                                                <option value="">All College Programs</option>
+                                                <option value="BSIT">BSIT</option>
+                                                <option value="BSBA">BSBA</option>
+                                            </select>
+                                        </div>
                                     <!-- Role Filter -->
                                     <div>
                                         <select wire:model.live="filterRole"
@@ -644,9 +711,10 @@
                                         <th
                                             class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Year Level</th>
-                                        <th
-                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Program</th>
+                                        <th 
+                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">SHS Strand</th>
+                                        <th 
+                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">College Program</th>
                                         <th
                                             class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Student ID</th>
@@ -675,9 +743,13 @@
                                             <td class="px-4 py-3 text-sm text-gray-600">
                                                 {{ $user->year_level ? 'Year ' . $user->year_level : 'N/A' }}
                                             </td>
-                                            <!--users.program, only if student, N/A if not-->
+                                            <!--users.shs_strand, only if student and SHS, N/A if not-->
                                             <td class="px-4 py-3 text-sm text-gray-600">
-                                                {{ $user->program ?? 'N/A' }}
+                                                {{ $user->shs_strand ?? 'N/A' }}
+                                            </td>
+                                            <!--users.college_program, only if student and college, N/A if not-->
+                                            <td class="px-4 py-3 text-sm text-gray-600">
+                                                {{ $user->college_program ?? 'N/A' }}
                                             </td>
                                             <!--users.student_id, only if student, N/A if not-->
                                             <td class="px-4 py-3 text-sm text-gray-600">
@@ -714,7 +786,8 @@
                                                     </svg>
                                                     <p class="text-lg font-medium text-gray-600">No users found</p>
                                                     <p class="text-sm text-gray-500 mt-1">
-                                                        @if ($search || $filterGradeLevel || $filterYearLevel || $filterProgram || $filterRole)
+                                                        @if (
+                                                            $search ||         $filterGradeLevel || $filterYearLevel || $filterSHSStrand || $filterCollegeProgram || $filterRole)
                                                             Try adjusting your search or filters
                                                         @else
                                                             No users in the system yet
@@ -996,3 +1069,27 @@
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener('livewire:initialized', () => {
+        Livewire.on('editUserModal', () => {
+            // Handle field disabling based on grade_level/year_level
+            Livewire.on('updated', (component, name, value) => {
+                if (name === 'grade_level' && value) {
+                    // If grade_level is selected, disable college_program
+                    const collegeProgramSelect = document.querySelector('select[wire\\:model="college_program"]');
+                    if (collegeProgramSelect) {
+                        collegeProgramSelect.disabled = true;
+                        collegeProgramSelect.classList.add('bg-gray-100', 'cursor-not-allowed');
+                    }
+                } else if (name === 'year_level' && value) {
+                    // If year_level is selected, disable shs_strand
+                    const shsStrandSelect = document.querySelector('select[wire\\:model="shs_strand"]');
+                    if (shsStrandSelect) {
+                        shsStrandSelect.disabled = true;
+                        shsStrandSelect.classList.add('bg-gray-100', 'cursor-not-allowed');
+                    }
+                }
+            });
+        });
+    });
+</script>

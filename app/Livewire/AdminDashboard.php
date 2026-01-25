@@ -25,13 +25,15 @@ class AdminDashboard extends Component
     public $role;
     public $grade_level;
     public $year_level;
-    public $program;
+    public $shs_strand;      // Changed from $program
+    public $college_program; // Added
 
     // Search and filter properties
     public $search = '';
     public $filterGradeLevel = '';
     public $filterYearLevel = '';
-    public $filterProgram = '';
+    public $filterSHSStrand = '';   // Changed from $filterProgram
+    public $filterCollegeProgram = ''; // Added
     public $filterRole = '';
     
     // Events properties
@@ -69,7 +71,8 @@ class AdminDashboard extends Component
     public $selectedEvent = null;
 
      // Available programs and roles for filters
-    public $availablePrograms = [];
+    public $availableSHSStrands = [];      // Changed
+    public $availableCollegePrograms = []; // Added
     public $availableRoles = [];
     protected $paginationTheme = 'bootstrap';
     public $perPage = 10;
@@ -81,10 +84,17 @@ class AdminDashboard extends Component
 
     public function loadFilterOptions()
     {
-        // Load distinct programs from users
-        $this->availablePrograms = User::whereNotNull('program')
+        // Load distinct SHS strands from users
+        $this->availableSHSStrands = User::whereNotNull('shs_strand')
             ->distinct()
-            ->pluck('program')
+            ->pluck('shs_strand')
+            ->filter()
+            ->toArray();
+        
+        // Load distinct college programs from users
+        $this->availableCollegePrograms = User::whereNotNull('college_program')
+            ->distinct()
+            ->pluck('college_program')
             ->filter()
             ->toArray();
         
@@ -116,8 +126,11 @@ class AdminDashboard extends Component
             ->when($this->filterYearLevel, function ($query) {
                 $query->where('year_level', $this->filterYearLevel);
             })
-            ->when($this->filterProgram, function ($query) {
-                $query->where('program', $this->filterProgram);
+            ->when($this->filterSHSStrand, function ($query) {
+                $query->where('shs_strand', $this->filterSHSStrand);
+            })
+            ->when($this->filterCollegeProgram, function ($query) {
+                $query->where('college_program', $this->filterCollegeProgram);
             })
             ->when($this->filterRole, function ($query) {
                 $query->whereHas('roles', function ($q) {
@@ -130,7 +143,7 @@ class AdminDashboard extends Component
     // Reset filters
     public function resetFilters()
     {
-        $this->reset(['search', 'filterGradeLevel', 'filterYearLevel', 'filterProgram', 'filterRole']);
+        $this->reset(['search', 'filterGradeLevel', 'filterYearLevel', 'filterSHSStrand', 'filterCollegeProgram', 'filterRole']);
         $this->gotoPage(1); // Use gotoPage instead of resetPage
     }
 
@@ -156,7 +169,8 @@ class AdminDashboard extends Component
                 'Student ID' => $user->student_id ?? 'N/A',
                 'Grade Level' => $user->grade_level ? 'Grade ' . $user->grade_level : 'N/A',
                 'Year Level' => $user->year_level ? 'Year ' . $user->year_level : 'N/A',
-                'Program' => $user->program ?? 'N/A',
+                'SHS Strand' => $user->shs_strand ?? 'N/A', // UPDATED
+                'College Program' => $user->college_program ?? 'N/A', // ADDED
                 'Role' => $user->roles->first()->name ?? 'N/A',
                 'Created At' => $user->created_at->format('Y-m-d H:i:s'),
                 'Updated At' => $user->updated_at->format('Y-m-d H:i:s'),
@@ -167,7 +181,7 @@ class AdminDashboard extends Component
         $filename = 'users_report_' . date('Y-m-d_H-i-s');
         
         // Add filter info to filename if filters are applied
-        if ($this->search || $this->filterGradeLevel || $this->filterYearLevel || $this->filterProgram || $this->filterRole) {
+        if ($this->search || $this->filterGradeLevel || $this->filterYearLevel || $this->filterSHSStrand || $this->filterCollegeProgram || $this->filterRole) {
             $filename .= '_filtered';
         }
         
@@ -268,7 +282,8 @@ class AdminDashboard extends Component
             $this->email = $this->editingUser->email;
             $this->grade_level = $this->editingUser->grade_level;
             $this->year_level = $this->editingUser->year_level;
-            $this->program = $this->editingUser->program;
+            $this->shs_strand = $this->editingUser->shs_strand;      // UPDATED
+            $this->college_program = $this->editingUser->college_program; // ADDED
             
             // Get the first role name (assuming users have one primary role)
             $this->role = $this->editingUser->roles->first()->name ?? 'student';
@@ -308,7 +323,8 @@ class AdminDashboard extends Component
             'email' => 'required|email|unique:users,email,' . ($this->editingUser ? $this->editingUser->id : ''),
             'grade_level' => 'nullable|integer|min:11|max:12',
             'year_level' => 'nullable|integer|min:1|max:5',
-            'program' => 'nullable|string|max:255',
+            'shs_strand' => 'nullable|in:ABM,HUMSS,GAS,ICT',
+            'college_program' => 'nullable|in:BSIT,BSBA',
             'role' => 'required|in:admin,organizer,student',
         ]);
 
@@ -322,7 +338,8 @@ class AdminDashboard extends Component
                 'email' => $this->email,
                 'grade_level' => $this->grade_level,
                 'year_level' => $this->year_level,
-                'program' => $this->program,
+                'shs_strand' => $this->grade_level ? $this->shs_strand : null, // Only set if grade_level is selected
+                'college_program' => $this->year_level ? $this->college_program : null, // Only set if year_level is selected
             ]);
 
             // Update role
@@ -357,7 +374,7 @@ class AdminDashboard extends Component
     {
         $this->reset([
             'first_name', 'middle_name', 'last_name', 'student_id', 
-            'email', 'role', 'grade_level', 'year_level', 'program'
+            'email', 'role', 'grade_level', 'year_level', 'shs_strand', 'college_program'
         ]);
         $this->resetErrorBag();
     }

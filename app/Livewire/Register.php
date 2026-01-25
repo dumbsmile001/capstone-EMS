@@ -21,7 +21,8 @@ class Register extends Component
     public string $password_confirmation = '';
     public ?int $grade_level = null;
     public ?int $year_level = null;
-    public ?string $program = null;
+    public ?string $shs_strand = null;
+    public ?string $college_program = null;
     public bool $terms = false;
 
     protected function rules(): array
@@ -30,14 +31,40 @@ class Register extends Component
             'first_name' => ['required', 'string', 'max:255'],
             'middle_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
-            'student_id' => ['required', 'integer', 'unique:users,student_id'],
+            'student_id' => ['nullable', 'integer', 'unique:users,student_id'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', Password::defaults(), 'confirmed'],
             'grade_level' => ['nullable', 'integer', 'min:11', 'max:12'],
             'year_level' => ['nullable', 'integer', 'min:1', 'max:5'],
-            'program' => ['nullable', 'string', 'max:255'],
+            'shs_strand' => ['nullable', 'in:ABM,HUMSS,GAS,ICT'],
+            'college_program' => ['nullable', 'in:BSIT,BSBA'],
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : [],
         ];
+    }
+
+    // Add validation messages
+    protected function messages(): array
+    {
+        return [
+            'shs_strand.in' => 'Please select a valid SHS Strand.',
+            'college_program.in' => 'Please select a valid College Program.',
+        ];
+    }
+
+    public function updated($propertyName)
+    {
+        // Reset fields when grade_level or year_level changes
+        if ($propertyName === 'grade_level') {
+            if ($this->grade_level) {
+                $this->reset('year_level', 'college_program');
+            }
+        } elseif ($propertyName === 'year_level') {
+            if ($this->year_level) {
+                $this->reset('grade_level', 'shs_strand');
+            }
+        }
+        
+        $this->validateOnly($propertyName);
     }
 
     public function register()
@@ -52,7 +79,8 @@ class Register extends Component
             'email' => $this->email,
             'grade_level' => $this->grade_level,
             'year_level' => $this->year_level,
-            'program' => $this->program,
+            'shs_strand' => $this->grade_level ? $this->shs_strand : null,
+            'college_program' => $this->year_level ? $this->college_program : null,
             'password' => Hash::make($this->password),
         ]);
 
