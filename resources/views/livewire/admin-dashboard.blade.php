@@ -3,7 +3,7 @@
     <x-dashboard-sidebar />
 
     <!-- Main Content -->
-    <div class="flex-1 flex flex-col">
+    <div class="flex-1 flex flex-col lg:ml-0">
         <!-- Header -->
         <x-dashboard-header userRole="Admin" :userInitials="$userInitials" />
 
@@ -27,79 +27,10 @@
                     iconColor="orange" />
             </div>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                <!-- Recent Activity Card, cards switch order according to activity date and time-->
-                <div class="bg-white rounded-lg shadow-md p-6">
-                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Recent Activity</h2>
-                    <div class="space-y-4">
-                        <div
-                            class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1">
-                                        </path>
-                                    </svg>
-                                </div>
-                                <div>
-                                    <p class="font-medium text-gray-800">System Logins</p>
-                                    <p class="text-sm text-gray-600">[logins within 24 hours]</p>
-                                </div>
-                            </div>
-                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
-                                </path>
-                            </svg>
-                        </div>
-                        <div
-                            class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                                    <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
-                                </div>
-                                <div>
-                                    <p class="font-medium text-gray-800">Event Updates</p>
-                                    <p class="text-sm text-gray-600">[event updates within the week]</p>
-                                </div>
-                            </div>
-                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
-                                </path>
-                            </svg>
-                        </div>
-                        <div
-                            class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                                    <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
-                                        </path>
-                                    </svg>
-                                </div>
-                                <div>
-                                    <p class="font-medium text-gray-800">User Updates</p>
-                                    <p class="text-sm text-gray-600">[user updates within a month]</p>
-                                </div>
-                            </div>
-                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
-                                </path>
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Loads 3 events with dates close to current server date -->
-                <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="bg-white rounded-lg shadow-md p-4 lg:p-6">
                     <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-semibold text-gray-800">Upcoming Events</h2>
+                        <h2 class="text-lg lg:text-xl font-semibold text-gray-800">Upcoming Events</h2>
                         <x-custom-modal model="showCreateModal">
                             <h1 class="text-xl text-center font-bold mb-4">Create Event</h1>
                             @if (session()->has('success'))
@@ -109,29 +40,36 @@
                             @endif
                             <form wire:submit.prevent="createEvent" class="max-w-md mx-auto">
                                 <div class="mb-5">
-                                    <label for="title" class="block mb-2.5 text-sm font-medium text-heading">Event Title</label>
+                                    <label for="title" class="block mb-2.5 text-sm font-medium text-heading">Event
+                                        Title</label>
                                     <input type="text" id="title" wire:model="title"
                                         class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                         placeholder="Enter Event Title...">
-                                    @error('title') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                                    @error('title')
+                                        <span class="text-red-500 text-xs">{{ $message }}</span>
+                                    @enderror
                                 </div>
-                                
+
                                 <div class="flex flex-col mb-5">
                                     <h3 class="font-medium text-gray-700 mb-2">Event Date and Time</h3>
                                     <div class="flex flex-row gap-2">
                                         <div class="w-1/2">
                                             <input type="date" wire:model="date"
                                                 class="w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                            @error('date') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                                            @error('date')
+                                                <span class="text-red-500 text-xs">{{ $message }}</span>
+                                            @enderror
                                         </div>
                                         <div class="w-1/2">
                                             <input type="time" wire:model="time"
                                                 class="w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                            @error('time') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                                            @error('time')
+                                                <span class="text-red-500 text-xs">{{ $message }}</span>
+                                            @enderror
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <div class="flex flex-col mb-5">
                                     <h2 class="font-medium text-gray-700 mb-2">Event Type</h2>
                                     <select wire:model="type"
@@ -140,15 +78,19 @@
                                         <option value="online">Online</option>
                                         <option value="face-to-face">Face-to-face</option>
                                     </select>
-                                    @error('type') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
-                                    
+                                    @error('type')
+                                        <span class="text-red-500 text-xs">{{ $message }}</span>
+                                    @enderror
+
                                     <h3 class="font-medium text-gray-700 mt-3 mb-2">Event Place or Link</h3>
                                     <input type="text" wire:model="place_link"
                                         class="w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                         placeholder="Enter Event Place or Link...">
-                                    @error('place_link') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                                    @error('place_link')
+                                        <span class="text-red-500 text-xs">{{ $message }}</span>
+                                    @enderror
                                 </div>
-                                
+
                                 <div class="flex flex-col mb-5">
                                     <h2 class="font-medium text-gray-700 mb-2">Event Category</h2>
                                     <select wire:model="category"
@@ -158,66 +100,83 @@
                                         <option value="sports">Sports</option>
                                         <option value="cultural">Cultural</option>
                                     </select>
-                                    @error('category') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                                    @error('category')
+                                        <span class="text-red-500 text-xs">{{ $message }}</span>
+                                    @enderror
                                 </div>
-                                
+
                                 <div class="flex flex-col mb-5">
                                     <h2 class="font-medium text-gray-700 mb-2">Event Description</h2>
                                     <textarea wire:model="description" rows="3"
                                         class="w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                         placeholder="Enter Event Description..."></textarea>
-                                    @error('description') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                                    @error('description')
+                                        <span class="text-red-500 text-xs">{{ $message }}</span>
+                                    @enderror
                                 </div>
-                                
+
                                 <div class="flex flex-col mb-5">
                                     <h2 class="font-medium text-gray-700 mb-2">Event Banner</h2>
                                     <div class="flex items-center justify-center w-full">
                                         <label for="dropzone-file"
                                             class="flex flex-col items-center justify-center w-full h-32 bg-neutral-secondary-medium border border-dashed border-default-strong rounded-base cursor-pointer hover:bg-neutral-tertiary-medium">
                                             <div class="flex flex-col items-center justify-center text-body">
-                                                <svg class="w-8 h-8 mb-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h3a3 3 0 0 0 0-6h-.025a5.56 5.56 0 0 0 .025-.5A5.5 5.5 0 0 0 7.207 9.021C7.137 9.017 7.071 9 7 9a4 4 0 1 0 0 8h2.167M12 19v-9m0 0-2 2m2-2 2 2"/>
+                                                <svg class="w-8 h-8 mb-2" aria-hidden="true"
+                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    fill="none" viewBox="0 0 24 24">
+                                                    <path stroke="currentColor" stroke-linecap="round"
+                                                        stroke-linejoin="round" stroke-width="2"
+                                                        d="M15 17h3a3 3 0 0 0 0-6h-.025a5.56 5.56 0 0 0 .025-.5A5.5 5.5 0 0 0 7.207 9.021C7.137 9.017 7.071 9 7 9a4 4 0 1 0 0 8h2.167M12 19v-9m0 0-2 2m2-2 2 2" />
                                                 </svg>
                                                 <p class="mb-1 text-sm">
                                                     <span class="font-semibold">Click to upload</span> or drag and drop
                                                 </p>
                                                 <p class="text-xs">JPG or PNG (MAX. 2MB)</p>
                                             </div>
-                                            <input id="dropzone-file" type="file" class="hidden" wire:model="banner" />
+                                            <input id="dropzone-file" type="file" class="hidden"
+                                                wire:model="banner" />
                                         </label>
                                     </div>
-                                    @error('banner') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                                    @error('banner')
+                                        <span class="text-red-500 text-xs">{{ $message }}</span>
+                                    @enderror
                                     @if ($banner)
-                                        <p class="text-xs text-green-600 mt-1">File selected: {{ $banner->getClientOriginalName() }}</p>
+                                        <p class="text-xs text-green-600 mt-1">File selected:
+                                            {{ $banner->getClientOriginalName() }}</p>
                                     @endif
                                 </div>
-                                
+
                                 <div class="flex items-center mb-5">
                                     <input id="default-checkbox" type="checkbox" wire:model="require_payment"
                                         class="w-4 h-4 border border-default-medium rounded-xs bg-neutral-secondary-medium focus:ring-2 focus:ring-brand-soft">
-                                    <label for="default-checkbox" class="select-none ms-2 text-sm font-medium text-heading">
+                                    <label for="default-checkbox"
+                                        class="select-none ms-2 text-sm font-medium text-heading">
                                         Require Payment
                                     </label>
                                 </div>
-                                
-                                @if($require_payment)
-                                <div class="flex flex-col mb-5">
-                                    <label for="payment_amount" class="block mb-2.5 text-sm font-medium text-heading">
-                                        Payment Amount
-                                    </label>
-                                    <input type="number" id="payment_amount" wire:model="payment_amount" step="0.01" min="0"
-                                        class="block w-full px-3 py-2.5 bg-white border border-gray-300 rounded-md shadow-sm text-heading text-sm focus:ring-brand focus:border-brand placeholder:text-body"
-                                        placeholder="Enter amount (e.g., 50.00)" />
-                                    @error('payment_amount') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
-                                </div>
+
+                                @if ($require_payment)
+                                    <div class="flex flex-col mb-5">
+                                        <label for="payment_amount"
+                                            class="block mb-2.5 text-sm font-medium text-heading">
+                                            Payment Amount
+                                        </label>
+                                        <input type="number" id="payment_amount" wire:model="payment_amount"
+                                            step="0.01" min="0"
+                                            class="block w-full px-3 py-2.5 bg-white border border-gray-300 rounded-md shadow-sm text-heading text-sm focus:ring-brand focus:border-brand placeholder:text-body"
+                                            placeholder="Enter amount (e.g., 50.00)" />
+                                        @error('payment_amount')
+                                            <span class="text-red-500 text-xs">{{ $message }}</span>
+                                        @enderror
+                                    </div>
                                 @endif
-                                
+
                                 <div class="mb-5 flex gap-2">
-                                    <button type="button" wire:click="closeCreateModal" 
+                                    <button type="button" wire:click="closeCreateModal"
                                         class="w-1/2 px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition-colors">
                                         Cancel
                                     </button>
-                                    <button type="submit" 
+                                    <button type="submit"
                                         class="w-1/2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
                                         Publish Event
                                     </button>
@@ -233,20 +192,20 @@
                         @forelse($upcomingEventsData as $event)
                             @php
                                 $eventDate = \Carbon\Carbon::parse($event->date);
-                                $borderColor = match($loop->index % 3) {
+                                $borderColor = match ($loop->index % 3) {
                                     0 => 'border-blue-500',
-                                    1 => 'border-green-500', 
+                                    1 => 'border-green-500',
                                     2 => 'border-orange-500',
-                                    default => 'border-blue-500'
+                                    default => 'border-blue-500',
                                 };
-                                $bgColor = match($loop->index % 3) {
+                                $bgColor = match ($loop->index % 3) {
                                     0 => 'bg-blue-50',
                                     1 => 'bg-green-50',
                                     2 => 'bg-orange-50',
-                                    default => 'bg-blue-50'
+                                    default => 'bg-blue-50',
                                 };
                             @endphp
-                            
+
                             <div class="flex items-center space-x-4 p-4 border-l-4 {{ $borderColor }} {{ $bgColor }} rounded-lg hover:shadow-md transition-all cursor-pointer transform hover:scale-[1.02]"
                                 wire:click="openEventDetailsModal({{ $event->id }})">
                                 <div class="text-center min-w-12">
@@ -256,10 +215,10 @@
                                 <div class="flex-1">
                                     <h3 class="font-semibold text-gray-800">{{ $event->title }}</h3>
                                     <p class="text-sm text-gray-600">
-                                        {{ \Carbon\Carbon::parse($event->time)->format('g:i A') }} • 
+                                        {{ \Carbon\Carbon::parse($event->time)->format('g:i A') }} •
                                         {{ $event->type === 'online' ? 'Online' : 'In-person' }}
                                     </p>
-                                    @if($event->require_payment)
+                                    @if ($event->require_payment)
                                         <p class="text-xs text-red-600 font-medium mt-1">
                                             Paid Event - ₱{{ number_format($event->payment_amount, 2) }}
                                         </p>
@@ -269,14 +228,18 @@
                                 </div>
                                 <div class="text-gray-400">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 5l7 7-7 7"></path>
                                     </svg>
                                 </div>
                             </div>
                         @empty
                             <div class="text-center py-8 text-gray-500 bg-gray-50 rounded-lg">
-                                <svg class="w-12 h-12 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                <svg class="w-12 h-12 mx-auto text-gray-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                    </path>
                                 </svg>
                                 <p class="mt-2 text-gray-600">No upcoming events</p>
                                 <p class="text-sm text-gray-500 mt-1">Create your first event to get started</p>
@@ -285,19 +248,24 @@
                     </div>
                     <!-- Event Details Modal -->
                     <x-custom-modal model="showEventDetailsModal">
-                        @if($selectedEvent)
+                        @if ($selectedEvent)
                             <div class="max-w-2xl mx-auto bg-white rounded-lg">
                                 <!-- Banner Section -->
                                 <div class="mb-6">
-                                    @if($selectedEvent->banner)
-                                        <img src="{{ asset('storage/' . $selectedEvent->banner) }}" 
-                                            alt="{{ $selectedEvent->title }}" 
+                                    @if ($selectedEvent->banner)
+                                        <img src="{{ asset('storage/' . $selectedEvent->banner) }}"
+                                            alt="{{ $selectedEvent->title }}"
                                             class="w-full h-48 object-cover rounded-t-lg">
                                     @else
-                                        <div class="w-full h-48 bg-gray-200 rounded-t-lg flex items-center justify-center">
+                                        <div
+                                            class="w-full h-48 bg-gray-200 rounded-t-lg flex items-center justify-center">
                                             <div class="text-center text-gray-500">
-                                                <svg class="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                                <svg class="w-12 h-12 mx-auto mb-2" fill="none"
+                                                    stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                                    </path>
                                                 </svg>
                                                 <p class="text-sm">No banner available</p>
                                             </div>
@@ -308,10 +276,12 @@
                                 <!-- Content Section -->
                                 <div class="px-6 pb-6">
                                     <!-- Event Title -->
-                                    <h1 class="text-2xl font-bold text-gray-800 mb-4 text-center">{{ $selectedEvent->title }}</h1>
+                                    <h1 class="text-2xl font-bold text-gray-800 mb-4 text-center">
+                                        {{ $selectedEvent->title }}</h1>
 
                                     <!-- Event Description -->
-                                    <p class="text-gray-600 text-center mb-6 leading-relaxed">{{ $selectedEvent->description }}</p>
+                                    <p class="text-gray-600 text-center mb-6 leading-relaxed">
+                                        {{ $selectedEvent->description }}</p>
 
                                     <!-- Divider -->
                                     <div class="border-t border-gray-300 my-6"></div>
@@ -321,13 +291,15 @@
                                         <!-- Date -->
                                         <div>
                                             <h3 class="font-semibold text-gray-700 mb-1">Date</h3>
-                                            <p class="text-gray-600">{{ \Carbon\Carbon::parse($selectedEvent->date)->format('F j, Y') }}</p>
+                                            <p class="text-gray-600">
+                                                {{ \Carbon\Carbon::parse($selectedEvent->date)->format('F j, Y') }}</p>
                                         </div>
 
                                         <!-- Time -->
                                         <div>
                                             <h3 class="font-semibold text-gray-700 mb-1">Time</h3>
-                                            <p class="text-gray-600">{{ \Carbon\Carbon::parse($selectedEvent->time)->format('g:i A') }}</p>
+                                            <p class="text-gray-600">
+                                                {{ \Carbon\Carbon::parse($selectedEvent->time)->format('g:i A') }}</p>
                                         </div>
 
                                         <!-- Location/Link -->
@@ -336,8 +308,9 @@
                                                 {{ $selectedEvent->type === 'online' ? 'Event Link' : 'Location' }}
                                             </h3>
                                             <p class="text-gray-600 break-words">
-                                                @if($selectedEvent->type === 'online' && filter_var($selectedEvent->place_link, FILTER_VALIDATE_URL))
-                                                    <a href="{{ $selectedEvent->place_link }}" target="_blank" class="text-blue-600 hover:underline">
+                                                @if ($selectedEvent->type === 'online' && filter_var($selectedEvent->place_link, FILTER_VALIDATE_URL))
+                                                    <a href="{{ $selectedEvent->place_link }}" target="_blank"
+                                                        class="text-blue-600 hover:underline">
                                                         {{ $selectedEvent->place_link }}
                                                     </a>
                                                 @else
@@ -349,7 +322,8 @@
                                         <!-- Event Type -->
                                         <div>
                                             <h3 class="font-semibold text-gray-700 mb-1">Event Type</h3>
-                                            <p class="text-gray-600 capitalize">{{ str_replace('-', ' ', $selectedEvent->type) }}</p>
+                                            <p class="text-gray-600 capitalize">
+                                                {{ str_replace('-', ' ', $selectedEvent->type) }}</p>
                                         </div>
 
                                         <!-- Category -->
@@ -362,9 +336,10 @@
                                         <div>
                                             <h3 class="font-semibold text-gray-700 mb-1">Payment</h3>
                                             <p class="text-gray-600">
-                                                @if($selectedEvent->require_payment)
+                                                @if ($selectedEvent->require_payment)
                                                     <span class="text-red-600 font-semibold">
-                                                        Paid Event - ₱{{ number_format($selectedEvent->payment_amount, 2) }}
+                                                        Paid Event -
+                                                        ₱{{ number_format($selectedEvent->payment_amount, 2) }}
                                                     </span>
                                                 @else
                                                     <span class="text-green-600 font-semibold">Free Event</span>
@@ -375,11 +350,11 @@
 
                                     <!-- Action Buttons -->
                                     <div class="flex gap-3 pt-4 border-t border-gray-200">
-                                        <button type="button" wire:click="closeEventDetailsModal" 
+                                        <button type="button" wire:click="closeEventDetailsModal"
                                             class="flex-1 px-6 py-3 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors font-medium">
                                             Close
                                         </button>
-                                        <button type="button" wire:click="openEditModal({{ $selectedEvent->id }})" 
+                                        <button type="button" wire:click="openEditModal({{ $selectedEvent->id }})"
                                             class="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
                                             Edit Event
                                         </button>
@@ -396,8 +371,9 @@
             <x-custom-modal model="showGenerateReportModal">
                 <div class="max-w-md mx-auto p-6">
                     <h1 class="text-xl text-center font-bold mb-2">Export Users Report</h1>
-                    <p class="text-center text-gray-600 mb-6">Export current users table data to Excel or CSV format.</p>
-                    
+                    <p class="text-center text-gray-600 mb-6">Export current users table data to Excel or CSV format.
+                    </p>
+
                     <div class="mb-6">
                         <p class="text-sm text-gray-700 mb-2">Filters applied:</p>
                         <ul class="text-sm text-gray-600 space-y-1">
@@ -408,29 +384,29 @@
                             <li>• Role: {{ $filterRole ? ucfirst($filterRole) : 'All' }}</li>
                         </ul>
                     </div>
-                    
+
                     <div class="mb-6">
                         <label class="block mb-2 text-sm font-medium text-gray-700">Export Format</label>
                         <div class="flex space-x-4">
                             <label class="inline-flex items-center">
-                                <input type="radio" wire:model="exportFormat" value="xlsx" 
+                                <input type="radio" wire:model="exportFormat" value="xlsx"
                                     class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
                                 <span class="ml-2 text-sm text-gray-700">Excel (.xlsx)</span>
                             </label>
                             <label class="inline-flex items-center">
-                                <input type="radio" wire:model="exportFormat" value="csv" 
+                                <input type="radio" wire:model="exportFormat" value="csv"
                                     class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
                                 <span class="ml-2 text-sm text-gray-700">CSV (.csv)</span>
                             </label>
                         </div>
                     </div>
-                    
+
                     <div class="flex gap-3">
-                        <button type="button" wire:click="closeGenerateReportModal" 
+                        <button type="button" wire:click="closeGenerateReportModal"
                             class="flex-1 px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition-colors font-medium">
                             Cancel
                         </button>
-                        <button type="button" wire:click="exportUsers" 
+                        <button type="button" wire:click="exportUsers"
                             class="flex-1 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors font-medium">
                             Export {{ strtoupper($exportFormat) }}
                         </button>
@@ -499,7 +475,8 @@
                             <div class="flex flex-col mb-5">
                                 <label for="number-input"
                                     class="block mb-2.5 text-sm font-medium text-heading">Student ID</label>
-                                <input type="number" id="number-input" wire:model="student_id" aria-describedby="helper-text-explanation"
+                                <input type="number" id="number-input" wire:model="student_id"
+                                    aria-describedby="helper-text-explanation"
                                     class="block w-full px-3 py-2.5 bg-neutral-secondary-medium border border-gray-300 rounded-md shadow-sm text-heading text-sm rounded-base focus:ring-brand focus:border-brand placeholder:text-body"
                                     placeholder="Enter Student ID..." required />
                             </div>
@@ -530,9 +507,10 @@
                         <form class="max-w-md mx-auto">
                             <h1 class="text-xl text-center font-bold">Delete User</h1>
                             <h3 class="text-center mb-6">Are you sure to delete this user?</h3>
-                            @if($deletingUser)
+                            @if ($deletingUser)
                                 <p class="text-center text-gray-600 mb-4">
-                                    User: <strong>{{ $deletingUser->first_name }} {{ $deletingUser->last_name }}</strong>
+                                    User: <strong>{{ $deletingUser->first_name }}
+                                        {{ $deletingUser->last_name }}</strong>
                                 </p>
                             @endif
                             <div class="flex flex-row gap-1">
@@ -544,189 +522,217 @@
                         </form>
                     </x-custom-modal>
                     <!-- THIS IS THE USERS TABLE-->
-                    <div class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default"
-                        x-show="activeTab === 'users'" x-transition>
-                        
-                       <!-- Search and Filter Controls -->
-                        <div class="p-4 bg-gray-50 border-b border-gray-200">
-                            <div class="flex justify-between items-center mb-4">
-                                <h3 class="text-lg font-semibold text-gray-700">Users Management</h3>
-                                <!-- Move Generate Report button here -->
-                                <button wire:click="openGenerateReportModal"
-                                    class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium flex items-center gap-2">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                    </svg>
-                                    Export to Excel/CSV
-                                </button>
-                            </div>
-                            <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
-                                <!-- Search Box -->
-                                <div class="md:col-span-2">
-                                    <div class="relative">
-                                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                            <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                                            </svg>
+                    <div class="overflow-x-auto">
+                        <div class="relative bg-neutral-primary-soft shadow-xs rounded-base border border-default"
+                            x-show="activeTab === 'users'" x-transition>
+
+                            <!-- Search and Filter Controls -->
+                            <div class="p-4 bg-gray-50 border-b border-gray-200">
+                                <div class="flex justify-between items-center mb-4">
+                                    <h3 class="text-lg font-semibold text-gray-700">Users Management</h3>
+                                    <!-- Move Generate Report button here -->
+                                    <button wire:click="openGenerateReportModal"
+                                        class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium flex items-center gap-2">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                        </svg>
+                                        Export to Excel/CSV
+                                    </button>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
+                                    <!-- Search Box -->
+                                    <div class="md:col-span-2">
+                                        <div class="relative">
+                                            <div
+                                                class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                                <svg class="w-4 h-4 text-gray-500" aria-hidden="true"
+                                                    xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                    viewBox="0 0 20 20">
+                                                    <path stroke="currentColor" stroke-linecap="round"
+                                                        stroke-linejoin="round" stroke-width="2"
+                                                        d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                                                </svg>
+                                            </div>
+                                            <input type="text" wire:model.live.debounce.300ms="search"
+                                                class="block w-full pl-10 pr-4 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500"
+                                                placeholder="Search by name, email, or student ID...">
                                         </div>
-                                        <input type="text" wire:model.live.debounce.300ms="search" 
-                                            class="block w-full pl-10 pr-4 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500"
-                                            placeholder="Search by name, email, or student ID...">
+                                    </div>
+
+                                    <!-- Grade Level Filter -->
+                                    <div>
+                                        <select wire:model.live="filterGradeLevel"
+                                            class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500">
+                                            <option value="">All Grade Levels</option>
+                                            <option value="11">Grade 11</option>
+                                            <option value="12">Grade 12</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Year Level Filter -->
+                                    <div>
+                                        <select wire:model.live="filterYearLevel"
+                                            class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500">
+                                            <option value="">All Year Levels</option>
+                                            <option value="1">Year 1</option>
+                                            <option value="2">Year 2</option>
+                                            <option value="3">Year 3</option>
+                                            <option value="4">Year 4</option>
+                                            <option value="5">Year 5</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Program Filter -->
+                                    <div>
+                                        <select wire:model.live="filterProgram"
+                                            class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500">
+                                            <option value="">All Programs</option>
+                                            @foreach ($availablePrograms as $program)
+                                                <option value="{{ $program }}">{{ $program }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
 
-                                <!-- Grade Level Filter -->
-                                <div>
-                                    <select wire:model.live="filterGradeLevel"
-                                        class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500">
-                                        <option value="">All Grade Levels</option>
-                                        <option value="11">Grade 11</option>
-                                        <option value="12">Grade 12</option>
-                                    </select>
-                                </div>
-
-                                <!-- Year Level Filter -->
-                                <div>
-                                    <select wire:model.live="filterYearLevel"
-                                        class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500">
-                                        <option value="">All Year Levels</option>
-                                        <option value="1">Year 1</option>
-                                        <option value="2">Year 2</option>
-                                        <option value="3">Year 3</option>
-                                        <option value="4">Year 4</option>
-                                        <option value="5">Year 5</option>
-                                    </select>
-                                </div>
-
-                                <!-- Program Filter -->
-                                <div>
-                                    <select wire:model.live="filterProgram"
-                                        class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500">
-                                        <option value="">All Programs</option>
-                                        @foreach($availablePrograms as $program)
-                                            <option value="{{ $program }}">{{ $program }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <!-- Role Filter -->
-                                <div>
-                                    <select wire:model.live="filterRole"
-                                        class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500">
-                                        <option value="">All Roles</option>
-                                        @foreach($availableRoles as $role)
-                                            <option value="{{ $role }}">{{ ucfirst($role) }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <!-- Results Per Page -->
-                                <div>
-                                    <select wire:model.live="perPage"
-                                        class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500">
-                                        <option value="10">10 per page</option>
-                                        <option value="25">25 per page</option>
-                                        <option value="50">50 per page</option>
-                                        <option value="100">100 per page</option>
-                                    </select>
-                                </div>
-
-                                <!-- Reset Filters Button -->
-                                <div>
-                                    <button wire:click="resetFilters"
-                                        class="w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                                        Reset All Filters
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Users Table -->
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Grade Level</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Year Level</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Program</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student ID</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                                </tr>
-                            </thead>
-                            <!--Dynamically loaded data-->
-                            <tbody class="bg-white divide-y divide-gray-200">
-                                @forelse($users as $user)
-                                    <tr class="hover:bg-gray-50">
-                                        <!--users.first_name + users.last_name-->
-                                        <td class="px-4 py-3 text-sm text-gray-900">{{ $user->first_name }} {{ $user->last_name }}</td>
-                                        <!--users.email-->
-                                        <td class="px-4 py-3 text-sm text-gray-600">{{ $user->email }}</td>
-                                        <!--users.grade_level,only if student and senior high, N/A if not-->
-                                        <td class="px-4 py-3 text-sm text-gray-600">
-                                            {{ $user->grade_level ? 'Grade ' . $user->grade_level : 'N/A' }}
-                                        </td>
-                                        <!--users.year_level, only if student and college, N/A if not-->
-                                        <td class="px-4 py-3 text-sm text-gray-600">
-                                            {{ $user->year_level ? 'Year ' . $user->year_level : 'N/A' }}
-                                        </td>
-                                        <!--users.program, only if student, N/A if not-->
-                                        <td class="px-4 py-3 text-sm text-gray-600">
-                                            {{ $user->program ?? 'N/A' }}
-                                        </td>
-                                        <!--users.student_id, only if student, N/A if not-->
-                                        <td class="px-4 py-3 text-sm text-gray-600">
-                                            {{ $user->student_id ?? 'N/A' }}
-                                        </td>
-                                        <!--Spatie Roles-->
-                                        <td class="px-4 py-3 text-sm text-gray-600">
-                                            @foreach($user->roles as $role)
-                                                <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs capitalize">
-                                                    {{ $role->name }}
-                                                </span>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <!-- Role Filter -->
+                                    <div>
+                                        <select wire:model.live="filterRole"
+                                            class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500">
+                                            <option value="">All Roles</option>
+                                            @foreach ($availableRoles as $role)
+                                                <option value="{{ $role }}">{{ ucfirst($role) }}</option>
                                             @endforeach
-                                        </td>
-                                        <!--Edit, Delete-->
-                                        <td class="flex flex-row items-center px-4 py-3 space-x-2">
-                                            <!--Edit User Modal-->
-                                            <button wire:click="openEditUserModal({{ $user->id }})"
-                                                class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-xs font-medium">Edit</button>
-                                            <!--Delete User Modal-->
-                                            <button wire:click="openDeleteUserModal({{ $user->id }})"
-                                                class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs font-medium">Delete</button>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="8" class="px-4 py-8 text-center text-gray-500">
-                                            <div class="flex flex-col items-center justify-center">
-                                                <svg class="w-12 h-12 mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                </svg>
-                                                <p class="text-lg font-medium text-gray-600">No users found</p>
-                                                <p class="text-sm text-gray-500 mt-1">
-                                                    @if($search || $filterGradeLevel || $filterYearLevel || $filterProgram || $filterRole)
-                                                        Try adjusting your search or filters
-                                                    @else
-                                                        No users in the system yet
-                                                    @endif
-                                                </p>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
+                                        </select>
+                                    </div>
 
-                       <!-- Pagination - Simplified version -->
-                   <!-- Simple Pagination -->
-                        @if($users && method_exists($users, 'links'))
-                            <div class="px-4 py-3 bg-gray-50 border-t border-gray-200">
-                                {{ $users->links() }}
+                                    <!-- Results Per Page -->
+                                    <div>
+                                        <select wire:model.live="perPage"
+                                            class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500">
+                                            <option value="10">10 per page</option>
+                                            <option value="25">25 per page</option>
+                                            <option value="50">50 per page</option>
+                                            <option value="100">100 per page</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Reset Filters Button -->
+                                    <div>
+                                        <button wire:click="resetFilters"
+                                            class="w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                            Reset All Filters
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-                        @endif
+                            <!-- Users Table -->
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th
+                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Name</th>
+                                        <th
+                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Email</th>
+                                        <th
+                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Grade Level</th>
+                                        <th
+                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Year Level</th>
+                                        <th
+                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Program</th>
+                                        <th
+                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Student ID</th>
+                                        <th
+                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Role</th>
+                                        <th
+                                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Actions</th>
+                                    </tr>
+                                </thead>
+                                <!--Dynamically loaded data-->
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    @forelse($users as $user)
+                                        <tr class="hover:bg-gray-50">
+                                            <!--users.first_name + users.last_name-->
+                                            <td class="px-4 py-3 text-sm text-gray-900">{{ $user->first_name }}
+                                                {{ $user->last_name }}</td>
+                                            <!--users.email-->
+                                            <td class="px-4 py-3 text-sm text-gray-600">{{ $user->email }}</td>
+                                            <!--users.grade_level,only if student and senior high, N/A if not-->
+                                            <td class="px-4 py-3 text-sm text-gray-600">
+                                                {{ $user->grade_level ? 'Grade ' . $user->grade_level : 'N/A' }}
+                                            </td>
+                                            <!--users.year_level, only if student and college, N/A if not-->
+                                            <td class="px-4 py-3 text-sm text-gray-600">
+                                                {{ $user->year_level ? 'Year ' . $user->year_level : 'N/A' }}
+                                            </td>
+                                            <!--users.program, only if student, N/A if not-->
+                                            <td class="px-4 py-3 text-sm text-gray-600">
+                                                {{ $user->program ?? 'N/A' }}
+                                            </td>
+                                            <!--users.student_id, only if student, N/A if not-->
+                                            <td class="px-4 py-3 text-sm text-gray-600">
+                                                {{ $user->student_id ?? 'N/A' }}
+                                            </td>
+                                            <!--Spatie Roles-->
+                                            <td class="px-4 py-3 text-sm text-gray-600">
+                                                @foreach ($user->roles as $role)
+                                                    <span
+                                                        class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs capitalize">
+                                                        {{ $role->name }}
+                                                    </span>
+                                                @endforeach
+                                            </td>
+                                            <!--Edit, Delete-->
+                                            <td class="flex flex-row items-center px-4 py-3 space-x-2">
+                                                <!--Edit User Modal-->
+                                                <button wire:click="openEditUserModal({{ $user->id }})"
+                                                    class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-xs font-medium">Edit</button>
+                                                <!--Delete User Modal-->
+                                                <button wire:click="openDeleteUserModal({{ $user->id }})"
+                                                    class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs font-medium">Delete</button>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="8" class="px-4 py-8 text-center text-gray-500">
+                                                <div class="flex flex-col items-center justify-center">
+                                                    <svg class="w-12 h-12 mb-4 text-gray-400" fill="none"
+                                                        stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                    </svg>
+                                                    <p class="text-lg font-medium text-gray-600">No users found</p>
+                                                    <p class="text-sm text-gray-500 mt-1">
+                                                        @if ($search || $filterGradeLevel || $filterYearLevel || $filterProgram || $filterRole)
+                                                            Try adjusting your search or filters
+                                                        @else
+                                                            No users in the system yet
+                                                        @endif
+                                                    </p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                            <!-- Simple Pagination -->
+                            @if ($users && method_exists($users, 'links'))
+                                <div class="px-4 py-3 bg-gray-50 border-t border-gray-200">
+                                    {{ $users->links() }}
+                                </div>
+                            @endif
+                        </div>
                     </div>
                     <x-custom-modal model="showEditModal">
                         <h1 class="text-xl text-center font-bold mb-4">Edit Event</h1>
@@ -813,16 +819,16 @@
 
                             <div class="flex flex-col mb-5">
                                 <h2 class="font-medium text-gray-700 mb-2">Event Banner</h2>
-                                
-                                @if($editingEvent && $editingEvent->banner && !$banner)
+
+                                @if ($editingEvent && $editingEvent->banner && !$banner)
                                     <div class="mb-3">
                                         <p class="text-sm text-gray-600 mb-2">Current Banner:</p>
-                                        <img src="{{ asset('storage/' . $editingEvent->banner) }}" 
-                                            alt="Current Banner" 
+                                        <img src="{{ asset('storage/' . $editingEvent->banner) }}"
+                                            alt="Current Banner"
                                             class="w-full h-48 object-cover rounded-lg border border-gray-300">
                                     </div>
                                 @endif
-                                
+
                                 <div class="flex items-center justify-center w-full">
                                     <label for="dropzone-file-edit"
                                         class="flex flex-col items-center justify-center w-full h-32 bg-neutral-secondary-medium border border-dashed border-default-strong rounded-base cursor-pointer hover:bg-neutral-tertiary-medium">

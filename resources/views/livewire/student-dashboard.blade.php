@@ -32,9 +32,6 @@
                                 <button @click="activeTab = 'registrations'" :class="activeTab === 'registrations' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'" class="px-4 py-2 font-medium text-sm transition-colors">
                                     Registration History
                                 </button>
-                                <button @click="activeTab = 'payments'" :class="activeTab === 'payments' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'" class="px-4 py-2 font-medium text-sm transition-colors">
-                                    Payments
-                                </button>
                                 <button @click="activeTab = 'tickets'" :class="activeTab === 'tickets' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'" class="px-4 py-2 font-medium text-sm transition-colors">
                                     Tickets
                                 </button>
@@ -47,57 +44,6 @@
                             <div x-show="activeTab === 'registrations'" x-transition>
                                 <livewire:registration-history />
                             </div>
-
-                            <!-- Payments Table -->
-                            <div x-show="activeTab === 'payments'" x-transition>
-                                <table class="min-w-full divide-y divide-gray-200">
-                                    <thead class="bg-gray-50">
-                                        <tr>
-                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Event</th>
-                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment Date</th>
-                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="bg-white divide-y divide-gray-200">
-                                        <tr class="hover:bg-gray-50">
-                                            <td class="px-4 py-3 text-sm text-gray-900">Web Development Workshop</td>
-                                            <td class="px-4 py-3 text-sm text-gray-600">₱500.00</td>
-                                            <td class="px-4 py-3 text-sm text-gray-600">June 20, 2023</td>
-                                            <td class="px-4 py-3 text-sm">
-                                                <span class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-medium">Paid</span>
-                                            </td>
-                                            <td class="px-4 py-3 text-sm">
-                                                <button wire:click="viewReceipt(1)" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-xs font-medium">View Receipt</button>
-                                            </td>
-                                        </tr>
-                                        <tr class="hover:bg-gray-50">
-                                            <td class="px-4 py-3 text-sm text-gray-900">Data Science Summit</td>
-                                            <td class="px-4 py-3 text-sm text-gray-600">₱750.00</td>
-                                            <td class="px-4 py-3 text-sm text-gray-600">-</td>
-                                            <td class="px-4 py-3 text-sm">
-                                                <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs font-medium">Pending</span>
-                                            </td>
-                                            <td class="px-4 py-3 text-sm">
-                                                <button wire:click="payNow(2)" class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-xs font-medium">Pay Now</button>
-                                            </td>
-                                        </tr>
-                                        <tr class="hover:bg-gray-50">
-                                            <td class="px-4 py-3 text-sm text-gray-900">Annual Tech Conference</td>
-                                            <td class="px-4 py-3 text-sm text-gray-600">₱1,000.00</td>
-                                            <td class="px-4 py-3 text-sm text-gray-600">-</td>
-                                            <td class="px-4 py-3 text-sm">
-                                                <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs font-medium">Pending</span>
-                                            </td>
-                                            <td class="px-4 py-3 text-sm">
-                                                <button wire:click="payNow(3)" class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-xs font-medium">Pay Now</button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-
                             <!-- Tickets Table -->
                             <div x-show="activeTab === 'tickets'" x-transition>
                                 <livewire:student-tickets />

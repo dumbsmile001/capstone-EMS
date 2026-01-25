@@ -19,17 +19,16 @@
     $iconColorClass = $iconColors[$iconColor] ?? 'text-blue-500';
 @endphp
 
-<div class="bg-white rounded-lg shadow-md p-6 border-l-4 {{ $borderColor }}">
+<div class="bg-white rounded-lg shadow-md p-3 md:p-4 lg:p-6 border-l-4 {{ $borderColor }}">
     <div class="flex items-center justify-between">
-        <div>
-            <p class="text-sm text-gray-600 mb-1">{{ $title }}</p>
-            <p class="text-3xl font-bold text-gray-800">{{ $value }}</p>
+        <div class="flex-1 min-w-0">
+            <p class="text-xs md:text-sm text-gray-600 mb-1 truncate">{{ $title }}</p>
+            <p class="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 truncate">{{ $value }}</p>
         </div>
         @if($icon)
-            <div class="{{ $iconColorClass }}">
+            <div class="{{ $iconColorClass }} flex-shrink-0 ml-2">
                 {!! $icon !!}
             </div>
         @endif
     </div>
 </div>
-

@@ -5,10 +5,10 @@ $id = $id ?? md5($attributes->wire('model'));
 
 $maxWidth = [
     'sm' => 'sm:max-w-sm',
-    'md' => 'sm:max-w-md',
-    'lg' => 'sm:max-w-lg',
-    'xl' => 'sm:max-w-xl',
-    '2xl' => 'sm:max-w-2xl',
+    'md' => 'sm:max-w-md md:max-w-lg',
+    'lg' => 'sm:max-w-lg md:max-w-xl lg:max-w-2xl',
+    'xl' => 'sm:max-w-xl md:max-w-2xl lg:max-w-4xl',
+    '2xl' => 'sm:max-w-2xl md:max-w-4xl lg:max-w-5xl',
 ][$maxWidth ?? '2xl'];
 @endphp
 
@@ -18,7 +18,7 @@ $maxWidth = [
     x-on:keydown.escape.window="show = false"
     x-show="show"
     id="{{ $id }}"
-    class="jetstream-modal fixed inset-0 overflow-y-auto px-4 py-6 sm:px-0 z-50"
+    class="jetstream-modal fixed inset-0 overflow-y-auto px-2 md:px-4 py-6 z-50"
     style="display: none;"
 >
     <div x-show="show" class="fixed inset-0 transform transition-all" x-on:click="show = false" x-transition:enter="ease-out duration-300"
