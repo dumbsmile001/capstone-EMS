@@ -17,14 +17,25 @@ class DashboardStats extends Component
             ->with('event')
             ->get();
 
+        // Count tickets that exist and are active
+        $ticketsCount = $registrations->filter(function($registration) {
+            return $registration->ticket && $registration->ticket->isActive();
+        })->count();
+
+        // Count pending payments
+        $pendingPaymentsCount = $registrations->filter(function($registration) {
+            return $registration->event->require_payment && 
+                   $registration->payment_status === 'pending';
+        })->count();
+
         $this->stats = [
             'my_events' => $registrations->where('status', 'registered')->count(),
             'upcoming_events' => $registrations->where('status', 'registered')
                 ->filter(function($registration) {
                     return $registration->event->date >= now()->format('Y-m-d');
                 })->count(),
-            'my_tickets' => 0, // Will update when we implement ticketing
-            'pending_payments' => 0, // Will update when we implement payments
+            'my_tickets' => $ticketsCount, // Will update when we implement ticketing
+            'pending_payments' => $pendingPaymentsCount, // Will update when we implement payments
         ];
     }
 

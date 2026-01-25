@@ -549,8 +549,8 @@ class AdminDashboard extends Component
 
         // Fetch events from database
         $events = Event::where('created_by', Auth::id())
-                      ->orderBy('created_at', 'desc')
-                      ->get();
+                    ->orderBy('created_at', 'desc')
+                    ->get();
 
         // Get upcoming events
         $upcomingEventsData = $this->getUpcomingEvents();
@@ -558,8 +558,14 @@ class AdminDashboard extends Component
         // Get counts for overview cards
         $usersCount = User::count();
         $eventsCount = Event::count();
-        $archivedEvents = Event::where('status', 'archived')->count();
-        $upcomingEvents = Event::where('date', '>=', now()->format('Y-m-d'))->count();
+        
+        // FIXED: Count all archived events (using is_archived field)
+        $archivedEvents = Event::where('is_archived', true)->count();
+        
+        // FIXED: Count upcoming events (published and not archived)
+        $upcomingEvents = Event::where('date', '>=', now()->format('Y-m-d'))
+                            ->where('is_archived', false)
+                            ->count();
         
         return view('livewire.admin-dashboard', [
             'userInitials' => $userInitials,
