@@ -21,12 +21,38 @@ class EventRegistration extends Component
 
     public function loadEvents()
     {
+        $user = Auth::user();
+
         $this->events = Event::where('status', 'published')
-            ->where('is_archived', false) // Add this
-            ->where('date', '>=', now()->format('Y-m-d'))
-            ->orderBy('date')
-            ->orderBy('time')
-            ->get();
+        ->where('is_archived', false)
+        ->where('date', '>=', now()->format('Y-m-d'))
+        ->where(function($query) use ($user) {
+            // Events visible to all
+            $query->where('visibility_type', 'all')
+                // OR events visible to user's grade level
+                ->orWhere(function($q) use ($user) {
+                    $q->where('visibility_type', 'grade_level')
+                      ->whereJsonContains('visible_to_grade_level', (string)$user->grade_level);
+                })
+                // OR events visible to user's SHS strand
+                ->orWhere(function($q) use ($user) {
+                    $q->where('visibility_type', 'shs_strand')
+                      ->whereJsonContains('visible_to_shs_strand', $user->shs_strand);
+                })
+                // OR events visible to user's year level
+                ->orWhere(function($q) use ($user) {
+                    $q->where('visibility_type', 'year_level')
+                      ->whereJsonContains('visible_to_year_level', (string)$user->year_level);
+                })
+                // OR events visible to user's college program
+                ->orWhere(function($q) use ($user) {
+                    $q->where('visibility_type', 'college_program')
+                      ->whereJsonContains('visible_to_college_program', $user->college_program);
+                });
+        })
+        ->orderBy('date')
+        ->orderBy('time')
+        ->get();
     }
 
     public function loadUserRegistrations()

@@ -43,6 +43,13 @@ class OrganizerEvents extends Component
     public $sortBy = 'date';
     public $sortDirection = 'asc';
 
+    // Add these properties to the OrganizerEvents class (around line 40-50):
+    public $visibility_type = 'all';
+    public $visible_to_grade_level = [];
+    public $visible_to_shs_strand = [];
+    public $visible_to_year_level = [];
+    public $visible_to_college_program = [];
+
     protected $queryString = [
         'search' => ['except' => ''],
         'filterType' => ['except' => ''],
@@ -88,6 +95,12 @@ class OrganizerEvents extends Component
         $this->description = $this->editingEvent->description;
         $this->require_payment = $this->editingEvent->require_payment;
         $this->payment_amount = $this->editingEvent->payment_amount;
+        // Add these lines:
+        $this->visibility_type = $this->editingEvent->visibility_type;
+        $this->visible_to_grade_level = $this->editingEvent->visible_to_grade_level ?? [];
+        $this->visible_to_shs_strand = $this->editingEvent->visible_to_shs_strand ?? [];
+        $this->visible_to_year_level = $this->editingEvent->visible_to_year_level ?? [];
+        $this->visible_to_college_program = $this->editingEvent->visible_to_college_program ?? [];
 
         $this->showEditModal = true;
     }
@@ -124,13 +137,15 @@ class OrganizerEvents extends Component
             'banner' => 'nullable|image|max:2048',
             'require_payment' => 'boolean',
             'payment_amount' => 'nullable|required_if:require_payment,true|numeric|min:0',
+            'visibility_type' => 'required|in:all,grade_level,shs_strand,year_level,college_program',
+            'visible_to_grade_level' => 'nullable|array',
+            'visible_to_shs_strand' => 'nullable|array',
+            'visible_to_year_level' => 'nullable|array',
+            'visible_to_college_program' => 'nullable|array',
         ]);
 
         // Handle banner upload
-        $bannerPath = null;
-        if ($this->banner) {
-            $bannerPath = $this->banner->store('event-banners', 'public');
-        }
+        $bannerPath = $this->banner ? $this->banner->store('event-banners', 'public') : null;
 
         // Create the event
         Event::create([
@@ -146,6 +161,11 @@ class OrganizerEvents extends Component
             'payment_amount' => $this->require_payment ? $this->payment_amount : null,
             'created_by' => Auth::id(),
             'status' => 'published',
+            'visibility_type' => $this->visibility_type,
+            'visible_to_grade_level' => $this->visibility_type === 'grade_level' ? $this->visible_to_grade_level : null,
+            'visible_to_shs_strand' => $this->visibility_type === 'shs_strand' ? $this->visible_to_shs_strand : null,
+            'visible_to_year_level' => $this->visibility_type === 'year_level' ? $this->visible_to_year_level : null,
+            'visible_to_college_program' => $this->visibility_type === 'college_program' ? $this->visible_to_college_program : null,
         ]);
 
         $this->closeCreateModal();
@@ -166,13 +186,28 @@ class OrganizerEvents extends Component
                 'banner' => 'nullable|image|max:2048',
                 'require_payment' => 'boolean',
                 'payment_amount' => 'nullable|required_if:require_payment,true|numeric|min:0',
+                'visibility_type' => 'required|in:all,grade_level,shs_strand,year_level,college_program',
+                'visible_to_grade_level' => 'nullable|array',
+                'visible_to_shs_strand' => 'nullable|array',
+                'visible_to_year_level' => 'nullable|array',
+                'visible_to_college_program' => 'nullable|array',
             ]);
 
             // Handle banner upload if new banner is provided
             if ($this->banner) {
-                $bannerPath = $this->banner->store('event-banners', 'public');
-                $data['banner'] = $bannerPath;
+                $data['banner'] = $this->banner->store('event-banners', 'public');
             }
+            else {
+                // Keep the existing banner if no new banner is uploaded
+                unset($data['banner']);
+            }
+
+            // Add visibility fields
+            $data['visibility_type'] = $this->visibility_type;
+            $data['visible_to_grade_level'] = $this->visibility_type === 'grade_level' ? $this->visible_to_grade_level : null;
+            $data['visible_to_shs_strand'] = $this->visibility_type === 'shs_strand' ? $this->visible_to_shs_strand : null;
+            $data['visible_to_year_level'] = $this->visibility_type === 'year_level' ? $this->visible_to_year_level : null;
+            $data['visible_to_college_program'] = $this->visibility_type === 'college_program' ? $this->visible_to_college_program : null;
 
             $this->editingEvent->update($data);
             
@@ -285,9 +320,11 @@ class OrganizerEvents extends Component
 
     private function resetForm()
     {
-        $this->reset([
+       $this->reset([
             'title', 'date', 'time', 'type', 'place_link', 
-            'category', 'description', 'banner', 'require_payment', 'payment_amount'
+            'category', 'description', 'banner', 'require_payment', 'payment_amount',
+            'visibility_type', 'visible_to_grade_level', 'visible_to_shs_strand',
+            'visible_to_year_level', 'visible_to_college_program'
         ]);
         $this->resetErrorBag();
         $this->date = now()->format('Y-m-d');

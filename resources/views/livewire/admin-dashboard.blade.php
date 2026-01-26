@@ -105,6 +105,113 @@
                                     @enderror
                                 </div>
 
+                                <!-- In the create event modal form, add this after the payment section: -->
+<div class="flex flex-col mb-5">
+    <h2 class="font-medium text-gray-700 mb-2">Event Visibility</h2>
+    <select wire:model="visibility_type"
+        class="block w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        <option value="all">Visible to All Students</option>
+        <option value="grade_level">Specific Grade Levels</option>
+        <option value="shs_strand">Specific SHS Strands</option>
+        <option value="year_level">Specific Year Levels</option>
+        <option value="college_program">Specific College Programs</option>
+    </select>
+    @error('visibility_type')
+        <span class="text-red-500 text-xs">{{ $message }}</span>
+    @enderror
+</div>
+
+@if ($visibility_type === 'grade_level')
+<div class="flex flex-col mb-5">
+    <label class="block mb-2 text-sm font-medium text-gray-700">Select Grade Levels</label>
+    <div class="space-y-2">
+        <label class="inline-flex items-center">
+            <input type="checkbox" wire:model="visible_to_grade_level" value="11" 
+                class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+            <span class="ml-2 text-sm text-gray-700">Grade 11</span>
+        </label>
+        <label class="inline-flex items-center">
+            <input type="checkbox" wire:model="visible_to_grade_level" value="12" 
+                class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+            <span class="ml-2 text-sm text-gray-700">Grade 12</span>
+        </label>
+    </div>
+    @error('visible_to_grade_level')
+        <span class="text-red-500 text-xs">{{ $message }}</span>
+    @enderror
+</div>
+@endif
+
+@if ($visibility_type === 'shs_strand')
+<div class="flex flex-col mb-5">
+    <label class="block mb-2 text-sm font-medium text-gray-700">Select SHS Strands</label>
+    <div class="space-y-2">
+        <label class="inline-flex items-center">
+            <input type="checkbox" wire:model="visible_to_shs_strand" value="ABM" 
+                class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+            <span class="ml-2 text-sm text-gray-700">ABM</span>
+        </label>
+        <label class="inline-flex items-center">
+            <input type="checkbox" wire:model="visible_to_shs_strand" value="HUMSS" 
+                class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+            <span class="ml-2 text-sm text-gray-700">HUMSS</span>
+        </label>
+        <label class="inline-flex items-center">
+            <input type="checkbox" wire:model="visible_to_shs_strand" value="GAS" 
+                class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+            <span class="ml-2 text-sm text-gray-700">GAS</span>
+        </label>
+        <label class="inline-flex items-center">
+            <input type="checkbox" wire:model="visible_to_shs_strand" value="ICT" 
+                class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+            <span class="ml-2 text-sm text-gray-700">ICT</span>
+        </label>
+    </div>
+    @error('visible_to_shs_strand')
+        <span class="text-red-500 text-xs">{{ $message }}</span>
+    @enderror
+</div>
+@endif
+
+@if ($visibility_type === 'year_level')
+<div class="flex flex-col mb-5">
+    <label class="block mb-2 text-sm font-medium text-gray-700">Select Year Levels</label>
+    <div class="space-y-2">
+        @for ($i = 1; $i <= 5; $i++)
+            <label class="inline-flex items-center">
+                <input type="checkbox" wire:model="visible_to_year_level" value="{{ $i }}" 
+                    class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                <span class="ml-2 text-sm text-gray-700">Year {{ $i }}</span>
+            </label>
+        @endfor
+    </div>
+    @error('visible_to_year_level')
+        <span class="text-red-500 text-xs">{{ $message }}</span>
+    @enderror
+</div>
+@endif
+
+@if ($visibility_type === 'college_program')
+<div class="flex flex-col mb-5">
+    <label class="block mb-2 text-sm font-medium text-gray-700">Select College Programs</label>
+    <div class="space-y-2">
+        <label class="inline-flex items-center">
+            <input type="checkbox" wire:model="visible_to_college_program" value="BSIT" 
+                class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+            <span class="ml-2 text-sm text-gray-700">BSIT</span>
+        </label>
+        <label class="inline-flex items-center">
+            <input type="checkbox" wire:model="visible_to_college_program" value="BSBA" 
+                class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+            <span class="ml-2 text-sm text-gray-700">BSBA</span>
+        </label>
+    </div>
+    @error('visible_to_college_program')
+        <span class="text-red-500 text-xs">{{ $message }}</span>
+    @enderror
+</div>
+@endif
+
                                 <div class="flex flex-col mb-5">
                                     <h2 class="font-medium text-gray-700 mb-2">Event Description</h2>
                                     <textarea wire:model="description" rows="3"
@@ -879,6 +986,113 @@
                                     <span class="text-red-500 text-xs">{{ $message }}</span>
                                 @enderror
                             </div>
+
+                            <!-- In the create event modal form, add this after the payment section: -->
+<div class="flex flex-col mb-5">
+    <h2 class="font-medium text-gray-700 mb-2">Event Visibility</h2>
+    <select wire:model="visibility_type"
+        class="block w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        <option value="all">Visible to All Students</option>
+        <option value="grade_level">Specific Grade Levels</option>
+        <option value="shs_strand">Specific SHS Strands</option>
+        <option value="year_level">Specific Year Levels</option>
+        <option value="college_program">Specific College Programs</option>
+    </select>
+    @error('visibility_type')
+        <span class="text-red-500 text-xs">{{ $message }}</span>
+    @enderror
+</div>
+
+@if ($visibility_type === 'grade_level')
+<div class="flex flex-col mb-5">
+    <label class="block mb-2 text-sm font-medium text-gray-700">Select Grade Levels</label>
+    <div class="space-y-2">
+        <label class="inline-flex items-center">
+            <input type="checkbox" wire:model="visible_to_grade_level" value="11" 
+                class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+            <span class="ml-2 text-sm text-gray-700">Grade 11</span>
+        </label>
+        <label class="inline-flex items-center">
+            <input type="checkbox" wire:model="visible_to_grade_level" value="12" 
+                class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+            <span class="ml-2 text-sm text-gray-700">Grade 12</span>
+        </label>
+    </div>
+    @error('visible_to_grade_level')
+        <span class="text-red-500 text-xs">{{ $message }}</span>
+    @enderror
+</div>
+@endif
+
+@if ($visibility_type === 'shs_strand')
+<div class="flex flex-col mb-5">
+    <label class="block mb-2 text-sm font-medium text-gray-700">Select SHS Strands</label>
+    <div class="space-y-2">
+        <label class="inline-flex items-center">
+            <input type="checkbox" wire:model="visible_to_shs_strand" value="ABM" 
+                class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+            <span class="ml-2 text-sm text-gray-700">ABM</span>
+        </label>
+        <label class="inline-flex items-center">
+            <input type="checkbox" wire:model="visible_to_shs_strand" value="HUMSS" 
+                class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+            <span class="ml-2 text-sm text-gray-700">HUMSS</span>
+        </label>
+        <label class="inline-flex items-center">
+            <input type="checkbox" wire:model="visible_to_shs_strand" value="GAS" 
+                class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+            <span class="ml-2 text-sm text-gray-700">GAS</span>
+        </label>
+        <label class="inline-flex items-center">
+            <input type="checkbox" wire:model="visible_to_shs_strand" value="ICT" 
+                class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+            <span class="ml-2 text-sm text-gray-700">ICT</span>
+        </label>
+    </div>
+    @error('visible_to_shs_strand')
+        <span class="text-red-500 text-xs">{{ $message }}</span>
+    @enderror
+</div>
+@endif
+
+@if ($visibility_type === 'year_level')
+<div class="flex flex-col mb-5">
+    <label class="block mb-2 text-sm font-medium text-gray-700">Select Year Levels</label>
+    <div class="space-y-2">
+        @for ($i = 1; $i <= 5; $i++)
+            <label class="inline-flex items-center">
+                <input type="checkbox" wire:model="visible_to_year_level" value="{{ $i }}" 
+                    class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                <span class="ml-2 text-sm text-gray-700">Year {{ $i }}</span>
+            </label>
+        @endfor
+    </div>
+    @error('visible_to_year_level')
+        <span class="text-red-500 text-xs">{{ $message }}</span>
+    @enderror
+</div>
+@endif
+
+@if ($visibility_type === 'college_program')
+<div class="flex flex-col mb-5">
+    <label class="block mb-2 text-sm font-medium text-gray-700">Select College Programs</label>
+    <div class="space-y-2">
+        <label class="inline-flex items-center">
+            <input type="checkbox" wire:model="visible_to_college_program" value="BSIT" 
+                class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+            <span class="ml-2 text-sm text-gray-700">BSIT</span>
+        </label>
+        <label class="inline-flex items-center">
+            <input type="checkbox" wire:model="visible_to_college_program" value="BSBA" 
+                class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+            <span class="ml-2 text-sm text-gray-700">BSBA</span>
+        </label>
+    </div>
+    @error('visible_to_college_program')
+        <span class="text-red-500 text-xs">{{ $message }}</span>
+    @enderror
+</div>
+@endif
 
                             <div class="flex flex-col mb-5">
                                 <h2 class="font-medium text-gray-700 mb-2">Event Description</h2>
