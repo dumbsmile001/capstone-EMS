@@ -29,6 +29,8 @@ Route::middleware([
     ->name('organizer.events');
     Route::get('/organizer/events/archived', \App\Livewire\ArchivedEvents::class)->name('organizer.events.archived');
 
+    Route::get('/dashboard/student/events', App\Livewire\StudentEvents::class)->name('student.events');
+
     // Ticket routes
     Route::get('/ticket/{ticket}/download', [TicketController::class, 'download'])
         ->name('ticket.download');

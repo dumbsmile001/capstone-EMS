@@ -52,6 +52,7 @@ class EventRegistration extends Component
         })
         ->orderBy('date')
         ->orderBy('time')
+        ->take(3)
         ->get();
     }
 
