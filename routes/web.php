@@ -22,11 +22,11 @@ Route::middleware([
     Route::get('/dashboard/organizer', \App\Livewire\OrganizerDashboard::class)->name('dashboard.organizer');
     Route::get('/dashboard/student', \App\Livewire\StudentDashboard::class)->name('dashboard.student');
 
-    // Organizer Events Page (NEW ROUTE)
+    Route::get('/admin/events', \App\Livewire\AdminEvents::class)->name('admin.events');
+    Route::get('/admin/events/archived', \App\Livewire\AdminArchivedEvents::class)->name('admin.events.archived');
+
     Route::get('/organizer/events', \App\Livewire\OrganizerEvents::class)
     ->name('organizer.events');
-
-    // routes/web.php
     Route::get('/organizer/events/archived', \App\Livewire\ArchivedEvents::class)->name('organizer.events.archived');
 
     // Ticket routes
