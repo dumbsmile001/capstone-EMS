@@ -28,6 +28,7 @@ Route::middleware([
     Route::get('/organizer/events', \App\Livewire\OrganizerEvents::class)
     ->name('organizer.events');
     Route::get('/organizer/events/archived', \App\Livewire\ArchivedEvents::class)->name('organizer.events.archived');
+     Route::get('/organizer/attendance', \App\Livewire\EventAttendance::class)->name('organizer.attendance');
 
     Route::get('/dashboard/student/events', App\Livewire\StudentEvents::class)->name('student.events');
 

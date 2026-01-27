@@ -30,14 +30,16 @@ class Ticket extends Model
         return $this->belongsTo(Registration::class);
     }
 
+    // Correct the event relationship - use through() with correct parameters
     public function event()
     {
-        return $this->hasOneThrough(Event::class, Registration::class);
+        return $this->through('registration')->has('event');
     }
 
+   // Correct the user relationship - use through() with correct parameters
     public function user()
     {
-        return $this->hasOneThrough(User::class, Registration::class);
+        return $this->through('registration')->has('user');
     }
 
     // Helper methods
