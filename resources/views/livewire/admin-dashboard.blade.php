@@ -659,7 +659,7 @@
                                 <input type="number" id="number-input" wire:model="student_id"
                                     aria-describedby="helper-text-explanation"
                                     class="block w-full px-3 py-2.5 bg-neutral-secondary-medium border border-gray-300 rounded-md shadow-sm text-heading text-sm rounded-base focus:ring-brand focus:border-brand placeholder:text-body"
-                                    placeholder="Enter Student ID..." required />
+                                    placeholder="Enter Student ID..."/>
                             </div>
                             <div class="mb-5">
                                 <label for="email"

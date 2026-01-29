@@ -15,7 +15,7 @@ class Register extends Component
     public string $first_name = '';
     public string $middle_name = '';
     public string $last_name = '';
-    public string $student_id = '';
+    public ?int $student_id = null;
     public string $email = '';
     public string $password = '';
     public string $password_confirmation = '';
@@ -24,6 +24,17 @@ class Register extends Component
     public ?string $shs_strand = null;
     public ?string $college_program = null;
     public bool $terms = false;
+
+     // Add this computed property to help with UI state
+    public function getShouldDisableCollegeFields(): bool
+    {
+        return !empty($this->grade_level) || !empty($this->shs_strand);
+    }
+    
+    public function getShouldDisableShsFields(): bool
+    {
+        return !empty($this->year_level) || !empty($this->college_program);
+    }
 
     protected function rules(): array
     {
@@ -34,10 +45,46 @@ class Register extends Component
             'student_id' => ['nullable', 'integer', 'unique:users,student_id'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', Password::defaults(), 'confirmed'],
-            'grade_level' => ['nullable', 'integer', 'min:11', 'max:12'],
-            'year_level' => ['nullable', 'integer', 'min:1', 'max:5'],
-            'shs_strand' => ['nullable', 'in:ABM,HUMSS,GAS,ICT'],
-            'college_program' => ['nullable', 'in:BSIT,BSBA'],
+            'grade_level' => [
+                'nullable', 
+                'integer', 
+                'min:11', 
+                'max:12',
+                function ($attribute, $value, $fail) {
+                    if ($value && ($this->year_level || $this->college_program)) {
+                        $fail('You cannot select both SHS and College fields.');
+                    }
+                }
+            ],
+            'year_level' => [
+                'nullable', 
+                'integer', 
+                'min:1', 
+                'max:5',
+                function ($attribute, $value, $fail) {
+                    if ($value && ($this->grade_level || $this->shs_strand)) {
+                        $fail('You cannot select both SHS and College fields.');
+                    }
+                }
+            ],
+            'shs_strand' => [
+                'nullable', 
+                'in:ABM,HUMSS,GAS,ICT',
+                function ($attribute, $value, $fail) {
+                    if ($value && ($this->year_level || $this->college_program)) {
+                        $fail('You cannot select both SHS and College fields.');
+                    }
+                }
+            ],
+            'college_program' => [
+                'nullable', 
+                'in:BSIT,BSBA',
+                function ($attribute, $value, $fail) {
+                    if ($value && ($this->grade_level || $this->shs_strand)) {
+                        $fail('You cannot select both SHS and College fields.');
+                    }
+                }
+            ],
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : [],
         ];
     }
@@ -53,13 +100,21 @@ class Register extends Component
 
     public function updated($propertyName)
     {
-        // Reset fields when grade_level or year_level changes
+         // Reset fields when grade_level or year_level changes
         if ($propertyName === 'grade_level') {
             if ($this->grade_level) {
                 $this->reset('year_level', 'college_program');
             }
         } elseif ($propertyName === 'year_level') {
             if ($this->year_level) {
+                $this->reset('grade_level', 'shs_strand');
+            }
+        } elseif ($propertyName === 'shs_strand') {
+            if ($this->shs_strand) {
+                $this->reset('year_level', 'college_program');
+            }
+        } elseif ($propertyName === 'college_program') {
+            if ($this->college_program) {
                 $this->reset('grade_level', 'shs_strand');
             }
         }

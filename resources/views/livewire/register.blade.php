@@ -89,8 +89,9 @@
                             <x-label for="grade_level" value="{{ __('Grade Level (SHS)') }}" class="text-gray-700 font-medium text-sm sm:text-base" />
                             <select 
                                 id="grade_level" 
-                                class="block mt-1 w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm text-sm sm:text-base"
+                                class="block mt-1 w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm text-sm sm:text-base {{ $year_level || $college_program ? 'bg-gray-100 cursor-not-allowed' : '' }}"
                                 wire:model="grade_level"
+                                {{ $year_level || $college_program ? 'disabled' : '' }}
                             >
                                 <option value="">Select Grade Level</option>
                                 <option value="11">Grade 11</option>
@@ -103,8 +104,9 @@
                             <x-label for="year_level" value="{{ __('Year Level (College)') }}" class="text-gray-700 font-medium text-sm sm:text-base" />
                             <select 
                                 id="year_level" 
-                                class="block mt-1 w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm text-sm sm:text-base"
+                                class="block mt-1 w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm text-sm sm:text-base {{ $grade_level || $shs_strand ? 'bg-gray-100 cursor-not-allowed' : '' }}"
                                 wire:model="year_level"
+                                {{ $grade_level || $shs_strand ? 'disabled' : '' }}
                             >
                                 <option value="">Select Year Level</option>
                                 <option value="1">1st Year</option>
@@ -122,9 +124,9 @@
                             <x-label for="shs_strand" value="{{ __('SHS Strand') }}" class="text-gray-700 font-medium text-sm sm:text-base" />
                             <select 
                                 id="shs_strand" 
-                                class="block mt-1 w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm text-sm sm:text-base {{ $year_level ? 'bg-gray-100 cursor-not-allowed' : '' }}"
+                                class="block mt-1 w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm text-sm sm:text-base {{ $year_level || $college_program ? 'bg-gray-100 cursor-not-allowed' : '' }}"
                                 wire:model="shs_strand"
-                                {{ $year_level ? 'disabled' : '' }}
+                                {{ $year_level || $college_program ? 'disabled' : '' }}
                             >
                                 <option value="">Select SHS Strand</option>
                                 <option value="ABM">ABM</option>
@@ -139,9 +141,9 @@
                             <x-label for="college_program" value="{{ __('College Program') }}" class="text-gray-700 font-medium text-sm sm:text-base" />
                             <select 
                                 id="college_program" 
-                                class="block mt-1 w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm text-sm sm:text-base {{ $grade_level ? 'bg-gray-100 cursor-not-allowed' : '' }}"
+                                class="block mt-1 w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm text-sm sm:text-base {{ $grade_level || $shs_strand ? 'bg-gray-100 cursor-not-allowed' : '' }}"
                                 wire:model="college_program"
-                                {{ $grade_level ? 'disabled' : '' }}
+                                {{ $grade_level || $shs_strand ? 'disabled' : '' }}
                             >
                                 <option value="">Select College Program</option>
                                 <option value="BSIT">BSIT</option>
@@ -228,3 +230,61 @@
         </form>
     </div>
 </div>
+<!-- Add this script section at the bottom of the file, just before closing the main div -->
+<script>
+document.addEventListener('livewire:initialized', () => {
+    const component = @this;
+    
+    // Function to update field states
+    function updateFieldStates() {
+        const shsFields = ['grade_level', 'shs_strand'];
+        const collegeFields = ['year_level', 'college_program'];
+        
+        // Get current values
+        const hasShsValue = shsFields.some(field => component.get(field));
+        const hasCollegeValue = collegeFields.some(field => component.get(field));
+        
+        // Update disabled states
+        shsFields.forEach(field => {
+            const element = document.getElementById(field);
+            if (element) {
+                element.disabled = hasCollegeValue;
+                element.classList.toggle('bg-gray-100', hasCollegeValue);
+                element.classList.toggle('cursor-not-allowed', hasCollegeValue);
+            }
+        });
+        
+        collegeFields.forEach(field => {
+            const element = document.getElementById(field);
+            if (element) {
+                element.disabled = hasShsValue;
+                element.classList.toggle('bg-gray-100', hasShsValue);
+                element.classList.toggle('cursor-not-allowed', hasShsValue);
+            }
+        });
+    }
+    
+    // Initial update
+    updateFieldStates();
+    
+    // Listen for Livewire updates on relevant fields
+    const fieldsToWatch = ['grade_level', 'year_level', 'shs_strand', 'college_program'];
+    
+    fieldsToWatch.forEach(field => {
+        component.on(`updated:${field}`, () => {
+            // Small delay to ensure DOM is updated
+            setTimeout(updateFieldStates, 50);
+        });
+    });
+    
+    // Also listen for changes directly on the inputs (in case Livewire events don't fire)
+    fieldsToWatch.forEach(field => {
+        const element = document.getElementById(field);
+        if (element) {
+            element.addEventListener('change', () => {
+                setTimeout(updateFieldStates, 50);
+            });
+        }
+    });
+});
+</script>

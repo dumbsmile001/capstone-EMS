@@ -326,7 +326,7 @@ class AdminDashboard extends Component
             'first_name' => 'required|string|max:255',
             'middle_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'student_id' => 'required|integer|unique:users,student_id,' . ($this->editingUser ? $this->editingUser->id : ''),
+            'student_id' => 'nullable|integer|unique:users,student_id,' . ($this->editingUser ? $this->editingUser->id : ''),
             'email' => 'required|email|unique:users,email,' . ($this->editingUser ? $this->editingUser->id : ''),
             'grade_level' => 'nullable|integer|min:11|max:12',
             'year_level' => 'nullable|integer|min:1|max:5',
