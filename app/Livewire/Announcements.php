@@ -11,13 +11,18 @@ class Announcements extends Component
 {
     use WithPagination;
     
-    //Announcement properties
+    // Announcement properties
     public string $title = '';
     public string $category = 'general';
     public string $description = '';
+    public ?int $editingId = null;
 
-    //Modal flags
+    // Modal flags
     public $showAnnouncementModal = false;
+    public $showDeleteModal = false;
+
+    // For delete confirmation
+    public $announcementToDelete = null;
 
     public function createAnnouncement()
     {
@@ -27,32 +32,141 @@ class Announcements extends Component
             'description' => 'required|string|min:10'
         ]);
 
-        $category = $this->category ?: 'general';
-
         Announcement::create([
             'title' => $this->title,
-            'category' => $category,
+            'category' => $this->category,
             'description' => $this->description,
             'user_id' => Auth::id(),
         ]);
 
         $this->reset('title', 'category', 'description');
         $this->showAnnouncementModal = false;
+        $this->editingId = null;
 
         session()->flash('success', 'Announcement created successfully!');
-    }   
+    }
+
+    public function editAnnouncement($id)
+    {
+        $announcement = Announcement::findOrFail($id);
+        
+        // Check authorization - only creator or admin can edit
+        if (!$this->canModifyAnnouncement($announcement)) {
+            session()->flash('error', 'You are not authorized to edit this announcement.');
+            return;
+        }
+
+        $this->editingId = $id;
+        $this->title = $announcement->title;
+        $this->category = $announcement->category;
+        $this->description = $announcement->description;
+        
+        $this->showAnnouncementModal = true;
+    }
+
+    public function updateAnnouncement()
+    {
+        if (!$this->editingId) return;
+
+        $data = $this->validate([
+            'title' => 'required|string|max:255',
+            'category' => 'required|in:general,event,reminder',
+            'description' => 'required|string|min:10'
+        ]);
+
+        $announcement = Announcement::findOrFail($this->editingId);
+        
+        // Check authorization
+        if (!$this->canModifyAnnouncement($announcement)) {
+            session()->flash('error', 'You are not authorized to update this announcement.');
+            return;
+        }
+
+        $announcement->update([
+            'title' => $this->title,
+            'category' => $this->category,
+            'description' => $this->description,
+        ]);
+
+        $this->reset('title', 'category', 'description', 'editingId');
+        $this->showAnnouncementModal = false;
+
+        session()->flash('success', 'Announcement updated successfully!');
+    }
+
+    public function confirmDelete($id)
+    {
+        $announcement = Announcement::findOrFail($id);
+        
+        // Check authorization
+        if (!$this->canModifyAnnouncement($announcement)) {
+            session()->flash('error', 'You are not authorized to delete this announcement.');
+            return;
+        }
+
+        $this->announcementToDelete = $announcement;
+        $this->showDeleteModal = true;
+    }
+
+    public function deleteAnnouncement()
+    {
+        if (!$this->announcementToDelete) return;
+
+        // Final authorization check
+        if (!$this->canModifyAnnouncement($this->announcementToDelete)) {
+            session()->flash('error', 'You are not authorized to delete this announcement.');
+            $this->closeDeleteModal();
+            return;
+        }
+
+        $this->announcementToDelete->delete();
+        $this->closeDeleteModal();
+
+        session()->flash('success', 'Announcement deleted successfully!');
+    }
+
+    public function saveAnnouncement()
+    {
+        if ($this->editingId) {
+            $this->updateAnnouncement();
+        } else {
+            $this->createAnnouncement();
+        }
+    }
+
+    public function canModifyAnnouncement($announcement)
+    {
+        $user = Auth::user();
+        
+        // Admins can modify any announcement
+        if ($user->hasRole('admin')) {
+            return true;
+        }
+        
+        // Organizers can only modify their own announcements
+        if ($user->hasRole('organizer')) {
+            return $announcement->user_id == $user->id;
+        }
+        
+        return false;
+    }
     
     public function openAnnouncementModal(){
+        $this->reset('editingId', 'title', 'category', 'description');
+        $this->category = 'general';
         $this->showAnnouncementModal = true;
     }
     
     public function closeAnnouncementModal(){
         $this->showAnnouncementModal = false;
-        $this->reset([
-            'title', 'category', 'description'
-        ]);
+        $this->reset(['title', 'category', 'description', 'editingId']);
         $this->category = 'general'; 
         $this->resetErrorBag();
+    }
+    
+    public function closeDeleteModal(){
+        $this->showDeleteModal = false;
+        $this->announcementToDelete = null;
     }
     
     public function render()
@@ -70,6 +184,8 @@ class Announcements extends Component
             'userInitials' => $userInitials,
             'userRole' => ucfirst($userRole),
             'announcements' => $announcements,
+            'editingId' => $this->editingId, // Add this line
+            'announcementToDelete' => $this->announcementToDelete, // Also add this
         ])->layout('layouts.app');
     }
 }

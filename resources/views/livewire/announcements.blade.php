@@ -14,7 +14,11 @@
                 <p class="text-gray-600 mb-6">Stay updated with the latest announcements and news</p>
                 
                 <!-- Announcements Feed -->
-                <x-announcements-feed :announcements="$announcements" />
+                <x-announcements-feed 
+                    :announcements="$announcements"
+                    :editingId="$editingId"
+                    :announcementToDelete="$announcementToDelete"
+                />
             </div>
         </div>
     </div>
