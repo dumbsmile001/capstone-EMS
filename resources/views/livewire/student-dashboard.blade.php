@@ -1,14 +1,17 @@
 <div class="flex min-h-screen bg-gray-50">
-    <!-- Sidebar -->
-    <x-dashboard-sidebar />
+    <div class="fixed left-0 top-0 h-screen z-40">
+        <x-dashboard-sidebar />
+    </div>
 
     <!-- Main Content -->
-    <div class="flex-1 flex flex-col">
-        <!-- Header -->
-        <x-dashboard-header userRole="Student" :userInitials="$userInitials" />
+    <div class="flex-1 flex flex-col lg:ml-64">
+        <!-- Fixed Header -->
+        <div class="fixed top-0 right-0 left-0 lg:left-64 z-30">
+            <x-dashboard-header userRole="Student" :userInitials="$userInitials" />
+        </div>
 
         <!-- Dashboard Content -->
-        <div class="flex-1 p-6">
+        <div class="flex-1 pt-16 lg:pt-20 p-6 mt-16 lg:mt-0 overflow-y-auto">
             <!-- Overview Cards -->
             <livewire:dashboard-stats />
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">

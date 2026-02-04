@@ -1,16 +1,17 @@
 <div class="flex min-h-screen bg-gray-50">
-    <!-- Sidebar -->
-    <x-dashboard-sidebar />
+    <div class="fixed left-0 top-0 h-screen z-40">
+        <x-dashboard-sidebar />
+    </div>
 
     <!-- Main Content -->
-    <div class="flex-1 flex flex-col">
-        <!-- Header -->
-        <x-dashboard-header userRole="Organizer" :userInitials="$userInitials" />
+    <div class="flex-1 flex flex-col lg:ml-64">
+        <!-- Fixed Header -->
+        <div class="fixed top-0 right-0 left-0 lg:left-64 z-30">
+            <x-dashboard-header userRole="Organizer" :userInitials="$userInitials" />
+        </div>
 
         <!-- Dashboard Content -->
-        <div class="flex-1 p-6">
-            <!-- Overview Cards -->
-            <!-- organizer-dashboard.blade.php -->
+        <div class="flex-1 pt-16 lg:pt-20 p-6 mt-16 lg:mt-0 overflow-y-auto">
             <!-- Overview Cards -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                 <x-overview-card title="Event Registrations" :value="$eventRegistrationsCount"

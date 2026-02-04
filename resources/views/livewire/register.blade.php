@@ -1,4 +1,6 @@
-<div class="min-h-screen flex flex-col sm:justify-center items-center pt-4 sm:pt-0 px-4 sm:px-0 relative">
+<div class="min-h-screen flex flex-col sm:justify-center items-center pt-4 sm:pt-0 px-4 sm:px-0 relative" style="min-height: 100vh;
+                              background: url('/images/spcc-login-register-bg.jpg') no-repeat center fixed;
+                              background-size: cover;">
     <!-- Blue Gradient Background -->
     <div class="fixed inset-0 -z-10 bg-gradient-to-br from-blue-50 via-blue-100 to-blue-200"></div>
 

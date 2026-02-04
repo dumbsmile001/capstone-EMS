@@ -1,14 +1,17 @@
 <div class="flex min-h-screen bg-gray-50">
-    <!-- Sidebar -->
-    <x-dashboard-sidebar />
+    <div class="fixed left-0 top-0 h-screen z-40">
+        <x-dashboard-sidebar />
+    </div>
 
     <!-- Main Content -->
-    <div class="flex-1 flex flex-col lg:ml-0">
-        <!-- Header -->
-        <x-dashboard-header userRole="Admin" :userInitials="$userInitials" />
+    <div class="flex-1 flex flex-col lg:ml-64">
+        <!-- Fixed Header -->
+        <div class="fixed top-0 right-0 left-0 lg:left-64 z-30">
+            <x-dashboard-header userRole="Admin" :userInitials="$userInitials" />
+        </div>
 
         <!-- Dashboard Content -->
-        <div class="flex-1 p-6">
+        <div class="flex-1 pt-16 lg:pt-20 p-6 mt-16 lg:mt-0 overflow-y-auto">
             <!-- Overview Cards -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                 <!--Count all users in the system-->
@@ -31,7 +34,10 @@
                 <div class="bg-white rounded-lg shadow-md p-4 lg:p-6">
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-lg lg:text-xl font-semibold text-gray-800">Upcoming Events</h2>
-                        <x-custom-modal model="showCreateModal">
+                        <x-custom-modal 
+                        model="showCreateModal" 
+                        title="Create New Event"
+                        description="Fill in the details below to create a new event for students.">
                             <h1 class="text-xl text-center font-bold mb-4">Create Event</h1>
                             @if (session()->has('success'))
                                 <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">

@@ -13,8 +13,8 @@
     $isDashboardRoute = request()->routeIs('dashboard.*') || request()->routeIs('home');
 @endphp
 
-<!-- Mobile sidebar toggle -->
-<div class="lg:hidden fixed top-4 left-4 z-50">
+<!-- Mobile sidebar toggle - Moved to right side -->
+<div class="lg:hidden fixed top-4 right-4 z-50">
     <button id="sidebarToggle" class="p-2 bg-blue-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300">
         <svg id="menuIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
@@ -27,8 +27,19 @@
 
 <!-- Sidebar with mobile classes -->
 <div id="sidebar" class="fixed lg:static w-64 bg-blue-900 min-h-screen text-white transform -translate-x-full lg:translate-x-0 transition-transform duration-300 z-40">
-    <div class="p-6 border-b border-blue-800">
-        <h1 class="text-2xl font-bold">SPCC</h1>
+    <div class="p-4 border-b border-blue-800 flex items-center justify-center lg:justify-start">
+        <!-- Logo Container -->
+        <div class="flex items-center space-x-3">
+            <!-- Logo Image - Replace with your actual logo path -->
+            <img 
+                src="{{ asset('images/spcc-logo.png') }}" 
+                alt="SPCC Logo" 
+                class="h-10 w-10 object-contain"
+                onerror="this.onerror=null; this.src='https://via.placeholder.com/40?text=Logo';"
+            >
+            <!-- Header Text -->
+            <h1 class="text-2xl font-bold">SPCC</h1>
+        </div>
     </div>
     <nav class="mt-6">
         <a href="{{ route('home') }}" class="flex items-center px-6 py-3 hover:bg-blue-800 transition-colors {{ $isDashboardRoute ? 'bg-blue-800' : '' }}">
