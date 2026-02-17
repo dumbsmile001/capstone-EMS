@@ -401,7 +401,7 @@
             </div>
         </div>
     @endif
-
+    <div class="overflow-x-auto">
     @if ($registrations->count() > 0)
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
@@ -664,4 +664,5 @@
             </p>
         </div>
     @endif
+    </div>
 </div>

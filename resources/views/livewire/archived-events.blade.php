@@ -4,7 +4,7 @@
     <x-dashboard-sidebar />
 
     <!-- Main Content -->
-    <div class="flex-1 flex flex-col">
+    <div class="flex-1 overflow-y-auto overflow-x-hidden">
         <!-- Header -->
         <x-dashboard-header userRole="Organizer" :userInitials="$userInitials" />
 

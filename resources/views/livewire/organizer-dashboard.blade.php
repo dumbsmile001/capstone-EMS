@@ -4,7 +4,7 @@
     </div>
 
     <!-- Main Content -->
-    <div class="flex-1 flex flex-col lg:ml-64">
+    <div class="flex-1 lg:ml-64 overflow-y-auto overflow-x-hidden">
         <!-- Fixed Header -->
         <div class="fixed top-0 right-0 left-0 lg:left-64 z-30">
             <x-dashboard-header userRole="Organizer" :userInitials="$userInitials" />
@@ -148,7 +148,7 @@
                                 {{ session('info') }}
                             </div>
                         @endif
-
+                        <div class="overflow-x-auto">
                         @if (count($payments) > 0)
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-50">
@@ -314,6 +314,7 @@
                                 </div>
                             </div>
                         @endif
+                        </div>
                     </div>
 
                     <!-- Export Payments Modal -->
