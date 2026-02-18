@@ -1,77 +1,160 @@
 @props(['announcements' => [], 'editingId' => null, 'announcementToDelete' => null])
 <div class="bg-white rounded-lg shadow-md p-6">
     <!-- Create/Edit Modal -->
-    <x-custom-modal model="showAnnouncementModal">
-        <h1 class="text-xl text-center font-bold mb-6">
-            {{ $editingId ? 'Edit Announcement' : 'Create Announcement' }}
-        </h1>
-        
-        @if (session()->has('success'))
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-                {{ session('success') }}
+    <x-custom-modal 
+        model="showAnnouncementModal" 
+        maxWidth="lg"
+        :title="$editingId ? 'Edit Announcement' : 'Create New Announcement'"
+        description="{{ $editingId ? 'Update your announcement details below' : 'Fill in the details below to create a new announcement' }}"
+        headerBg="{{ $editingId ? 'yellow' : 'blue' }}"
+    >
+        <form wire:submit.prevent="saveAnnouncement" class="space-y-6">
+            @if (session()->has('success'))
+                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mb-4">
+                    {{ session('success') }}
+                </div>
+            @endif
+            
+            @if (session()->has('error'))
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-4">
+                    {{ session('error') }}
+                </div>
+            @endif
+            
+            <!-- Title Field -->
+            <div>
+                <label for="title" class="block text-sm font-semibold text-gray-700 mb-2">
+                    Announcement Title
+                    <span class="text-xs font-normal text-gray-500 ml-2">e.g., Important Update, Event Reminder</span>
+                </label>
+                <input 
+                    type="text" 
+                    id="title" 
+                    wire:model="title" 
+                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200"
+                    placeholder="Enter announcement title..."
+                    required 
+                />
+                @error('title') 
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
             </div>
-        @endif
-        
-        @if (session()->has('error'))
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                {{ session('error') }}
-            </div>
-        @endif
-        
-        <form wire:submit.prevent="saveAnnouncement" class="max-w-md mx-auto">
-            <div class="mb-5">
-                <label for="title" class="block mb-2.5 text-sm font-medium text-heading">Title</label>
-                <input type="text" id="title" wire:model="title" class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Title..." required />
-                @error('title') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
-            </div>
-            <div class="mb-5">
-                <label for="category" class="block mb-2.5 text-sm font-medium text-heading">Category</label>
-                <select id="category" wire:model="category" class="block w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                    <option value="general">General</option>
-                    <option value="event">Event</option>
+
+            <!-- Category Field -->
+            <div>
+                <label for="category" class="block text-sm font-semibold text-gray-700 mb-2">
+                    Category
+                </label>
+                <select 
+                    id="category" 
+                    wire:model="category" 
+                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200"
+                >
+                    <option value="general">General Announcement</option>
+                    <option value="event">Event Announcement</option>
                     <option value="reminder">Reminder</option>
                 </select>
-                @error('category') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                @error('category') 
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
             </div>
-            <div class="mb-5">
-                <label for="description" class="block mb-2.5 text-sm font-medium text-heading">Description</label>
-                <textarea id="description" wire:model="description" rows="4" class="w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Description..." required></textarea>
-                @error('description') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+
+            <!-- Description Field -->
+            <div>
+                <label for="description" class="block text-sm font-semibold text-gray-700 mb-2">
+                    Description
+                </label>
+                <textarea 
+                    id="description" 
+                    wire:model="description" 
+                    rows="5" 
+                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 resize-none"
+                    placeholder="Write your announcement content here..."
+                    required
+                ></textarea>
+                @error('description') 
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
             </div>
-            <div class="mt-4 flex gap-2">
-                <button type="submit" class="flex-1 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-                    {{ $editingId ? 'Update Announcement' : 'Publish Announcement' }}
-                </button>
-                <button type="button" wire:click="closeAnnouncementModal" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">
-                    Cancel
-                </button>
-            </div>
+
+            <!-- Form Actions -->
+            <!-- Form Actions -->
+<div class="flex gap-3 pt-4">
+    <button 
+        type="submit" 
+        class="flex-1 px-6 py-3 font-medium rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-200 transform hover:scale-[1.02] 
+            @if($editingId)
+                bg-yellow-600 text-white hover:bg-yellow-700 focus:ring-yellow-500
+            @else
+                bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500
+            @endif"
+    >
+        {{ $editingId ? 'Update Announcement' : 'Publish Announcement' }}
+    </button>
+    <button 
+        type="button" 
+        wire:click="closeAnnouncementModal" 
+        class="px-6 py-3 bg-gray-100 text-gray-700 font-medium rounded-xl hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 transition-all duration-200"
+    >
+        Cancel
+    </button>
+</div>
         </form>
     </x-custom-modal>
 
     <!-- Delete Confirmation Modal -->
-    <x-custom-modal model="showDeleteModal">
-        <div class="text-center">
-            <h2 class="text-xl font-bold text-gray-800 mb-4">Delete Announcement</h2>
-            <div class="mb-6">
-                <svg class="mx-auto h-12 w-12 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <x-custom-modal 
+        model="showDeleteModal" 
+        maxWidth="md"
+        title="Delete Announcement"
+        description="This action cannot be undone"
+        headerBg="red"
+        :showCloseButton="true"
+    >
+        <div class="text-center py-2">
+            <!-- Warning Icon -->
+            <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-100 mb-4">
+                <svg class="h-8 w-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.928-.833-2.698 0L4.732 16.5c-.77.833.192 2.5 1.732 2.5z"/>
                 </svg>
-                <p class="mt-2 text-gray-600">
-                    Are you sure you want to delete this announcement?
-                </p>
-                <p class="mt-1 font-semibold text-gray-800">
-                    "{{ $announcementToDelete->title ?? '' }}"
-                </p>
-                <p class="mt-1 text-sm text-gray-500">
-                    This action cannot be undone.
-                </p>
             </div>
-            <div class="flex gap-3 justify-center">
-                <button wire:click="deleteAnnouncement" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
-                    Delete
+            
+            <!-- Confirmation Message -->
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">Are you absolutely sure?</h3>
+            <p class="text-sm text-gray-500 mb-4">
+                This will permanently delete this announcement and remove all associated data.
+            </p>
+            
+            <!-- Announcement Details -->
+            @if($announcementToDelete)
+                <div class="bg-gray-50 rounded-lg p-4 mb-6 text-left">
+                    <p class="text-xs text-gray-500 mb-1">Announcement:</p>
+                    <p class="font-medium text-gray-900">"{{ $announcementToDelete->title }}"</p>
+                    @if($announcementToDelete->category)
+                        <span class="inline-block mt-2 px-2 py-1 text-xs font-semibold rounded 
+                            @switch($announcementToDelete->category)
+                                @case('event') bg-green-100 text-green-800 @break
+                                @case('reminder') bg-yellow-100 text-yellow-800 @break
+                                @default bg-blue-100 text-blue-800
+                            @endswitch">
+                            {{ ucfirst($announcementToDelete->category) }}
+                        </span>
+                    @endif
+                </div>
+            @endif
+
+            <!-- Action Buttons -->
+            <div class="flex gap-3">
+                <button 
+                    wire:click="deleteAnnouncement" 
+                    class="flex-1 px-4 py-3 bg-red-600 text-white font-medium rounded-xl hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-all duration-200"
+                >
+                    Confirm Delete
                 </button>
-                <button wire:click="closeDeleteModal" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">
+                <button 
+                    wire:click="closeDeleteModal" 
+                    class="flex-1 px-4 py-3 bg-gray-100 text-gray-700 font-medium rounded-xl hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 transition-all duration-200"
+                >
                     Cancel
                 </button>
             </div>

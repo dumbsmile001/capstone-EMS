@@ -20,6 +20,12 @@ class AdminArchivedEvents extends Component
     public $eventsPerPage = 10;
     public $exportFormat = 'xlsx';
     public $showExportModal = false;
+    
+    // Confirmation modal properties
+    public $showRestoreConfirmation = false;
+    public $showDeleteConfirmation = false;
+    public $selectedEventId = null;
+    public $selectedEventTitle = '';
 
     protected $queryString = [
         'search' => ['except' => ''],
@@ -45,12 +51,46 @@ class AdminArchivedEvents extends Component
         })->toArray();
     }
 
+    public function confirmRestore($eventId)
+    {
+        $event = Event::find($eventId);
+        if ($event) {
+            $this->selectedEventId = $eventId;
+            $this->selectedEventTitle = $event->title;
+            $this->showRestoreConfirmation = true;
+        }
+    }
+
+    public function confirmDelete($eventId)
+    {
+        $event = Event::find($eventId);
+        if ($event) {
+            $this->selectedEventId = $eventId;
+            $this->selectedEventTitle = $event->title;
+            $this->showDeleteConfirmation = true;
+        }
+    }
+
+    public function confirmAction()
+    {
+        if ($this->showRestoreConfirmation) {
+            $this->unarchiveEvent($this->selectedEventId);
+            $this->showRestoreConfirmation = false;
+        } elseif ($this->showDeleteConfirmation) {
+            $this->deleteArchivedEvent($this->selectedEventId);
+            $this->showDeleteConfirmation = false;
+        }
+        
+        $this->selectedEventId = null;
+        $this->selectedEventTitle = '';
+    }
+
     public function unarchiveEvent($eventId)
     {
         $event = Event::findOrFail($eventId);
         
         if ($event->unarchive()) {
-            session()->flash('success', 'Event restored successfully!');
+            session()->flash('success', 'Event "' . $event->title . '" restored successfully!');
         } else {
             session()->flash('error', 'Failed to restore event.');
         }
@@ -59,9 +99,10 @@ class AdminArchivedEvents extends Component
     public function deleteArchivedEvent($eventId)
     {
         $event = Event::findOrFail($eventId);
+        $eventTitle = $event->title;
         
         $event->delete();
-        session()->flash('success', 'Event deleted permanently!');
+        session()->flash('success', 'Event "' . $eventTitle . '" deleted permanently!');
     }
 
     public function exportArchivedEvents()

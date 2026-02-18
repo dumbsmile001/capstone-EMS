@@ -356,7 +356,7 @@ class AdminDashboard extends Component
         }
 
         $this->closeEditUserModal();
-        $this->loadUsers(); // Refresh the users list
+        $this->resetPage();
     }
 
     public function deleteUser()
@@ -374,7 +374,7 @@ class AdminDashboard extends Component
         }
 
         $this->closeDeleteUserModal();
-        $this->loadUsers(); // Refresh the users list
+        $this->resetPage();
     }
 
     private function resetUserForm()

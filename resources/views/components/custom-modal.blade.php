@@ -6,7 +6,8 @@
     'showCloseButton' => true,
     'padding' => 'p-4 md:p-6',
     'footer' => null,
-    'noPadding' => false
+    'noPadding' => false,
+    'headerBg' => 'blue' // blue, yellow, green, etc.
 ])
 
 @php
@@ -19,6 +20,36 @@
     ][$maxWidth] ?? 'sm:max-w-lg md:max-w-xl lg:max-w-2xl';
     
     $paddingClass = $noPadding ? '' : $padding;
+    
+    $headerSolidColors = [
+        'blue' => 'bg-blue-600',
+        'yellow' => 'bg-yellow-500',
+        'green' => 'bg-green-600',
+        'red' => 'bg-red-600',
+        'purple' => 'bg-purple-600',
+    ];
+    
+    $headerBgClass = $headerSolidColors[$headerBg] ?? $headerSolidColors['blue'];
+    
+    $iconBgColors = [
+        'blue' => 'bg-blue-500',
+        'yellow' => 'bg-yellow-400',
+        'green' => 'bg-green-500',
+        'red' => 'bg-red-500',
+        'purple' => 'bg-purple-500',
+    ];
+    
+    $iconBgClass = $iconBgColors[$headerBg] ?? $iconBgColors['blue'];
+    
+    $closeButtonColors = [
+        'blue' => 'hover:bg-blue-700 focus:ring-blue-300',
+        'yellow' => 'hover:bg-yellow-600 focus:ring-yellow-300',
+        'green' => 'hover:bg-green-700 focus:ring-green-300',
+        'red' => 'hover:bg-red-700 focus:ring-red-300',
+        'purple' => 'hover:bg-purple-700 focus:ring-purple-300',
+    ];
+    
+    $closeButtonClass = $closeButtonColors[$headerBg] ?? $closeButtonColors['blue'];
 @endphp
 
 <x-modal
@@ -26,36 +57,57 @@
     maxWidth="{{ $maxWidth }}"
 >
     <div class="modal-content-wrapper">
-        <!-- Modal Header -->
-        @if($title || $description || $showCloseButton)
-        <div class="modal-header">
-            <div class="modal-header-content">
-                @if($title)
-                    <h2 class="modal-title">{{ $title }}</h2>
-                @endif
-                @if($description)
-                    <p class="modal-description">{{ $description }}</p>
+        <!-- Modal Header with Solid Color Background -->
+        <div class="modal-header {{ $headerBgClass }}">
+            <div class="flex items-center justify-between w-full">
+                <div class="flex items-center space-x-3">
+                    <!-- Icon Circle with darker shade for contrast -->
+                    <div class="p-2.5 rounded-xl {{ $iconBgClass }} text-white shadow-lg">
+                        @if($headerBg === 'blue')
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                            </svg>
+                        @elseif($headerBg === 'yellow')
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                            </svg>
+                        @elseif($headerBg === 'green')
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                            </svg>
+                        @endif
+                    </div>
+                    
+                    <!-- Title and Description - White text for contrast -->
+                    <div>
+                        @if($title)
+                            <h2 class="text-xl font-bold text-white">{{ $title }}</h2>
+                        @endif
+                        @if($description)
+                            <p class="text-sm text-white/90 mt-0.5">{{ $description }}</p>
+                        @endif
+                    </div>
+                </div>
+                
+                @if($showCloseButton)
+                    <button type="button" class="modal-close-button text-white hover:bg-white/20 transition-all duration-200 rounded-lg p-2 focus:outline-none focus:ring-2 {{ $closeButtonClass }}" 
+                            wire:click="$set('{{ $model }}', false)"
+                            aria-label="Close modal">
+                        <svg class="w-5 h-5 transition-transform duration-300 group-hover:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
                 @endif
             </div>
-            
-            @if($showCloseButton)
-                <button type="button" class="modal-close-button" 
-                        wire:click="$set('{{ $model }}', false)"
-                        aria-label="Close modal">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            @endif
         </div>
-        @endif
 
-        <!-- Modal Body -->
+        <!-- Modal Body with Improved Spacing -->
         <div class="modal-body {{ $paddingClass }}">
             {{ $slot }}
         </div>
 
-        <!-- Modal Footer (if provided) -->
+        <!-- Modal Footer -->
         @if($footer)
             <div class="modal-footer">
                 {{ $footer }}
@@ -66,256 +118,132 @@
 
 @once
 <style>
+    /* School Colors - Replace these with your actual school colors */
+    :root {
+        --school-blue: #2563eb;
+        --school-blue-light: #3b82f6;
+        --school-yellow: #eab308;
+        --school-yellow-light: #facc15;
+        --school-green: #16a34a;
+        --school-green-light: #22c55e;
+    }
+
     .modal-content-wrapper {
         background: white;
-        border-radius: 0.75rem;
+        border-radius: 1rem;
         overflow: hidden;
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
         max-height: calc(90vh - 2rem);
         display: flex;
         flex-direction: column;
+        animation: modalSlideIn 0.3s ease-out;
+    }
+
+    @keyframes modalSlideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px) scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
     }
 
     .modal-header {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        padding: 1.5rem 1.5rem 0;
-        background: linear-gradient(to right, #f8fafc, #ffffff);
-        border-bottom: 1px solid #e5e7eb;
-    }
-
-    .modal-header-content {
-        flex: 1;
-        padding-right: 1rem;
-    }
-
-    .modal-title {
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: #1f2937;
-        margin-bottom: 0.25rem;
-        line-height: 1.4;
-    }
-
-    .modal-description {
-        font-size: 0.875rem;
-        color: #6b7280;
-        line-height: 1.5;
-        margin-top: 0.25rem;
+        padding: 1.25rem 1.5rem;
     }
 
     .modal-close-button {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 2rem;
-        height: 2rem;
-        border-radius: 0.375rem;
-        color: #9ca3af;
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 0.5rem;
         transition: all 0.2s ease;
         flex-shrink: 0;
     }
 
     .modal-close-button:hover {
-        background-color: #f3f4f6;
-        color: #374151;
-        transform: rotate(90deg);
-    }
-
-    .modal-close-button:focus {
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        transform: scale(1.1);
     }
 
     .modal-body {
         flex: 1;
         overflow-y: auto;
         scrollbar-width: thin;
-        scrollbar-color: #d1d5db #f9fafb;
+        scrollbar-color: #cbd5e0 #f1f5f9;
     }
 
     .modal-body::-webkit-scrollbar {
-        width: 6px;
+        width: 8px;
     }
 
     .modal-body::-webkit-scrollbar-track {
-        background: #f9fafb;
-        border-radius: 3px;
+        background: #f1f5f9;
+        border-radius: 4px;
     }
 
     .modal-body::-webkit-scrollbar-thumb {
-        background-color: #d1d5db;
-        border-radius: 3px;
+        background: #cbd5e0;
+        border-radius: 4px;
     }
 
-    .modal-footer {
-        padding: 1.25rem 1.5rem;
-        background-color: #f9fafb;
-        border-top: 1px solid #e5e7eb;
-        display: flex;
-        gap: 0.75rem;
-        justify-content: flex-end;
+    .modal-body::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
     }
 
-    /* Success/Failure Message Styling */
-    .modal-body .bg-green-100 {
-        border-radius: 0.5rem;
-        padding: 0.75rem 1rem;
-        margin-bottom: 1.25rem;
-        border-left: 4px solid #10b981;
-        background-color: #ecfdf5;
-        border-color: #10b981;
-        color: #047857;
-    }
-
-    .modal-body .bg-red-100 {
-        border-radius: 0.5rem;
-        padding: 0.75rem 1rem;
-        margin-bottom: 1.25rem;
-        border-left: 4px solid #ef4444;
-        background-color: #fef2f2;
-        border-color: #ef4444;
-        color: #dc2626;
-    }
-
-    /* Form Styling within Modal */
-    .modal-body form {
-        display: flex;
-        flex-direction: column;
-        gap: 1.25rem;
-    }
-
-    .modal-body .form-group {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    .modal-body label {
-        font-size: 0.875rem;
-        font-weight: 500;
-        color: #374151;
-        display: block;
-        margin-bottom: 0.25rem;
-    }
-
+    /* Form Elements Styling */
     .modal-body input[type="text"],
     .modal-body input[type="email"],
     .modal-body input[type="number"],
     .modal-body input[type="date"],
     .modal-body input[type="time"],
-    .modal-body input[type="password"],
     .modal-body textarea,
     .modal-body select {
         width: 100%;
-        padding: 0.625rem 0.875rem;
-        border: 1px solid #d1d5db;
-        border-radius: 0.5rem;
-        font-size: 0.875rem;
-        color: #374151;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 0.75rem;
+        font-size: 0.95rem;
+        color: #1f2937;
         background-color: white;
         transition: all 0.2s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    }
+
+    .modal-body input:hover,
+    .modal-body textarea:hover,
+    .modal-body select:hover {
+        border-color: var(--school-blue-light);
+        box-shadow: 0 4px 8px rgba(37, 99, 235, 0.1);
+        transform: translateY(-1px);
     }
 
     .modal-body input:focus,
     .modal-body textarea:focus,
     .modal-body select:focus {
         outline: none;
-        border-color: #3b82f6;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        ring-width: 0;
+        border-color: var(--school-yellow);
+        box-shadow: 0 0 0 4px rgba(234, 179, 8, 0.15);
+        transform: translateY(-1px);
     }
 
-    .modal-body input::placeholder,
-    .modal-body textarea::placeholder {
-        color: #9ca3af;
-    }
-
-    .modal-body .text-red-500 {
-        font-size: 0.75rem;
-        margin-top: 0.25rem;
-    }
-
-    /* File Upload Styling */
-    .modal-body .file-upload-area {
-        border: 2px dashed #d1d5db;
-        border-radius: 0.5rem;
-        padding: 2rem 1rem;
-        text-align: center;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        background-color: #f9fafb;
-    }
-
-    .modal-body .file-upload-area:hover {
-        border-color: #3b82f6;
-        background-color: #eff6ff;
-    }
-
-    .modal-body .file-upload-area.dragover {
-        border-color: #3b82f6;
-        background-color: #dbeafe;
-    }
-
-    /* Checkbox and Radio Styling */
-    .modal-body input[type="checkbox"],
-    .modal-body input[type="radio"] {
-        border-color: #d1d5db;
-        border-radius: 0.25rem;
-        color: #3b82f6;
-    }
-
-    .modal-body input[type="checkbox"]:checked,
-    .modal-body input[type="radio"]:checked {
-        background-color: #3b82f6;
-        border-color: #3b82f6;
-    }
-
-    /* Button Styling within Modal */
-    .modal-body .button-group {
+    /* Modal Footer */
+    .modal-footer {
+        padding: 1rem 1.5rem;
+        background: #f9fafb;
+        border-top: 1px solid #e5e7eb;
         display: flex;
         gap: 0.75rem;
-        margin-top: 1.5rem;
-        padding-top: 1rem;
-        border-top: 1px solid #e5e7eb;
-    }
-
-    .modal-body button {
-        padding: 0.625rem 1.25rem;
-        border-radius: 0.5rem;
-        font-weight: 500;
-        font-size: 0.875rem;
-        transition: all 0.2s ease;
-        cursor: pointer;
-    }
-
-    .modal-body button[type="submit"] {
-        background-color: #3b82f6;
-        color: white;
-        border: none;
-    }
-
-    .modal-body button[type="submit"]:hover {
-        background-color: #2563eb;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
-    }
-
-    .modal-body button[type="button"] {
-        background-color: #f3f4f6;
-        color: #374151;
-        border: 1px solid #d1d5db;
-    }
-
-    .modal-body button[type="button"]:hover {
-        background-color: #e5e7eb;
+        justify-content: flex-end;
     }
 
     /* Responsive adjustments */
     @media (max-width: 640px) {
         .modal-header {
-            padding: 1rem 1rem 0;
+            padding: 1rem 1.25rem;
         }
         
         .modal-body {
@@ -323,11 +251,7 @@
         }
         
         .modal-footer {
-            padding: 1rem;
-        }
-        
-        .modal-title {
-            font-size: 1.125rem;
+            padding: 0.875rem 1.25rem;
         }
     }
 </style>
