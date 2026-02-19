@@ -26,7 +26,7 @@
         'yellow' => 'bg-yellow-500',
         'green' => 'bg-green-600',
         'red' => 'bg-red-600',
-        'purple' => 'bg-purple-600',
+        'orange' => 'bg-orange-600',
     ];
     
     $headerBgClass = $headerSolidColors[$headerBg] ?? $headerSolidColors['blue'];
@@ -36,7 +36,7 @@
         'yellow' => 'bg-yellow-400',
         'green' => 'bg-green-500',
         'red' => 'bg-red-500',
-        'purple' => 'bg-purple-500',
+        'orange' => 'bg-orange-500',
     ];
     
     $iconBgClass = $iconBgColors[$headerBg] ?? $iconBgColors['blue'];
@@ -46,7 +46,7 @@
         'yellow' => 'hover:bg-yellow-600 focus:ring-yellow-300',
         'green' => 'hover:bg-green-700 focus:ring-green-300',
         'red' => 'hover:bg-red-700 focus:ring-red-300',
-        'purple' => 'hover:bg-purple-700 focus:ring-purple-300',
+        'orange' => 'hover:bg-orange-700 focus:ring-orange-300',
     ];
     
     $closeButtonClass = $closeButtonColors[$headerBg] ?? $closeButtonColors['blue'];
@@ -75,6 +75,10 @@
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                            </svg>
+                        @elseif($headerBg === 'orange')
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                             </svg>
                         @endif
                     </div>
@@ -118,7 +122,6 @@
 
 @once
 <style>
-    /* School Colors - Replace these with your actual school colors */
     :root {
         --school-blue: #2563eb;
         --school-blue-light: #3b82f6;

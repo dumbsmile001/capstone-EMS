@@ -31,11 +31,13 @@ class AdminEvents extends Component
     public $showEditModal = false;
     public $showDeleteModal = false;
     public $showEventDetailsModal = false;
+    public $showArchiveModal = false;
     
     // Event management
     public $editingEvent = null;
     public $deletingEvent = null;
     public $selectedEvent = null;
+    public $archivingEvent = null;
     
     // Search and filter
     public $search = '';
@@ -161,18 +163,6 @@ class AdminEvents extends Component
         $this->resetForm();
     }
     
-    public function openDeleteModal($eventId)
-    {
-        $this->deletingEvent = Event::findOrFail($eventId);
-        $this->showDeleteModal = true;
-    }
-    
-    public function closeDeleteModal()
-    {
-        $this->showDeleteModal = false;
-        $this->deletingEvent = null;
-    }
-    
     public function openEventDetailsModal($eventId)
     {
         $this->selectedEvent = Event::with('creator')->findOrFail($eventId);
@@ -275,14 +265,25 @@ class AdminEvents extends Component
             session()->flash('success', 'Event updated successfully!');
         }
     }
-    
-    public function deleteEvent()
+
+    public function confirmDelete()
     {
         if ($this->deletingEvent) {
             $this->deletingEvent->delete();
             session()->flash('success', 'Event deleted successfully!');
         }
         $this->closeDeleteModal();
+    }
+    public function openDeleteModal($eventId)
+    {
+        $this->deletingEvent = Event::findOrFail($eventId);
+        $this->showDeleteModal = true;
+    }
+    
+    public function closeDeleteModal()
+    {
+        $this->showDeleteModal = false;
+        $this->deletingEvent = null;
     }
     
     public function archiveEvent($eventId)
@@ -294,6 +295,29 @@ class AdminEvents extends Component
         } else {
             session()->flash('error', 'Failed to archive event.');
         }
+    }
+    public function openArchiveModal($eventId)
+    {
+        $this->archivingEvent = Event::findOrFail($eventId);
+        $this->showArchiveModal = true;
+    }
+
+    public function closeArchiveModal()
+    {
+        $this->showArchiveModal = false;
+        $this->archivingEvent = null;
+    }
+
+    public function confirmArchive()
+    {
+        if ($this->archivingEvent) {
+            if ($this->archivingEvent->archive(Auth::id())) {
+                session()->flash('success', 'Event archived successfully!');
+            } else {
+                session()->flash('error', 'Failed to archive event.');
+            }
+        }
+        $this->closeArchiveModal();
     }
     
     public function sortBy($field)

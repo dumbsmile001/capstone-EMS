@@ -19,6 +19,12 @@ class ArchivedEvents extends Component
     public $exportFormat = 'xlsx'; // Add export format property
     public $showExportModal = false;
 
+    // Confirmation modal properties
+    public $showRestoreConfirmation = false;
+    public $showDeleteConfirmation = false;
+    public $selectedEventId = null;
+    public $selectedEventTitle = '';
+
     protected $queryString = [
         'search' => ['except' => ''],
         'filterCategory' => ['except' => ''],
@@ -32,6 +38,40 @@ class ArchivedEvents extends Component
         if (!auth()->user()->hasRole('organizer')) {
             abort(403, 'Unauthorized access.');
         }
+    }
+
+    public function confirmRestore($eventId)
+    {
+        $event = Event::find($eventId);
+        if ($event) {
+            $this->selectedEventId = $eventId;
+            $this->selectedEventTitle = $event->title;
+            $this->showRestoreConfirmation = true;
+        }
+    }
+
+    public function confirmDelete($eventId)
+    {
+        $event = Event::find($eventId);
+        if ($event) {
+            $this->selectedEventId = $eventId;
+            $this->selectedEventTitle = $event->title;
+            $this->showDeleteConfirmation = true;
+        }
+    }
+
+    public function confirmAction()
+    {
+        if ($this->showRestoreConfirmation) {
+            $this->unarchiveEvent($this->selectedEventId);
+            $this->showRestoreConfirmation = false;
+        } elseif ($this->showDeleteConfirmation) {
+            $this->deleteArchivedEvent($this->selectedEventId);
+            $this->showDeleteConfirmation = false;
+        }
+        
+        $this->selectedEventId = null;
+        $this->selectedEventTitle = '';
     }
 
     public function unarchiveEvent($eventId)

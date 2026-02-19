@@ -58,3 +58,30 @@ body.sidebar-open {
 .animate-slideDown {
     animation: slideDown 0.3s ease-out;
 }
+
+/* Add to your existing styles or create a new style tag */
+
+.group:hover .group-hover\:scale-110 {
+    transform: scale(1.1);
+}
+
+.group:hover .group-hover\:rotate-12 {
+    transform: rotate(12deg);
+}
+
+.group:hover .group-hover\:translate-y-\[-2px\] {
+    transform: translateY(-2px);
+}
+
+/* Card entrance animation */
+.grid > div {
+    animation: slideIn 0.3s ease-out forwards;
+}
+
+/* Stagger children animations */
+.grid > div:nth-child(1) { animation-delay: 0.05s; }
+.grid > div:nth-child(2) { animation-delay: 0.1s; }
+.grid > div:nth-child(3) { animation-delay: 0.15s; }
+.grid > div:nth-child(4) { animation-delay: 0.2s; }
+.grid > div:nth-child(5) { animation-delay: 0.25s; }
+.grid > div:nth-child(6) { animation-delay: 0.3s; }

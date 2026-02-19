@@ -27,10 +27,14 @@ class OrganizerEvents extends Component
     public $showCreateModal = false;
     public $showEditModal = false;
     public $showDeleteModal = false;
+    public $showEventDetailsModal = false;
+    public $showArchiveModal = false;
 
     // Event management
     public $editingEvent = null;
     public $deletingEvent = null;
+    public $selectedEvent = null;
+    public $archivingEvent = null;
 
     // Search and filter
     public $search = '';
@@ -112,6 +116,26 @@ class OrganizerEvents extends Component
         $this->resetForm();
     }
 
+    public function openEventDetailsModal($eventId)
+    {
+        $this->selectedEvent = Event::with('creator')->findOrFail($eventId);
+        $this->showEventDetailsModal = true;
+    }
+    
+    public function closeEventDetailsModal()
+    {
+        $this->showEventDetailsModal = false;
+        $this->selectedEvent = null;
+    }
+
+    public function confirmDelete()
+    {
+        if ($this->deletingEvent) {
+            $this->deletingEvent->delete();
+            session()->flash('success', 'Event deleted successfully!');
+        }
+        $this->closeDeleteModal();
+    }
     public function openDeleteModal($eventId)
     {
         $this->deletingEvent = Event::findOrFail($eventId);
@@ -216,15 +240,6 @@ class OrganizerEvents extends Component
         }
     }
 
-    public function deleteEvent()
-    {
-        if ($this->deletingEvent) {
-            $this->deletingEvent->delete();
-            session()->flash('success', 'Event deleted successfully!');
-        }
-        $this->closeDeleteModal();
-    }
-
     public function sortBy($field)
     {
         if ($this->sortBy === $field) {
@@ -241,9 +256,6 @@ class OrganizerEvents extends Component
         $this->resetPage();
     }
 
-    // app/Livewire/OrganizerEvents.php
-    // Add these methods:
-
     public function archiveEvent($eventId)
     {
         $event = Event::findOrFail($eventId);
@@ -256,18 +268,28 @@ class OrganizerEvents extends Component
         $event->archive(Auth::id());
         session()->flash('success', 'Event archived successfully!');
     }
-
-    public function unarchiveEvent($eventId)
+    public function openArchiveModal($eventId)
     {
-        $event = Event::findOrFail($eventId);
-        
-        if ($event->created_by !== Auth::id()) {
-            session()->flash('error', 'You are not authorized to unarchive this event.');
-            return;
-        }
+        $this->archivingEvent = Event::findOrFail($eventId);
+        $this->showArchiveModal = true;
+    }
 
-        $event->unarchive();
-        session()->flash('success', 'Event unarchived successfully!');
+    public function closeArchiveModal()
+    {
+        $this->showArchiveModal = false;
+        $this->archivingEvent = null;
+    }
+
+    public function confirmArchive()
+    {
+        if ($this->archivingEvent) {
+            if ($this->archivingEvent->archive(Auth::id())) {
+                session()->flash('success', 'Event archived successfully!');
+            } else {
+                session()->flash('error', 'Failed to archive event.');
+            }
+        }
+        $this->closeArchiveModal();
     }
 
     public function getEventsProperty()
