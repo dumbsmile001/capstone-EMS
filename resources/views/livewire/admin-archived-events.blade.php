@@ -356,40 +356,6 @@
                     </label>
                 </div>
             </div>
-
-            <!-- Export Options -->
-            <div class="grid grid-cols-2 gap-4 p-4 bg-gray-50 rounded-xl border-2 border-gray-100">
-                <label class="flex items-center space-x-3 cursor-pointer">
-                    <input type="checkbox" wire:model="includeEventDetails"
-                        class="w-5 h-5 text-green-600 border-2 border-gray-300 rounded-lg focus:ring-green-500 focus:ring-2">
-                    <span class="text-sm font-medium text-gray-700">Include descriptions</span>
-                </label>
-                <label class="flex items-center space-x-3 cursor-pointer">
-                    <input type="checkbox" wire:model="includeRegistrationData"
-                        class="w-5 h-5 text-green-600 border-2 border-gray-300 rounded-lg focus:ring-green-500 focus:ring-2">
-                    <span class="text-sm font-medium text-gray-700">Include registration counts</span>
-                </label>
-            </div>
-
-            <!-- Date Range (Optional) -->
-            <div class="space-y-3">
-                <label class="flex items-center space-x-2 text-sm font-semibold text-green-800">
-                    <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                    <span>Archive Date Range (Optional)</span>
-                </label>
-                <div class="grid grid-cols-2 gap-3">
-                    <input type="date" wire:model="dateFrom"
-                        class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-2 focus:ring-green-200"
-                        placeholder="From">
-                    <input type="date" wire:model="dateTo"
-                        class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-2 focus:ring-green-200"
-                        placeholder="To">
-                </div>
-            </div>
-
             <!-- Action Buttons -->
             <div class="flex space-x-3 pt-4 border-t-2 border-gray-100">
                 <button type="button" wire:click="closeExportModal"

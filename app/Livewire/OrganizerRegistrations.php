@@ -23,10 +23,11 @@ class OrganizerRegistrations extends Component
     
     // For payment verification modal
     public $showPaymentModal = false;
+    public $showRejectModal = false;
     public $selectedRegistration;
-    public $verificationNotes = '';
+    public $selectedRegistrationId; // Add this to store ID separately
 
-     // Available filters
+    // Available filters
     public $availableEvents = [];
     public $availablePaymentStatuses = ['pending', 'verified', 'rejected'];
     public $availableTicketStatuses = ['active', 'pending_payment', 'used'];
@@ -256,29 +257,38 @@ class OrganizerRegistrations extends Component
     public function verifyPayment($registrationId)
     {
         $this->selectedRegistration = Registration::with(['user', 'event'])->find($registrationId);
-        $this->verificationNotes = '';
+        $this->selectedRegistrationId = $registrationId;
         $this->showPaymentModal = true;
     }
 
     public function confirmPaymentVerification()
     {
-        $this->validate([
-            'verificationNotes' => 'nullable|string|max:500',
-        ]);
-
-        $this->selectedRegistration->update([
+        $registration = Registration::with(['user'])->find($this->selectedRegistrationId);
+        
+        $registration->update([
             'payment_status' => 'verified',
             'payment_verified_at' => now(),
             'payment_verified_by' => Auth::id(),
         ]);
 
         $this->showPaymentModal = false;
-        session()->flash('success', 'Payment verified successfully for ' . $this->selectedRegistration->user->first_name . ' ' . $this->selectedRegistration->user->last_name);
+        $this->selectedRegistration = null;
+        $this->selectedRegistrationId = null;
+        
+        session()->flash('success', 'Payment verified successfully for ' . $registration->user->first_name . ' ' . $registration->user->last_name);
     }
 
     public function rejectPayment($registrationId)
     {
-        $registration = Registration::with(['user'])->find($registrationId);
+        $this->selectedRegistration = Registration::with(['user', 'event'])->find($registrationId);
+        $this->selectedRegistrationId = $registrationId;
+        $this->showRejectModal = true;
+    }
+
+    // Fix the confirmPaymentRejection method
+    public function confirmPaymentRejection()
+    {
+        $registration = Registration::with(['user', 'ticket'])->find($this->selectedRegistrationId);
         
         $registration->update([
             'payment_status' => 'rejected',
@@ -289,11 +299,23 @@ class OrganizerRegistrations extends Component
         // For rejected payments, if ticket exists, keep it but mark appropriately
         if ($registration->ticket && $registration->ticket->isPendingPayment()) {
             $registration->ticket->update([
-                'status' => 'pending_payment', // Keep as pending_payment for rejected payments
+                'status' => 'pending_payment',
             ]);
         }
 
+        $this->showRejectModal = false;
+        $this->selectedRegistration = null;
+        $this->selectedRegistrationId = null;
+
         session()->flash('info', 'Payment rejected for ' . $registration->user->first_name . ' ' . $registration->user->last_name);
+    }
+
+    // Fix the closeRejectModal method
+    public function closeRejectModal()
+    {
+        $this->showRejectModal = false;
+        $this->selectedRegistration = null;
+        $this->selectedRegistrationId = null;
     }
 
     public function resetPaymentStatus($registrationId)
@@ -313,7 +335,6 @@ class OrganizerRegistrations extends Component
             ]);
         }
 
-        // No need to manually load registrations
         session()->flash('info', 'Payment status reset to pending for ' . $registration->user->first_name . ' ' . $registration->user->last_name);
     }
 
@@ -321,7 +342,7 @@ class OrganizerRegistrations extends Component
     {
         $this->showPaymentModal = false;
         $this->selectedRegistration = null;
-        $this->verificationNotes = '';
+        $this->selectedRegistrationId = null;
     }
 
     public function generateTicket($registrationId)

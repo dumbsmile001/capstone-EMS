@@ -17,8 +17,6 @@
             {{ session('info') }}
         </div>
     @endif
-
-    <!-- Export Modal -->
     <!-- Export Modal -->
 <x-custom-modal 
     model="showExportModal" 
@@ -436,47 +434,147 @@
     @endif
 
     <!-- Payment Verification Modal -->
-    @if ($showPaymentModal && $selectedRegistration)
-        <div class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-            <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-                <div class="mt-3">
-                    <h3 class="text-lg font-medium text-gray-900 mb-4">Verify Payment</h3>
-
-                    <div class="mb-4">
-                        <p class="text-sm text-gray-600">
-                            Verify payment for <strong>{{ $selectedRegistration->user->first_name }}
-                                {{ $selectedRegistration->user->last_name }}</strong>
-                            for event: <strong>{{ $selectedRegistration->event->title }}</strong>
-                        </p>
-                        <p class="text-sm text-gray-600 mt-2">
-                            Amount:
-                            <strong>₱{{ number_format($selectedRegistration->event->payment_amount, 2) }}</strong>
-                        </p>
+   <!-- Payment Verification Modal -->
+@if ($showPaymentModal && $selectedRegistration)
+    <x-custom-modal 
+        model="showPaymentModal" 
+        maxWidth="sm" 
+        title="Verify Payment" 
+        description="Confirm payment verification for this registration" 
+        headerBg="green"
+    >
+        <div class="space-y-6">
+            <!-- Registration Summary Card -->
+            <div class="bg-gradient-to-br from-green-50 to-emerald-50 p-5 rounded-xl border border-green-200">
+                <div class="flex items-center space-x-3 mb-4">
+                    <div class="p-2 bg-green-200 rounded-full">
+                        <svg class="w-5 h-5 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
                     </div>
-
-                    <div class="mb-4">
-                        <label for="verificationNotes" class="block text-sm font-medium text-gray-700 mb-2">
-                            Verification Notes (Optional)
-                        </label>
-                        <textarea wire:model="verificationNotes" id="verificationNotes" rows="3"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                            placeholder="Add any notes about the payment verification..."></textarea>
+                    <div>
+                        <h3 class="font-semibold text-green-800">Student Information</h3>
+                        <p class="text-sm text-green-600">{{ $selectedRegistration->user->first_name }} {{ $selectedRegistration->user->last_name }}</p>
                     </div>
-
-                    <div class="flex justify-end space-x-3 mt-6">
-                        <button wire:click="closePaymentModal" type="button"
-                            class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors text-sm font-medium">
-                            Cancel
-                        </button>
-                        <button wire:click="confirmPaymentVerification" type="button"
-                            class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors text-sm font-medium">
-                            Confirm Payment
-                        </button>
+                </div>
+                
+                <div class="space-y-3 text-sm">
+                    <div class="flex justify-between items-center py-2 border-b border-green-200">
+                        <span class="text-green-700 font-medium">Student ID:</span>
+                        <span class="text-green-900">{{ $selectedRegistration->user->student_id ?? 'N/A' }}</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2 border-b border-green-200">
+                        <span class="text-green-700 font-medium">Event:</span>
+                        <span class="text-green-900 text-right">{{ $selectedRegistration->event->title }}</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2 border-b border-green-200">
+                        <span class="text-green-700 font-medium">Amount:</span>
+                        <span class="text-green-900 font-bold">₱{{ number_format($selectedRegistration->event->payment_amount, 2) }}</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2">
+                        <span class="text-green-700 font-medium">Current Status:</span>
+                        <span class="px-3 py-1 bg-yellow-200 text-yellow-800 rounded-full text-xs font-semibold">
+                            Pending Verification
+                        </span>
                     </div>
                 </div>
             </div>
+            <!-- Action Buttons -->
+            <div class="flex space-x-3 pt-4 border-t-2 border-gray-100">
+                <button type="button" wire:click="closePaymentModal"
+                    class="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-all duration-200 font-medium flex items-center justify-center space-x-2 group">
+                    <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                    <span>Cancel</span>
+                </button>
+                <button type="button" wire:click="confirmPaymentVerification"
+                    class="flex-1 px-4 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-xl hover:from-green-700 hover:to-green-800 transition-all duration-200 font-medium flex items-center justify-center space-x-2 shadow-lg shadow-green-200">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span>Verify Payment</span>
+                </button>
+            </div>
         </div>
-    @endif
+    </x-custom-modal>
+@endif
+
+<!-- Reject Payment Confirmation Modal -->
+@if ($showRejectModal && $selectedRegistration)
+    <x-custom-modal 
+        model="showRejectModal" 
+        maxWidth="sm" 
+        title="Reject Payment" 
+        description="Are you sure you want to reject this payment?" 
+        headerBg="red"
+    >
+        <div class="space-y-6">
+            <!-- Warning Card -->
+            <div class="bg-gradient-to-br from-red-50 to-rose-50 p-5 rounded-xl border border-red-200">
+                <div class="flex items-center space-x-3 mb-4">
+                    <div class="p-2 bg-red-200 rounded-full">
+                        <svg class="w-5 h-5 text-red-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-red-800">Confirmation Required</h3>
+                        <p class="text-sm text-red-600">This action cannot be undone</p>
+                    </div>
+                </div>
+                
+                <div class="space-y-3 text-sm">
+                    <div class="flex justify-between items-center py-2 border-b border-red-200">
+                        <span class="text-red-700 font-medium">Student:</span>
+                        <span class="text-red-900">{{ $selectedRegistration->user->first_name }} {{ $selectedRegistration->user->last_name }}</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2 border-b border-red-200">
+                        <span class="text-red-700 font-medium">Event:</span>
+                        <span class="text-red-900">{{ $selectedRegistration->event->title }}</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2">
+                        <span class="text-red-700 font-medium">Amount:</span>
+                        <span class="text-red-900 font-bold">₱{{ number_format($selectedRegistration->event->payment_amount, 2) }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rejection Notes
+            <div class="space-y-2">
+                <label class="flex items-center space-x-2 text-sm font-semibold text-red-800">
+                    <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                    <span>Rejection Reason (Optional)</span>
+                </label>
+                <textarea 
+                    wire:model="rejectionNotes" 
+                    rows="3"
+                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-red-500 focus:ring-2 focus:ring-red-200 transition-all duration-200 resize-none"
+                    placeholder="Provide reason for rejecting this payment..."></textarea>
+            </div>-->
+
+            <!-- Action Buttons -->
+            <div class="flex space-x-3 pt-4 border-t-2 border-gray-100">
+                <button type="button" wire:click="closeRejectModal"
+                    class="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-all duration-200 font-medium flex items-center justify-center space-x-2 group">
+                    <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                    <span>Keep Payment</span>
+                </button>
+                <button type="button" wire:click="confirmPaymentRejection"
+                    class="flex-1 px-4 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-xl hover:from-red-700 hover:to-red-800 transition-all duration-200 font-medium flex items-center justify-center space-x-2 shadow-lg shadow-red-200">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                    <span>Reject Payment</span>
+                </button>
+            </div>
+        </div>
+    </x-custom-modal>
+@endif
     <div class="overflow-x-auto">
     @if ($registrations->count() > 0)
         <table class="min-w-full divide-y divide-gray-200">
