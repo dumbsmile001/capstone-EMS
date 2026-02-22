@@ -148,22 +148,7 @@
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        @php
-                                            $actionColors = [
-                                                'CREATE' => 'bg-green-100 text-green-800',
-                                                'UPDATE' => 'bg-yellow-100 text-yellow-800',
-                                                'DELETE' => 'bg-red-100 text-red-800',
-                                                'LOGIN' => 'bg-blue-100 text-blue-800',
-                                                'REGISTER' => 'bg-yellow-100 text-yellow-800',
-                                                'LOGOUT' => 'bg-gray-100 text-gray-800',
-                                                'EXPORT' => 'bg-purple-100 text-purple-800',
-                                                'VIEW' => 'bg-indigo-100 text-indigo-800',
-                                            ];
-                                            $colorClass = $actionColors[$log->action] ?? 'bg-gray-100 text-gray-800';
-                                        @endphp
-                                        <span class="px-2 py-1 text-xs font-medium rounded-full {{ $colorClass }}">
-                                            {{ $log->action }}
-                                        </span>
+                                       <x-action-badge :action="$log->action" />
                                     </td>
                                     <td class="px-6 py-4 text-sm text-gray-600 max-w-xs truncate">
                                         {{ $log->description }}

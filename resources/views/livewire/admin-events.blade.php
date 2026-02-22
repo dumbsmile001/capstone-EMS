@@ -891,7 +891,7 @@
                     </svg>
                     <span>Cancel</span>
                 </button>
-                <button type="submit" wire:click="up"
+                <button type="submit" wire:click="updateEvent"
                     class="flex-1 px-6 py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white rounded-xl hover:from-yellow-600 hover:to-yellow-700 transition-all duration-200 font-medium flex items-center justify-center space-x-2 group shadow-lg shadow-yellow-200">
                     <span>Update Event</span>
                     <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none"

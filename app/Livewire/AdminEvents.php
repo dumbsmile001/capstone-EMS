@@ -8,11 +8,12 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Auth;
+use App\Traits\LogsActivity; // Add this
 use Carbon\Carbon;
 
 class AdminEvents extends Component
 {
-    use WithPagination, WithFileUploads;
+    use WithPagination, WithFileUploads, LogsActivity;
 
     // Event properties
     public string $title = '';
@@ -38,6 +39,9 @@ class AdminEvents extends Component
     public $deletingEvent = null;
     public $selectedEvent = null;
     public $archivingEvent = null;
+    // Add a new property to track the current action
+    public $currentAction = null;
+    public $currentEventId = null;
     
     // Search and filter
     public $search = '';
@@ -199,7 +203,7 @@ class AdminEvents extends Component
         $bannerPath = $this->banner ? $this->banner->store('event-banners', 'public') : null;
         
         // Create the event
-        Event::create([
+        $event = Event::create([
             'title' => $this->title,
             'date' => $this->date,
             'time' => $this->time,
@@ -219,6 +223,10 @@ class AdminEvents extends Component
             'visible_to_college_program' => $this->visibility_type === 'college_program' ? $this->visible_to_college_program : null,
         ]);
         
+         // Log the activity with custom description
+        $this->logActivity('CREATE', $event, 
+            auth()->user()->first_name . ' ' . auth()->user()->last_name . ' created new event: ' . $event->title);
+
         $this->closeCreateModal();
         session()->flash('success', 'Event created successfully!');
     }
@@ -259,8 +267,16 @@ class AdminEvents extends Component
             $data['visible_to_year_level'] = $this->visibility_type === 'year_level' ? $this->visible_to_year_level : null;
             $data['visible_to_college_program'] = $this->visibility_type === 'college_program' ? $this->visible_to_college_program : null;
             
+            $oldValues = $this->editingEvent->getOriginal();
             $this->editingEvent->update($data);
             
+            // Log the update with changes tracked
+            $this->logActivity('UPDATE', $this->editingEvent, 
+                auth()->user()->first_name . ' ' . auth()->user()->last_name . ' updated event: ' . $this->editingEvent->title,
+                $oldValues, 
+                $this->editingEvent->toArray()
+            );
+
             $this->closeEditModal();
             session()->flash('success', 'Event updated successfully!');
         }
@@ -269,7 +285,14 @@ class AdminEvents extends Component
     public function confirmDelete()
     {
         if ($this->deletingEvent) {
-            $this->deletingEvent->delete();
+           $event = $this->deletingEvent;
+            $eventTitle = $event->title;
+            
+            // Log before deletion
+            $this->logActivity('DELETE', $event, 
+                auth()->user()->first_name . ' ' . auth()->user()->last_name . ' deleted event: ' . $eventTitle);
+            
+            $event->delete();
             session()->flash('success', 'Event deleted successfully!');
         }
         $this->closeDeleteModal();
@@ -286,16 +309,6 @@ class AdminEvents extends Component
         $this->deletingEvent = null;
     }
     
-    public function archiveEvent($eventId)
-    {
-        $event = Event::findOrFail($eventId);
-        
-        if ($event->archive(Auth::id())) {
-            session()->flash('success', 'Event archived successfully!');
-        } else {
-            session()->flash('error', 'Failed to archive event.');
-        }
-    }
     public function openArchiveModal($eventId)
     {
         $this->archivingEvent = Event::findOrFail($eventId);
@@ -308,10 +321,26 @@ class AdminEvents extends Component
         $this->archivingEvent = null;
     }
 
+    public function confirmAction()
+    {
+        if ($this->currentAction === 'archive' && $this->archivingEvent) {
+            $this->confirmArchive();
+        }
+        
+        // Reset the action trackers
+        $this->currentAction = null;
+        $this->currentEventId = null;
+    }
+
+
     public function confirmArchive()
     {
         if ($this->archivingEvent) {
             if ($this->archivingEvent->archive(Auth::id())) {
+                // Log the archive action
+                $this->logActivity('ARCHIVE', $this->archivingEvent,
+                    auth()->user()->first_name . ' ' . auth()->user()->last_name . ' archived event: ' . $this->archivingEvent->title);
+                
                 session()->flash('success', 'Event archived successfully!');
             } else {
                 session()->flash('error', 'Failed to archive event.');
@@ -319,6 +348,7 @@ class AdminEvents extends Component
         }
         $this->closeArchiveModal();
     }
+
     
     public function sortBy($field)
     {

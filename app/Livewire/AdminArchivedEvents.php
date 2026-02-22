@@ -7,10 +7,11 @@ use App\Models\User;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
+use App\Traits\LogsActivity; // Add this
 
 class AdminArchivedEvents extends Component
 {
-    use WithPagination;
+    use WithPagination, LogsActivity;
 
     public $search = '';
     public $filterCategory = '';
@@ -26,6 +27,9 @@ class AdminArchivedEvents extends Component
     public $showDeleteConfirmation = false;
     public $selectedEventId = null;
     public $selectedEventTitle = '';
+     // Add a new property to track the current action
+    public $currentAction = null;
+    public $currentEventId = null;
 
     protected $queryString = [
         'search' => ['except' => ''],
@@ -57,30 +61,35 @@ class AdminArchivedEvents extends Component
         if ($event) {
             $this->selectedEventId = $eventId;
             $this->selectedEventTitle = $event->title;
+            $this->currentAction = 'restore';
+            $this->currentEventId = $eventId;
             $this->showRestoreConfirmation = true;
         }
     }
 
     public function confirmDelete($eventId)
     {
-        $event = Event::find($eventId);
+         $event = Event::find($eventId);
         if ($event) {
             $this->selectedEventId = $eventId;
             $this->selectedEventTitle = $event->title;
+            $this->currentAction = 'delete_permanent';
+            $this->currentEventId = $eventId;
             $this->showDeleteConfirmation = true;
         }
     }
 
     public function confirmAction()
     {
-        if ($this->showRestoreConfirmation) {
+        if ($this->currentAction === 'restore' && $this->selectedEventId) {
             $this->unarchiveEvent($this->selectedEventId);
-            $this->showRestoreConfirmation = false;
-        } elseif ($this->showDeleteConfirmation) {
+        } elseif ($this->currentAction === 'delete_permanent' && $this->selectedEventId) {
             $this->deleteArchivedEvent($this->selectedEventId);
-            $this->showDeleteConfirmation = false;
         }
         
+        // Reset the action trackers
+        $this->currentAction = null;
+        $this->currentEventId = null;
         $this->selectedEventId = null;
         $this->selectedEventTitle = '';
     }
@@ -90,6 +99,9 @@ class AdminArchivedEvents extends Component
         $event = Event::findOrFail($eventId);
         
         if ($event->unarchive()) {
+            // Log the restore action
+            $this->logActivity('RESTORE', $event,
+                auth()->user()->first_name . ' ' . auth()->user()->last_name . ' restored event: ' . $event->title);
             session()->flash('success', 'Event "' . $event->title . '" restored successfully!');
         } else {
             session()->flash('error', 'Failed to restore event.');
@@ -101,6 +113,9 @@ class AdminArchivedEvents extends Component
         $event = Event::findOrFail($eventId);
         $eventTitle = $event->title;
         
+          // Log permanent deletion
+        $this->logActivity('DELETE_PERMANENT', $event,
+            auth()->user()->first_name . ' ' . auth()->user()->last_name . ' permanently deleted archived event: ' . $eventTitle);
         $event->delete();
         session()->flash('success', 'Event "' . $eventTitle . '" deleted permanently!');
     }
@@ -108,6 +123,10 @@ class AdminArchivedEvents extends Component
     public function exportArchivedEvents()
     {
         $events = $this->getFilteredEventsQuery()->get();
+
+        // Log the export action
+        $this->logActivity('EXPORT', null,
+            auth()->user()->first_name . ' ' . auth()->user()->last_name . ' exported archived events (' . $events->count() . ' records)');
 
         $this->showExportModal = false;
         

@@ -6,10 +6,11 @@ use App\Models\Announcement;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
+use App\Traits\LogsActivity; // Add this
 
 class Announcements extends Component
 {
-    use WithPagination;
+    use WithPagination, LogsActivity;
     
     // Announcement properties
     public string $title = '';
@@ -32,12 +33,16 @@ class Announcements extends Component
             'description' => 'required|string|min:10'
         ]);
 
-        Announcement::create([
+        $announcement = Announcement::create([
             'title' => $this->title,
             'category' => $this->category,
             'description' => $this->description,
             'user_id' => Auth::id(),
         ]);
+
+        // Log the announcement creation with specific action
+        $this->logActivity('ANNOUNCEMENT_CREATE', $announcement,
+            auth()->user()->first_name . ' ' . auth()->user()->last_name . ' created announcement: ' . $announcement->title);
 
         $this->reset('title', 'category', 'description');
         $this->showAnnouncementModal = false;
@@ -82,11 +87,19 @@ class Announcements extends Component
             return;
         }
 
+        $oldValues = $announcement->getOriginal();
         $announcement->update([
             'title' => $this->title,
             'category' => $this->category,
             'description' => $this->description,
         ]);
+
+        // Log the announcement update
+        $this->logActivity('ANNOUNCEMENT_UPDATE', $announcement,
+            auth()->user()->first_name . ' ' . auth()->user()->last_name . ' updated announcement: ' . $announcement->title,
+            $oldValues,
+            $announcement->toArray()
+        );
 
         $this->reset('title', 'category', 'description', 'editingId');
         $this->showAnnouncementModal = false;
@@ -118,6 +131,13 @@ class Announcements extends Component
             $this->closeDeleteModal();
             return;
         }
+
+        $announcement = $this->announcementToDelete;
+        $announcementTitle = $announcement->title;
+
+        // Log before deletion
+        $this->logActivity('ANNOUNCEMENT_DELETE', $announcement,
+            auth()->user()->first_name . ' ' . auth()->user()->last_name . ' deleted announcement: ' . $announcementTitle);
 
         $this->announcementToDelete->delete();
         $this->closeDeleteModal();
