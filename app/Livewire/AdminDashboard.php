@@ -2,19 +2,21 @@
 
 namespace App\Livewire;
 
-use Carbon\Carbon;
-use App\Models\User;
+use App\Models\AuditLog;
 use App\Models\Event;
-use Livewire\Component;
-use Livewire\WithPagination;
-use Livewire\WithFileUploads;
-use Illuminate\Support\Str;
-use Spatie\Permission\Models\Role;
+use App\Models\User;
+use App\Traits\LogsActivity;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use Livewire\WithPagination;
+use Spatie\Permission\Models\Role;
 
 class AdminDashboard extends Component
 {
-    use WithFileUploads, WithPagination;
+    use WithFileUploads, WithPagination, LogsActivity;
 
     // User properties
     public $first_name;
@@ -74,6 +76,8 @@ class AdminDashboard extends Component
     public $availableSHSStrands = [];      // Changed
     public $availableCollegePrograms = []; // Added
     public $availableRoles = [];
+    // Add this property
+    public $recentActivities = [];
     protected $paginationTheme = 'bootstrap';
     public $perPage = 10;
 
@@ -87,6 +91,7 @@ class AdminDashboard extends Component
     public function mount()
     {
         $this->loadFilterOptions();
+        $this->loadRecentActivities(); // Add this line
     }
 
     public function loadFilterOptions()
@@ -107,6 +112,21 @@ class AdminDashboard extends Component
         
         // Load available roles
         $this->availableRoles = Role::pluck('name')->toArray();
+    }
+
+    // Add this method
+    public function loadRecentActivities()
+    {
+        $this->recentActivities = AuditLog::with('user')
+            ->latest()
+            ->limit(3)
+            ->get();
+    }
+    public function openLogDetailsModal($logId)
+    {
+        // You can redirect to the audit logs page with the log ID or open a modal
+        // For simplicity, we'll redirect to the audit logs page
+        return redirect()->route('admin.audit-logs');
     }
 
     // Computed property for users with search and filters
@@ -163,6 +183,8 @@ class AdminDashboard extends Component
     // Export users to Excel/CSV using PhpSpreadsheet
     public function exportUsers()
     {
+        // Log the export action
+        $this->logActivity('EXPORT', null, 'Exported users data to ' . $this->exportFormat);
         $users = $this->getFilteredUsersQuery()->get();
         
         // Close the modal
@@ -337,6 +359,7 @@ class AdminDashboard extends Component
 
         if ($this->editingUser) {
             // Update existing user
+            $oldValues = $this->editingUser->getOriginal();
             $this->editingUser->update([
                 'first_name' => $this->first_name,
                 'middle_name' => $this->middle_name,
@@ -352,6 +375,8 @@ class AdminDashboard extends Component
             // Update role
             $this->editingUser->syncRoles([$this->role]);
 
+            // Log the user update
+            $this->logActivity('UPDATE', $this->editingUser, null, $oldValues, $this->editingUser->toArray());
             session()->flash('success', 'User updated successfully!');
         }
 
@@ -368,8 +393,11 @@ class AdminDashboard extends Component
                 $this->closeDeleteUserModal();
                 return;
             }
-
+            $user = $this->deletingUser;
             $this->deletingUser->delete();
+
+            // Log the user deletion
+            $this->logActivity('DELETE', $user);
             session()->flash('success', 'User deleted successfully!');
         }
 
@@ -423,7 +451,10 @@ class AdminDashboard extends Component
             $data['visible_to_year_level'] = $this->visibility_type === 'year_level' ? $this->visible_to_year_level : null;
             $data['visible_to_college_program'] = $this->visibility_type === 'college_program' ? $this->visible_to_college_program : null;
 
+            $oldValues = $this->editingEvent->getOriginal();
             $this->editingEvent->update($data);
+
+            $this->logActivity('UPDATE', $this->editingEvent, null, $oldValues, $this->editingEvent->toArray());
             session()->flash('success', 'Event updated successfully!');
         }
 
@@ -456,7 +487,7 @@ class AdminDashboard extends Component
         $bannerPath = $this->banner ? $this->banner->store('event-banners', 'public') : null;
 
         // Create the event
-        Event::create([
+        $event = Event::create([
             'title' => $this->title,
             'date' => $this->date,
             'time' => $this->time,
@@ -481,6 +512,9 @@ class AdminDashboard extends Component
 
         // Close modal
         $this->showCreateModal = false;
+
+         // Log the activity
+        $this->logActivity('CREATE', $event);
 
         session()->flash('success', 'Event created successfully!');
     }
@@ -560,7 +594,11 @@ class AdminDashboard extends Component
     public function deleteEvent()
     {
         if ($this->deletingEvent) {
+            $event = $this->deletingEvent;
             $this->deletingEvent->delete();
+
+            // Log the deletion
+            $this->logActivity('DELETE', $event);
             session()->flash('success', 'Event deleted successfully!');
         }
         $this->showDeleteModal = false;

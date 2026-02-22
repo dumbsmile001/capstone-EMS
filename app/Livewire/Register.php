@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\User;
+use App\Traits\LogsActivity;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -12,6 +13,7 @@ use Spatie\Permission\Models\Role;
 
 class Register extends Component
 {
+    use LogsActivity;
     public string $first_name = '';
     public string $middle_name = '';
     public string $last_name = '';
@@ -145,6 +147,8 @@ class Register extends Component
 
         Auth::login($user);
 
+        // Log user registration
+        $this->logActivity('REGISTER', $user);
         session()->regenerate();
 
         return redirect()->route('home');

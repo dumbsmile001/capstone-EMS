@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TicketController;
-use App\Http\Controllers\AnnouncementController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -24,6 +23,8 @@ Route::middleware([
 
     Route::get('/admin/events', \App\Livewire\AdminEvents::class)->name('admin.events');
     Route::get('/admin/events/archived', \App\Livewire\AdminArchivedEvents::class)->name('admin.events.archived');
+    // ADD THIS LINE - Audit Logs route (only accessible by admin)
+    Route::get('/admin/audit-logs', \App\Livewire\AuditLogs::class)->name('admin.audit-logs');
 
     Route::get('/organizer/events', \App\Livewire\OrganizerEvents::class)
     ->name('organizer.events');

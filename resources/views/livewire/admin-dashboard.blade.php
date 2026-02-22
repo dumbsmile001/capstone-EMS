@@ -91,6 +91,113 @@
                         @endforelse
                     </div>
                 </div>
+                <!-- Recent Activities Card - Add this after the Upcoming Events section -->
+<!-- Replace the empty space with this Recent Activities card -->
+<div class="bg-white rounded-lg shadow-md p-4 lg:p-6">
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg lg:text-xl font-semibold text-gray-800">Recent Activities</h2>
+        <a href="{{ route('admin.audit-logs') }}" 
+           class="text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center space-x-1">
+            <span>View All</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+        </a>
+    </div>
+    
+    <div class="space-y-4">
+        @forelse($recentActivities as $activity)
+            <div class="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-all cursor-pointer"
+                 wire:click="openLogDetailsModal({{ $activity->id }})">
+                <!-- Activity Icon based on action -->
+                <div class="flex-shrink-0">
+                    @php
+                        $iconColors = [
+                            'CREATE' => 'bg-green-100 text-green-600',
+                            'UPDATE' => 'bg-yellow-100 text-yellow-600',
+                            'DELETE' => 'bg-red-100 text-red-600',
+                            'LOGIN' => 'bg-blue-100 text-blue-600',
+                            'LOGOUT' => 'bg-gray-100 text-gray-600',
+                            'EXPORT' => 'bg-purple-100 text-purple-600',
+                        ];
+                        $iconColor = $iconColors[$activity->action] ?? 'bg-gray-100 text-gray-600';
+                    @endphp
+                    <div class="w-8 h-8 {{ $iconColor }} rounded-full flex items-center justify-center">
+                        @switch($activity->action)
+                            @case('CREATE')
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                                </svg>
+                                @break
+                            @case('UPDATE')
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                </svg>
+                                @break
+                            @case('DELETE')
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                                @break
+                            @case('LOGIN')
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                                </svg>
+                                @break
+                            @default
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                        @endswitch
+                    </div>
+                </div>
+                
+                <!-- Activity Content -->
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-medium text-gray-900 truncate">
+                        {{ $activity->description }}
+                    </p>
+                    <div class="flex items-center mt-1 text-xs text-gray-500">
+                        <span>{{ $activity->created_at->diffForHumans() }}</span>
+                        @if($activity->user)
+                            <span class="mx-1">•</span>
+                            <span class="flex items-center">
+                                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                                {{ $activity->user->first_name }} {{ $activity->user->last_name }}
+                            </span>
+                        @endif
+                        @if($activity->ip_address)
+                            <span class="mx-1">•</span>
+                            <span class="font-mono">{{ $activity->ip_address }}</span>
+                        @endif
+                    </div>
+                </div>
+                
+                <!-- Action Badge -->
+                <div class="flex-shrink-0">
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium 
+                        @if($activity->action === 'CREATE') bg-green-100 text-green-800
+                        @elseif($activity->action === 'UPDATE') bg-yellow-100 text-yellow-800
+                        @elseif($activity->action === 'DELETE') bg-red-100 text-red-800
+                        @else bg-blue-100 text-blue-800
+                        @endif">
+                        {{ $activity->action }}
+                    </span>
+                </div>
+            </div>
+        @empty
+            <div class="text-center py-8 text-gray-500">
+                <svg class="w-12 h-12 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p class="mt-2">No recent activities</p>
+                <p class="text-sm text-gray-400">Activities will appear here as users interact with the system</p>
+            </div>
+        @endforelse
+    </div>
+</div>
             </div>
             <div class="bg-white rounded-lg shadow-md p-6" x-data="{ activeTab: 'users' }">
                 <div class="border-b border-gray-200 mb-4">
