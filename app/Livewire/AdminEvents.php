@@ -8,7 +8,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Auth;
-use App\Traits\LogsActivity; // Add this
+use App\Traits\LogsActivity;
 use Carbon\Carbon;
 
 class AdminEvents extends Component
@@ -39,9 +39,6 @@ class AdminEvents extends Component
     public $deletingEvent = null;
     public $selectedEvent = null;
     public $archivingEvent = null;
-    // Add a new property to track the current action
-    public $currentAction = null;
-    public $currentEventId = null;
     
     // Search and filter
     public $search = '';
@@ -95,7 +92,7 @@ class AdminEvents extends Component
     
     public function getEventsProperty()
     {
-        return Event::where('is_archived', false) // Only non-archived events
+        return Event::where('is_archived', false)
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
                     $q->where('title', 'like', '%' . $this->search . '%')
@@ -223,7 +220,6 @@ class AdminEvents extends Component
             'visible_to_college_program' => $this->visibility_type === 'college_program' ? $this->visible_to_college_program : null,
         ]);
         
-         // Log the activity with custom description
         $this->logActivity('CREATE', $event, 
             auth()->user()->first_name . ' ' . auth()->user()->last_name . ' created new event: ' . $event->title);
 
@@ -256,7 +252,6 @@ class AdminEvents extends Component
             if ($this->banner) {
                 $data['banner'] = $this->banner->store('event-banners', 'public');
             } else {
-                // Keep the existing banner if no new banner is uploaded
                 unset($data['banner']);
             }
             
@@ -270,7 +265,6 @@ class AdminEvents extends Component
             $oldValues = $this->editingEvent->getOriginal();
             $this->editingEvent->update($data);
             
-            // Log the update with changes tracked
             $this->logActivity('UPDATE', $this->editingEvent, 
                 auth()->user()->first_name . ' ' . auth()->user()->last_name . ' updated event: ' . $this->editingEvent->title,
                 $oldValues, 
@@ -285,10 +279,9 @@ class AdminEvents extends Component
     public function confirmDelete()
     {
         if ($this->deletingEvent) {
-           $event = $this->deletingEvent;
+            $event = $this->deletingEvent;
             $eventTitle = $event->title;
             
-            // Log before deletion
             $this->logActivity('DELETE', $event, 
                 auth()->user()->first_name . ' ' . auth()->user()->last_name . ' deleted event: ' . $eventTitle);
             
@@ -297,6 +290,7 @@ class AdminEvents extends Component
         }
         $this->closeDeleteModal();
     }
+    
     public function openDeleteModal($eventId)
     {
         $this->deletingEvent = Event::findOrFail($eventId);
@@ -314,42 +308,47 @@ class AdminEvents extends Component
         $this->archivingEvent = Event::findOrFail($eventId);
         $this->showArchiveModal = true;
     }
-
+    
     public function closeArchiveModal()
     {
         $this->showArchiveModal = false;
         $this->archivingEvent = null;
     }
-
-    public function confirmAction()
-    {
-        if ($this->currentAction === 'archive' && $this->archivingEvent) {
-            $this->confirmArchive();
-        }
-        
-        // Reset the action trackers
-        $this->currentAction = null;
-        $this->currentEventId = null;
-    }
-
-
+    
+    // SIMPLIFIED: Removed the unused confirmAction() method
+    // The archive button in the modal directly calls confirmArchive()
+    
     public function confirmArchive()
     {
-        if ($this->archivingEvent) {
-            if ($this->archivingEvent->archive(Auth::id())) {
-                // Log the archive action
-                $this->logActivity('ARCHIVE', $this->archivingEvent,
-                    auth()->user()->first_name . ' ' . auth()->user()->last_name . ' archived event: ' . $this->archivingEvent->title);
-                
+        if (!$this->archivingEvent) {
+            return;
+        }
+        
+        try {
+            // Log the archive action BEFORE archiving
+            $this->logActivity('ARCHIVE', $this->archivingEvent,
+                auth()->user()->first_name . ' ' . auth()->user()->last_name . ' archived event: ' . $this->archivingEvent->title);
+            
+            // Then archive the event
+            $archived = $this->archivingEvent->archive(Auth::id());
+            
+            if ($archived) {
                 session()->flash('success', 'Event archived successfully!');
             } else {
-                session()->flash('error', 'Failed to archive event.');
+                session()->flash('error', 'Failed to archive event. The archive operation returned false.');
             }
+        } catch (\Exception $e) {
+            \Log::error('Archive failed: ' . $e->getMessage(), [
+                'event_id' => $this->archivingEvent->id,
+                'user_id' => Auth::id()
+            ]);
+            
+            session()->flash('error', 'Failed to archive event: ' . $e->getMessage());
         }
+        
         $this->closeArchiveModal();
     }
 
-    
     public function sortBy($field)
     {
         if ($this->sortBy === $field) {

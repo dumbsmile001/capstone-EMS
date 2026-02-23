@@ -65,11 +65,14 @@ class AdminArchivedEvents extends Component
             $this->currentEventId = $eventId;
             $this->showRestoreConfirmation = true;
         }
+        // Log the restore action
+        $this->logActivity('RESTORE', $event,
+                auth()->user()->first_name . ' ' . auth()->user()->last_name . ' restored event: ' . $event->title);
     }
 
     public function confirmDelete($eventId)
     {
-         $event = Event::find($eventId);
+        $event = Event::find($eventId);
         if ($event) {
             $this->selectedEventId = $eventId;
             $this->selectedEventTitle = $event->title;
@@ -78,7 +81,6 @@ class AdminArchivedEvents extends Component
             $this->showDeleteConfirmation = true;
         }
     }
-
     public function confirmAction()
     {
         if ($this->currentAction === 'restore' && $this->selectedEventId) {
@@ -93,15 +95,11 @@ class AdminArchivedEvents extends Component
         $this->selectedEventId = null;
         $this->selectedEventTitle = '';
     }
-
     public function unarchiveEvent($eventId)
     {
         $event = Event::findOrFail($eventId);
         
         if ($event->unarchive()) {
-            // Log the restore action
-            $this->logActivity('RESTORE', $event,
-                auth()->user()->first_name . ' ' . auth()->user()->last_name . ' restored event: ' . $event->title);
             session()->flash('success', 'Event "' . $event->title . '" restored successfully!');
         } else {
             session()->flash('error', 'Failed to restore event.');
@@ -113,7 +111,7 @@ class AdminArchivedEvents extends Component
         $event = Event::findOrFail($eventId);
         $eventTitle = $event->title;
         
-          // Log permanent deletion
+        // Log permanent deletion
         $this->logActivity('DELETE_PERMANENT', $event,
             auth()->user()->first_name . ' ' . auth()->user()->last_name . ' permanently deleted archived event: ' . $eventTitle);
         $event->delete();
