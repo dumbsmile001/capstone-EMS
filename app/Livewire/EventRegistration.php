@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Traits\LogsActivity;
 use Livewire\Component;
 use App\Models\Event;
 use App\Models\Registration;
@@ -9,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class EventRegistration extends Component
 {
+    use LogsActivity;
     public $events;
      /** @var \Illuminate\Support\Collection */
     public $userRegistrations = [];
@@ -87,6 +89,15 @@ class EventRegistration extends Component
                 ]
             );
 
+            // Log the registration activity
+            $this->logActivity(
+                'REGISTER_EVENT',
+                $event,
+                null,
+                [], // No old values for registration
+                ['status' => 'registered', 'registered_at' => now()->toDateTimeString()]
+            );
+
             // Reload data
             $this->loadUserRegistrations();
             
@@ -99,12 +110,29 @@ class EventRegistration extends Component
 
     public function cancelRegistration($eventId)
     {
+        $event = Event::findOrFail($eventId);
         $registration = Registration::where('event_id', $eventId)
             ->where('user_id', Auth::id())
             ->first();
 
         if ($registration) {
+             // Store old values before update
+            $oldValues = [
+                'status' => $registration->status,
+                'cancelled_at' => $registration->cancelled_at
+            ];
+
             $registration->update(['status' => 'cancelled']);
+
+            // Log the cancellation activity
+            $this->logActivity(
+                'CANCEL_REGISTRATION',
+                $event,
+                null,
+                $oldValues,
+                ['status' => 'cancelled', 'cancelled_at' => now()->toDateTimeString()]
+            );
+
             $this->loadUserRegistrations();
             session()->flash('success', 'Registration cancelled successfully.');
         }

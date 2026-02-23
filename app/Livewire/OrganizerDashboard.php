@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Event;
 use App\Models\Registration;
+use App\Traits\LogsActivity;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination; // Add this
@@ -12,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 
 class OrganizerDashboard extends Component
 {
-    use WithFileUploads, WithPagination;
+    use WithFileUploads, WithPagination, LogsActivity;
 
     // Add these properties for editing
     public $editingEvent = null;
@@ -70,6 +71,9 @@ class OrganizerDashboard extends Component
         
         // Get filtered payments data
         $payments = $this->getFilteredPaymentsForExport();
+
+       // Log the export activity before closing modal
+        $this->logActivity('EXPORT_PAYMENTS');
         
         // Prepare data for export
         $data = $payments->map(function ($payment) {

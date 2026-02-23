@@ -28,6 +28,10 @@ $actionColors = [
     
     // View/Access
     'VIEW' => 'bg-cyan-100 text-cyan-800 border-cyan-200',
+
+    // Event Registration
+    'REGISTER_EVENT' => 'bg-green-100 text-green-800 border-green-200',
+    'CANCEL_REGISTRATION' => 'bg-orange-100 text-orange-800 border-orange-200',
 ];
 
 $colorClass = $actionColors[$action] ?? 'bg-gray-100 text-gray-800 border-gray-200';

@@ -8,10 +8,11 @@ use App\Models\Registration;
 use App\Models\Event;
 use App\Models\Ticket;
 use Illuminate\Support\Facades\Auth;
+use App\Traits\LogsActivity;
 
 class OrganizerRegistrations extends Component
 {
-    use WithPagination;
+    use WithPagination, LogsActivity;
     public $events;
 
     // Search and filter properties
@@ -64,6 +65,9 @@ class OrganizerRegistrations extends Component
 
     public function exportRegistrations()
     {
+        // Log the export activity
+        $this->logActivity('EXPORT_REGISTRATIONS');
+
         $this->closeExportModal();
         
         $registrations = $this->getExportData();
@@ -264,11 +268,20 @@ class OrganizerRegistrations extends Component
     public function confirmPaymentVerification()
     {
         $registration = Registration::with(['user'])->find($this->selectedRegistrationId);
+
+        $oldValues = ['payment_status' => $registration->payment_status];
         
         $registration->update([
             'payment_status' => 'verified',
             'payment_verified_at' => now(),
             'payment_verified_by' => Auth::id(),
+        ]);
+
+         // Log payment verification
+        $this->logActivity('VERIFY_PAYMENT', $registration, null, $oldValues, [
+            'payment_status' => 'verified',
+            'payment_verified_at' => now()->toDateTimeString(),
+            'payment_verified_by' => Auth::id()
         ]);
 
         $this->showPaymentModal = false;
@@ -289,6 +302,8 @@ class OrganizerRegistrations extends Component
     public function confirmPaymentRejection()
     {
         $registration = Registration::with(['user', 'ticket'])->find($this->selectedRegistrationId);
+
+        $oldValues = ['payment_status' => $registration->payment_status];
         
         $registration->update([
             'payment_status' => 'rejected',
@@ -302,6 +317,13 @@ class OrganizerRegistrations extends Component
                 'status' => 'pending_payment',
             ]);
         }
+
+         // Log payment rejection
+        $this->logActivity('REJECT_PAYMENT', $registration, null, $oldValues, [
+            'payment_status' => 'rejected',
+            'payment_verified_at' => now()->toDateTimeString(),
+            'payment_verified_by' => Auth::id()
+        ]);
 
         $this->showRejectModal = false;
         $this->selectedRegistration = null;
@@ -321,6 +343,8 @@ class OrganizerRegistrations extends Component
     public function resetPaymentStatus($registrationId)
     {
         $registration = Registration::with(['user', 'ticket'])->find($registrationId);
+
+        $oldValues = ['payment_status' => $registration->payment_status];
         
         $registration->update([
             'payment_status' => 'pending',
@@ -334,6 +358,11 @@ class OrganizerRegistrations extends Component
                 'status' => 'pending_payment',
             ]);
         }
+
+        // Log payment reset
+        $this->logActivity('RESET_PAYMENT', $registration, null, $oldValues, [
+            'payment_status' => 'pending'
+        ]);
 
         session()->flash('info', 'Payment status reset to pending for ' . $registration->user->first_name . ' ' . $registration->user->last_name);
     }
@@ -364,17 +393,32 @@ class OrganizerRegistrations extends Component
         try {
             // If ticket exists but not active, regenerate it
             if ($registration->ticket) {
+                $oldStatus = $registration->ticket->status;
                 $registration->regenerateTicket();
                 $registration->ticket->update(['status' => 'active']);
+
+                // Log ticket regeneration
+                $this->logActivity('REGENERATE_TICKET', $registration, null, 
+                    ['ticket_status' => $oldStatus, 'ticket_number' => $registration->ticket->ticket_number],
+                    ['ticket_status' => 'active', 'ticket_number' => $registration->ticket->ticket_number]
+                );
+
                 session()->flash('success', 'Ticket regenerated for ' . $registration->user->first_name);
             } else {
                 // Create new ticket
-                Ticket::create([
+                $ticket = Ticket::create([
                     'registration_id' => $registration->id,
                     'ticket_number' => Registration::generateTicketNumber(),
                     'status' => 'active',
                     'generated_at' => now(),
                 ]);
+
+                // Log ticket generation
+                $this->logActivity('GENERATE_TICKET', $registration, null, [], [
+                    'ticket_number' => $ticket->ticket_number,
+                    'ticket_status' => 'active'
+                ]);
+
                 session()->flash('success', 'Ticket generated for ' . $registration->user->first_name);
             }
             

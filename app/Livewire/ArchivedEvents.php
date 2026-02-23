@@ -6,10 +6,11 @@ use App\Models\Event;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
+use App\Traits\LogsActivity;
 
 class ArchivedEvents extends Component
 {
-    use WithPagination;
+    use WithPagination, LogsActivity;
 
     public $search = '';
     public $filterCategory = '';
@@ -84,6 +85,10 @@ class ArchivedEvents extends Component
         }
 
         $event->unarchive();
+
+        // Log the restore activity
+        $this->logActivity('RESTORE', $event);
+
         session()->flash('success', 'Event unarchived successfully!');
     }
 
@@ -95,8 +100,14 @@ class ArchivedEvents extends Component
             session()->flash('error', 'You are not authorized to delete this event.');
             return;
         }
-
+        // Store event info for logging
+        $eventInfo = $event;
+        
         $event->delete();
+        
+        // Log permanent deletion
+        $this->logActivity('DELETE_PERMANENT', $eventInfo);
+
         session()->flash('success', 'Event deleted permanently!');
     }
 
@@ -104,6 +115,9 @@ class ArchivedEvents extends Component
     public function exportArchivedEvents()
     {
         $events = $this->getFilteredEventsQuery()->get();
+
+        // Log the export activity
+        $this->logActivity('EXPORT_ARCHIVED');
 
         $this->showExportModal = false;
         

@@ -7,10 +7,11 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
+use App\Traits\LogsActivity;
 
 class OrganizerEvents extends Component
 {
-    use WithFileUploads, WithPagination;
+    use WithFileUploads, WithPagination, LogsActivity;
 
     public string $title = '';
     public $date;
@@ -131,7 +132,11 @@ class OrganizerEvents extends Component
     public function confirmDelete()
     {
         if ($this->deletingEvent) {
+            // Store event info before deletion
+            $event = $this->deletingEvent;
             $this->deletingEvent->delete();
+            // Log the activity after successful deletion
+            $this->logActivity('DELETE', $event);
             session()->flash('success', 'Event deleted successfully!');
         }
         $this->closeDeleteModal();
@@ -172,7 +177,7 @@ class OrganizerEvents extends Component
         $bannerPath = $this->banner ? $this->banner->store('event-banners', 'public') : null;
 
         // Create the event
-        Event::create([
+        $event = Event::create([
             'title' => $this->title,
             'date' => $this->date,
             'time' => $this->time,
@@ -191,6 +196,9 @@ class OrganizerEvents extends Component
             'visible_to_year_level' => $this->visibility_type === 'year_level' ? $this->visible_to_year_level : null,
             'visible_to_college_program' => $this->visibility_type === 'college_program' ? $this->visible_to_college_program : null,
         ]);
+
+         // Log the activity
+        $this->logActivity('CREATE', $event);
 
         $this->closeCreateModal();
         session()->flash('success', 'Event created successfully!');
@@ -217,6 +225,9 @@ class OrganizerEvents extends Component
                 'visible_to_college_program' => 'nullable|array',
             ]);
 
+            // Get old values for logging
+            $oldValues = $this->editingEvent->toArray();
+
             // Handle banner upload if new banner is provided
             if ($this->banner) {
                 $data['banner'] = $this->banner->store('event-banners', 'public');
@@ -234,6 +245,10 @@ class OrganizerEvents extends Component
             $data['visible_to_college_program'] = $this->visibility_type === 'college_program' ? $this->visible_to_college_program : null;
 
             $this->editingEvent->update($data);
+
+            // Log the activity with changes
+            $newValues = $this->editingEvent->fresh()->toArray();
+            $this->logActivity('UPDATE', $this->editingEvent, null, $oldValues, $newValues);
             
             $this->closeEditModal();
             session()->flash('success', 'Event updated successfully!');
@@ -256,18 +271,6 @@ class OrganizerEvents extends Component
         $this->resetPage();
     }
 
-    public function archiveEvent($eventId)
-    {
-        $event = Event::findOrFail($eventId);
-        
-        if ($event->created_by !== Auth::id()) {
-            session()->flash('error', 'You are not authorized to archive this event.');
-            return;
-        }
-
-        $event->archive(Auth::id());
-        session()->flash('success', 'Event archived successfully!');
-    }
     public function openArchiveModal($eventId)
     {
         $this->archivingEvent = Event::findOrFail($eventId);
@@ -282,13 +285,32 @@ class OrganizerEvents extends Component
 
     public function confirmArchive()
     {
-        if ($this->archivingEvent) {
-            if ($this->archivingEvent->archive(Auth::id())) {
+        if (!$this->archivingEvent) {
+            return;
+        }
+        
+        try {
+            // Log the archive action BEFORE archiving
+            $this->logActivity('ARCHIVE', $this->archivingEvent,
+                auth()->user()->first_name . ' ' . auth()->user()->last_name . ' archived event: ' . $this->archivingEvent->title);
+            
+            // Then archive the event
+            $archived = $this->archivingEvent->archive(Auth::id());
+            
+            if ($archived) {
                 session()->flash('success', 'Event archived successfully!');
             } else {
-                session()->flash('error', 'Failed to archive event.');
+                session()->flash('error', 'Failed to archive event. The archive operation returned false.');
             }
+        } catch (\Exception $e) {
+            \Log::error('Archive failed: ' . $e->getMessage(), [
+                'event_id' => $this->archivingEvent->id,
+                'user_id' => Auth::id()
+            ]);
+            
+            session()->flash('error', 'Failed to archive event: ' . $e->getMessage());
         }
+        
         $this->closeArchiveModal();
     }
 
