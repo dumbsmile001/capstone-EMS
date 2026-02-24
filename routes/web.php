@@ -15,6 +15,7 @@ Route::middleware([
     // Make dashboard the default home page
     Route::get('/dashboard', \App\Livewire\Home::class)->name('home'); // <-- Dashboard is now home
     Route::get('/announcements', \App\Livewire\Announcements::class)->name('announcements'); // <-- New announcements page
+     Route::get('/profile', \App\Livewire\UserProfile::class)->name('profile');
     
     // Role-specific dashboards
     Route::get('/dashboard/admin', \App\Livewire\AdminDashboard::class)->name('dashboard.admin');
