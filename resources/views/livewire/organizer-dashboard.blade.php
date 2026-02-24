@@ -11,7 +11,7 @@
         </div>
 
         <!-- Dashboard Content -->
-        <div class="flex-1 pt-16 lg:pt-20 p-6 mt-16 lg:mt-0 overflow-y-auto">
+        <div class="flex-1 p-6 mt-20 lg:mt-24 overflow-y-auto">
             <!-- Overview Cards -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                 <x-overview-card title="Event Registrations" :value="$eventRegistrationsCount"

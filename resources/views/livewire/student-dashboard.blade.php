@@ -11,7 +11,7 @@
         </div>
 
         <!-- Dashboard Content -->
-        <div class="flex-1 pt-16 lg:pt-20 p-6 mt-16 lg:mt-0 overflow-y-auto">
+        <div class="flex-1 p-6 mt-20 lg:mt-24 overflow-y-auto">
             <!-- Overview Cards -->
             <livewire:dashboard-stats />
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">

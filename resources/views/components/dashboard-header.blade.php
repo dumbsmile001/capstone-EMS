@@ -1,29 +1,17 @@
 @props(['userRole' => 'Student', 'userInitials' => 'SU'])
 
-<div class="bg-white shadow-sm border-b border-gray-200 px-8 py-4 flex items-center justify-between">
-    <h1 class="text-2xl font-semibold text-blue-900">Event Management System</h1>
-    <div class="flex items-center space-x-4">
-        <div class="relative" x-data="{ open: false }">
-            <button @click="open = !open" class="flex items-center space-x-3 hover:bg-gray-50 rounded-lg px-2 py-1 transition-colors">
-                <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-semibold">
-                    {{ $userInitials }}
-                </div>
-                <span class="text-gray-700 font-medium">{{ $userRole }} User</span>
-                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                </svg>
-            </button>
-            
-            <!-- Dropdown Menu -->
-            <div x-show="open" @click.away="open = false" x-transition class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="w-full text-left block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
-                        Log Out
-                    </button>
-                </form>
-            </div>
-        </div>
+<div class="bg-gradient-to-r from-yellow-400 to-yellow-500 shadow-lg border-b-4 border-blue-900 px-4 sm:px-8 py-4 flex items-center justify-between relative">
+    <h1 class="text-xl sm:text-2xl font-bold text-blue-900 drop-shadow-sm flex-1 text-left lg:text-left">
+        <span class="px-3 sm:px-4 py-2 rounded-lg inline-block">
+            Event Management System
+        </span>
+    </h1>
+    
+    <!-- Inspirational Message - Hidden on mobile, visible on desktop -->
+    <div class="hidden lg:flex items-center space-x-2 text-blue-900 px-6 py-2">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+        </svg>
+        <span class="font-medium text-sm">Manage and register to different events, all in one place!</span>
     </div>
 </div>
-

@@ -20,11 +20,6 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
             </button>
-            
-            <button wire:click="goToCurrentMonth" 
-                class="ml-2 px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors text-gray-700">
-                Today
-            </button>
         </div>
     </div>
     

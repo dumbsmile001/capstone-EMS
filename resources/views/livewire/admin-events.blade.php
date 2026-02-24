@@ -4,11 +4,12 @@
 
     <!-- Main Content -->
     <div class="flex-1 flex flex-col">
-        <!-- Header -->
-        <x-dashboard-header userRole="Admin" :userInitials="$userInitials" />
+        <div class="fixed top-0 right-0 left-0 lg:left-64 z-30">
+            <x-dashboard-header userRole="Organizer" :userInitials="$userInitials" />
+        </div>
 
         <!-- Main Content -->
-        <div class="flex-1 p-6">
+        <div class="flex-1 p-6 mt-20 lg:mt-24">
             <!-- Header with Stats and Create Button -->
             <div class="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>

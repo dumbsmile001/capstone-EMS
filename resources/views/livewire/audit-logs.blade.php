@@ -10,7 +10,7 @@
         </div>
 
         <!-- Dashboard Content -->
-        <div class="flex-1 pt-16 lg:pt-20 p-6 mt-16 lg:mt-0 overflow-y-auto">
+        <div class="flex-1 p-6 mt-20 lg:mt-24 overflow-y-auto">
             <!-- Page Header -->
             <div class="mb-6">
                 <h1 class="text-2xl font-bold text-gray-800">Audit Logs</h1>

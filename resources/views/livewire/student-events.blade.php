@@ -4,11 +4,12 @@
 
     <!-- Main Content -->
     <div class="flex-1 flex flex-col">
-        <!-- Header -->
-        <x-dashboard-header userRole="Student" :userInitials="$userInitials" />
+        <div class="fixed top-0 right-0 left-0 lg:left-64 z-30">
+            <x-dashboard-header userRole="Student" :userInitials="$userInitials" />
+        </div>
 
         <!-- Main Content -->
-        <div class="flex-1 p-6">
+        <div class="flex-1 p-6 mt-20 lg:mt-24">
             <!-- Header with Stats -->
             <div class="mb-6">
                 <h1 class="text-2xl font-bold text-gray-800">Available Events</h1>
