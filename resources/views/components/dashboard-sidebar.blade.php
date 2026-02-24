@@ -76,7 +76,7 @@
             </a>
             <div class="flex-1 min-w-0">
                 <a href="{{ route('profile') }}"
-                    class="font-bold text-white truncate text-lg hover:text-yellow-400 transition-colors">
+                    class="font-bold text-white hover:text-yellow-400 transition-colors block truncate text-lg">
                     {{ $fullName }}
                 </a>
                 <div
