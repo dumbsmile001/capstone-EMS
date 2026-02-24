@@ -5,11 +5,12 @@ namespace App\Livewire;
 use App\Models\Event;
 use App\Models\Registration;
 use App\Traits\LogsActivity;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination; // Add this
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class OrganizerDashboard extends Component
 {
@@ -42,6 +43,17 @@ class OrganizerDashboard extends Component
     public $filterRegistrationsEvent = '';
     public $filterRegistrationsPaymentStatus = '';
     public $filterRegistrationsTicketStatus = '';
+
+    // Add these properties to your OrganizerDashboard class
+    public $showEventDetailsModal = false;
+    public $showDateEventsModal = false;
+    public $selectedEvent = null;
+
+    // Add these properties
+    public $showCalendarEventsModal = false;
+    public $selectedCalendarDate = null;
+    public $selectedCalendarEvents = [];
+    public $calendarEventCount = 0;
 
     // Initialize or update the card data
     public function mount()
@@ -321,6 +333,77 @@ class OrganizerDashboard extends Component
         $this->dispatch('open-modal', modal: 'view-all-registrations');
     }
 
+    public function getUpcomingEvents()
+    {
+        $userId = Auth::id();
+        
+        return Event::where('created_by', $userId)
+            ->where('date', '>=', now()->format('Y-m-d'))
+            ->where('status', 'published')
+            ->where('is_archived', false)
+            ->orderBy('date', 'asc')
+            ->orderBy('time', 'asc')
+            ->limit(5) // You can adjust this limit
+            ->get();
+    }
+
+    // Add these modal methods
+    public function openEventDetailsModal($eventId)
+    {
+        $this->selectedEvent = Event::where('created_by', Auth::id())
+            ->findOrFail($eventId);
+        $this->showEventDetailsModal = true;
+    }
+
+    public function closeEventDetailsModal()
+    {
+        $this->showEventDetailsModal = false;
+        $this->selectedEvent = null;
+    }
+
+    // Add this method to handle the dispatched event
+    public function showDateEventsModal($data)
+    {
+        $this->selectedCalendarDate = Carbon::parse($data['date']);
+        $this->selectedCalendarEvents = $data['events'];
+        $this->calendarEventCount = $data['eventCount'];
+        $this->showCalendarEventsModal = true;
+    }
+
+    // Add this method to your OrganizerDashboard class
+    public function openEventDetailsFromCalendar($eventId)
+    {
+        $this->selectedEvent = Event::where('created_by', Auth::id())
+            ->findOrFail($eventId);
+        $this->showEventDetailsModal = true;
+        
+        // Also close the calendar events modal when opening event details
+        $this->closeCalendarEventsModal();
+    }
+
+    public function handleEventClick($eventId)
+    {
+        $this->dispatch('openEventDetails', eventId: $eventId);
+        $this->closeCalendarEventsModal();
+    }
+
+    public function closeCalendarEventsModal()
+    {
+        $this->showCalendarEventsModal = false;
+        $this->selectedCalendarDate = null;
+        $this->selectedCalendarEvents = [];
+        $this->calendarEventCount = 0;
+    }
+
+    // Add to your existing listeners array
+    protected function getListeners()
+    {
+        return array_merge(parent::getListeners(), [
+            'showDateEventsModal' => 'showDateEventsModal',
+            'openEventDetails' => 'openEventDetailsFromCalendar',
+        ]);
+    }
+
      public function render()
     {
         $user = Auth::user();
@@ -330,7 +413,10 @@ class OrganizerDashboard extends Component
         $events = Event::where('created_by', Auth::id())
                       ->orderBy('created_at', 'desc')
                       ->get();
-        
+
+        // Get upcoming events for the organizer
+        $upcomingEventsData = $this->getUpcomingEvents();
+
         // Get events for payment filter dropdown (only paid events)
         $paidEvents = Event::where('created_by', Auth::id())
             ->where('require_payment', true)
@@ -341,6 +427,7 @@ class OrganizerDashboard extends Component
             'userInitials' => $userInitials,
             'events' => $events,
             'paidEvents' => $paidEvents, // Add this for payment filter
+            'upcomingEventsData' => $upcomingEventsData, // Add this
             'eventRegistrationsCount' => $this->eventRegistrationsCount,
             'ongoingEventsCount' => $this->ongoingEventsCount,
             'upcomingEventsCount' => $this->upcomingEventsCount,
