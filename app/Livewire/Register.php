@@ -42,7 +42,7 @@ class Register extends Component
     {
         return [
             'first_name' => ['required', 'string', 'max:255'],
-            'middle_name' => ['required', 'string', 'max:255'],
+            'middle_name' => ['nullable', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'student_id' => ['nullable', 'integer', 'unique:users,student_id'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
@@ -62,7 +62,7 @@ class Register extends Component
                 'nullable', 
                 'integer', 
                 'min:1', 
-                'max:5',
+                'max:4',
                 function ($attribute, $value, $fail) {
                     if ($value && ($this->grade_level || $this->shs_strand)) {
                         $fail('You cannot select both SHS and College fields.');

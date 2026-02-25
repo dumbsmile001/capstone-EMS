@@ -115,7 +115,6 @@
                                 <option value="2">2nd Year</option>
                                 <option value="3">3rd Year</option>
                                 <option value="4">4th Year</option>
-                                <option value="5">5th Year</option>
                             </select>
                             @error('year_level') <span class="text-red-600 text-xs sm:text-sm mt-1">{{ $message }}</span> @enderror
                         </div>
