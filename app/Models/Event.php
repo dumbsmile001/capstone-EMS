@@ -12,8 +12,10 @@ class Event extends Model
     
     protected $fillable = [
         'title',
-        'date',
-        'time',
+        'start_date',        // Changed from 'date'
+        'start_time',        // Changed from 'time'
+        'end_date',          // New field
+        'end_time',          // New field
         'type',
         'place_link',
         'category',
@@ -35,19 +37,101 @@ class Event extends Model
     ];
 
     protected $casts = [
-        'date' => 'date',
+        'start_date' => 'date',
+        'end_date' => 'date',  
         'require_payment' => 'boolean',
         'payment_amount' => 'decimal:2',
         'is_archived' => 'boolean', // Add this
         'archived_at' => 'datetime', // Add this
-        // Add these for visibility
         'visible_to_grade_level' => 'array',
         'visible_to_shs_strand' => 'array',
         'visible_to_year_level' => 'array',
         'visible_to_college_program' => 'array',
     ];
 
-    // Add this method to check if event is visible to a user
+    // Add helper methods for date/time logic
+    public function getStartDateTimeAttribute()
+    {
+        return \Carbon\Carbon::parse($this->start_date->format('Y-m-d') . ' ' . $this->start_time);
+    }
+
+    public function getEndDateTimeAttribute()
+    {
+        return \Carbon\Carbon::parse($this->end_date->format('Y-m-d') . ' ' . $this->end_time);
+    }
+
+    public function isCurrentlyOngoing()
+    {
+        $now = now();
+        return $now->between($this->startDateTime, $this->endDateTime);
+    }
+
+    public function hasStarted()
+    {
+        return now()->gte($this->startDateTime);
+    }
+
+    public function hasEnded()
+    {
+        return now()->gt($this->endDateTime);
+    }
+
+    public function canRegister()
+    {
+        // Registration closes when event starts
+        return !$this->hasStarted() && !$this->is_archived && $this->status === 'published';
+    }
+
+    public function canCancelRegistration()
+    {
+        // Can cancel until event starts
+        return !$this->hasStarted() && !$this->is_archived;
+    }
+
+    public function canBeArchived()
+    {
+        // Can archive after event ends
+        return $this->hasEnded() && !$this->is_archived && $this->status === 'published';
+    }
+
+    // Update the scope for events that should be auto-archived
+    public function scopeShouldBeArchived($query)
+    {
+        return $query->where('end_date', '<', now()->toDateString())
+            ->orWhere(function($q) {
+                $q->where('end_date', now()->toDateString())
+                ->where('end_time', '<', now()->format('H:i:s'));
+            })
+            ->where('is_archived', false)
+            ->where('status', 'published');
+    }
+
+    // Update the scope for upcoming events
+    public function scopeUpcoming($query)
+    {
+        return $query->where(function($q) {
+            $q->where('start_date', '>', now()->toDateString())
+            ->orWhere(function($q2) {
+                $q2->where('start_date', now()->toDateString())
+                    ->where('start_time', '>', now()->format('H:i:s'));
+            });
+        });
+    }
+
+    // New scope for ongoing events
+    public function scopeOngoing($query)
+    {
+        return $query->where('start_date', '<=', now()->toDateString())
+            ->where('end_date', '>=', now()->toDateString())
+            ->where(function($q) {
+                $q->where('end_date', '>', now()->toDateString())
+                ->orWhere(function($q2) {
+                    $q2->where('end_date', now()->toDateString())
+                        ->where('end_time', '>', now()->format('H:i:s'));
+                });
+            });
+    }
+
     public function isVisibleToUser(User $user)
     {
         // If event is archived or not published, it's not visible
@@ -106,14 +190,6 @@ class Event extends Model
         return $query->where('is_archived', true);
     }
 
-    // Add this scope to get past events that should be auto-archived
-    public function scopeShouldBeArchived($query)
-    {
-        return $query->where('date', '<', now()->toDateString())
-            ->where('is_archived', false)
-            ->where('status', 'published');
-    }
-
     // Archive method
     public function archive($userId = null)
     {
@@ -139,12 +215,6 @@ class Event extends Model
     {
         $eventDateTime = \Carbon\Carbon::parse($this->date->format('Y-m-d') . ' ' . $this->time);
         return $eventDateTime->isPast();
-    }
-
-    // Check if event can be archived
-    public function canBeArchived()
-    {
-        return $this->isPast() && !$this->is_archived && $this->status === 'published';
     }
 
     /**

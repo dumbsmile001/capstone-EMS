@@ -99,7 +99,7 @@
                                 </svg>
                                 <p class="mt-2 text-gray-600">No upcoming events</p>
                                 <p class="text-sm text-gray-500 mt-1">Create your first event to get started</p>
-                                <a href="{{ route('events.create') }}"
+                                <a href="{{ route('organizer.events') }}"
                                     class="mt-4 inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
                                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

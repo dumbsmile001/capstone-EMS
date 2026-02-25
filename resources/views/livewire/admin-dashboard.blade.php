@@ -34,8 +34,9 @@
                     </div>
                     <div class="space-y-4">
                         @forelse($upcomingEventsData as $event)
+                            <!-- Update the upcoming events display (around line 90) -->
                             @php
-                                $eventDate = \Carbon\Carbon::parse($event->date);
+                                $eventDate = \Carbon\Carbon::parse($event->start_date);
                                 $borderColor = match ($loop->index % 3) {
                                     0 => 'border-blue-500',
                                     1 => 'border-green-500',
@@ -59,7 +60,8 @@
                                 <div class="flex-1">
                                     <h3 class="font-semibold text-gray-800">{{ $event->title }}</h3>
                                     <p class="text-sm text-gray-600">
-                                        {{ \Carbon\Carbon::parse($event->time)->format('g:i A') }} •
+                                        {{ \Carbon\Carbon::parse($event->start_time)->format('g:i A') }} - 
+                                        {{ \Carbon\Carbon::parse($event->end_time)->format('g:i A') }} •
                                         {{ $event->type === 'online' ? 'Online' : 'In-person' }}
                                     </p>
                                     @if ($event->require_payment)
@@ -77,7 +79,7 @@
                                     </svg>
                                 </div>
                             </div>
-                        @empty
+                            @empty
                             <div class="text-center py-8 text-gray-500 bg-gray-50 rounded-lg">
                                 <svg class="w-12 h-12 mx-auto text-gray-400" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
@@ -509,32 +511,64 @@
                     </div>
 
                     <!-- Date and Time -->
-                    <div class="space-y-1.5">
-                        <label class="flex items-center space-x-2 text-sm font-semibold text-blue-900">
-                            <svg class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                            <span>Date & Time</span>
-                        </label>
-                        <div class="grid grid-cols-2 gap-3">
-                            <div class="relative group">
-                                <input type="date" wire:model="date"
-                                    class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
-                                @error('date')
-                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="relative group">
-                                <input type="time" wire:model="time"
-                                    class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
-                                @error('time')
-                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
+                    <!-- Replace the old date/time section (around line 450) with this: -->
+<!-- Date and Time -->
+<div class="space-y-1.5">
+    <label class="flex items-center space-x-2 text-sm font-semibold text-blue-900">
+        <svg class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+        <span>Event Schedule</span>
+    </label>
+    
+    <!-- Start Date & Time -->
+    <div class="grid grid-cols-2 gap-3 mb-2">
+        <div class="relative group">
+            <label class="block text-xs text-gray-600 mb-1">Start Date</label>
+            <input type="date" wire:model="start_date"
+                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
+            @error('start_date')
+                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+            @enderror
+        </div>
+        <div class="relative group">
+            <label class="block text-xs text-gray-600 mb-1">Start Time</label>
+            <input type="time" wire:model="start_time"
+                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
+            @error('start_time')
+                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+            @enderror
+        </div>
+    </div>
+    
+    <!-- End Date & Time -->
+    <div class="grid grid-cols-2 gap-3">
+        <div class="relative group">
+            <label class="block text-xs text-gray-600 mb-1">End Date</label>
+            <input type="date" wire:model="end_date" min="{{ $start_date }}"
+                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
+            @error('end_date')
+                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+            @enderror
+        </div>
+        <div class="relative group">
+            <label class="block text-xs text-gray-600 mb-1">End Time</label>
+            <input type="time" wire:model="end_time"
+                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
+            @error('end_time')
+                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+            @enderror
+        </div>
+    </div>
+    
+    <!-- Quick duration presets -->
+    <div class="flex gap-2 mt-2">
+        <button type="button" wire:click="setDuration(1)" class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">1 Hour</button>
+        <button type="button" wire:click="setDuration(2)" class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">2 Hours</button>
+        <button type="button" wire:click="setDuration(4)" class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">4 Hours</button>
+        <button type="button" wire:click="setDuration(24)" class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">Full Day</button>
+    </div>
+</div>
 
                     <!-- Event Type and Location/Link -->
                     <div class="space-y-1.5">
@@ -789,32 +823,64 @@
                     </div>
 
                     <!-- Date and Time -->
-                    <div class="space-y-1.5">
-                        <label class="flex items-center space-x-2 text-sm font-semibold text-blue-900">
-                            <svg class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                            <span>Date & Time</span>
-                        </label>
-                        <div class="grid grid-cols-2 gap-3">
-                            <div class="relative group">
-                                <input type="date" wire:model="date"
-                                    class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
-                                @error('date')
-                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="relative group">
-                                <input type="time" wire:model="time"
-                                    class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
-                                @error('time')
-                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
+                    <!-- Replace the old date/time section (around line 450) with this: -->
+<!-- Date and Time -->
+<div class="space-y-1.5">
+    <label class="flex items-center space-x-2 text-sm font-semibold text-blue-900">
+        <svg class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+        <span>Event Schedule</span>
+    </label>
+    
+    <!-- Start Date & Time -->
+    <div class="grid grid-cols-2 gap-3 mb-2">
+        <div class="relative group">
+            <label class="block text-xs text-gray-600 mb-1">Start Date</label>
+            <input type="date" wire:model="start_date"
+                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
+            @error('start_date')
+                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+            @enderror
+        </div>
+        <div class="relative group">
+            <label class="block text-xs text-gray-600 mb-1">Start Time</label>
+            <input type="time" wire:model="start_time"
+                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
+            @error('start_time')
+                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+            @enderror
+        </div>
+    </div>
+    
+    <!-- End Date & Time -->
+    <div class="grid grid-cols-2 gap-3">
+        <div class="relative group">
+            <label class="block text-xs text-gray-600 mb-1">End Date</label>
+            <input type="date" wire:model="end_date" min="{{ $start_date }}"
+                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
+            @error('end_date')
+                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+            @enderror
+        </div>
+        <div class="relative group">
+            <label class="block text-xs text-gray-600 mb-1">End Time</label>
+            <input type="time" wire:model="end_time"
+                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
+            @error('end_time')
+                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+            @enderror
+        </div>
+    </div>
+    
+    <!-- Quick duration presets -->
+    <div class="flex gap-2 mt-2">
+        <button type="button" wire:click="setDuration(1)" class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">1 Hour</button>
+        <button type="button" wire:click="setDuration(2)" class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">2 Hours</button>
+        <button type="button" wire:click="setDuration(4)" class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">4 Hours</button>
+        <button type="button" wire:click="setDuration(24)" class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">Full Day</button>
+    </div>
+</div>
 
                     <!-- Event Type and Location/Link -->
                     <div class="space-y-1.5">

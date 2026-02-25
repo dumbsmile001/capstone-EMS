@@ -9,7 +9,6 @@ use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Auth;
 use App\Traits\LogsActivity;
-use Carbon\Carbon;
 
 class AdminEvents extends Component
 {
@@ -17,8 +16,10 @@ class AdminEvents extends Component
 
     // Event properties
     public string $title = '';
-    public $date;
-    public $time;
+    public $start_date;        // Changed from 'date'
+    public $start_time;        // Changed from 'time'
+    public $end_date;          // New
+    public $end_time;          // New
     public string $type = '';
     public $place_link = '';
     public string $category = '';
@@ -85,42 +86,44 @@ class AdminEvents extends Component
             return [$user->id => $user->first_name . ' ' . $user->last_name];
         })->toArray();
         
-        // Initialize with today's date for create form
-        $this->date = now()->format('Y-m-d');
-        $this->time = now()->format('H:i');
+         // Initialize with today's date for create form
+        $this->start_date = now()->format('Y-m-d');
+        $this->start_time = now()->format('H:i');
+        $this->end_date = now()->addHours(2)->format('Y-m-d');
+        $this->end_time = now()->addHours(2)->format('H:i');
     }
     
     public function getEventsProperty()
     {
         return Event::where('is_archived', false)
-            ->when($this->search, function ($query) {
-                $query->where(function ($q) {
-                    $q->where('title', 'like', '%' . $this->search . '%')
-                      ->orWhere('description', 'like', '%' . $this->search . '%');
-                });
-            })
-            ->when($this->filterType, function ($query) {
-                $query->where('type', $this->filterType);
-            })
-            ->when($this->filterCategory, function ($query) {
-                $query->where('category', $this->filterCategory);
-            })
-            ->when($this->filterPayment !== '', function ($query) {
-                if ($this->filterPayment === 'paid') {
-                    $query->where('require_payment', true);
-                } elseif ($this->filterPayment === 'free') {
-                    $query->where('require_payment', false);
-                }
-            })
-            ->when($this->filterCreator, function ($query) {
-                $query->where('created_by', $this->filterCreator);
-            })
-            ->when($this->filterStatus, function ($query) {
-                $query->where('status', $this->filterStatus);
-            })
-            ->orderBy($this->sortBy, $this->sortDirection)
-            ->with('creator')
-            ->paginate($this->eventsPerPage);
+        ->when($this->search, function ($query) {
+            $query->where(function ($q) {
+                $q->where('title', 'like', '%' . $this->search . '%')
+                  ->orWhere('description', 'like', '%' . $this->search . '%');
+            });
+        })
+        ->when($this->filterType, function ($query) {
+            $query->where('type', $this->filterType);
+        })
+        ->when($this->filterCategory, function ($query) {
+            $query->where('category', $this->filterCategory);
+        })
+        ->when($this->filterPayment !== '', function ($query) {
+            if ($this->filterPayment === 'paid') {
+                $query->where('require_payment', true);
+            } elseif ($this->filterPayment === 'free') {
+                $query->where('require_payment', false);
+            }
+        })
+        ->when($this->filterCreator, function ($query) {
+            $query->where('created_by', $this->filterCreator);
+        })
+        ->when($this->filterStatus, function ($query) {
+            $query->where('status', $this->filterStatus);
+        })
+        ->orderBy($this->sortBy === 'date' ? 'start_date' : $this->sortBy, $this->sortDirection)
+        ->with('creator')
+        ->paginate($this->eventsPerPage);
     }
     
     public function openCreateModal()
@@ -140,8 +143,10 @@ class AdminEvents extends Component
         
         // Populate form fields
         $this->title = $this->editingEvent->title;
-        $this->date = $this->editingEvent->date->format('Y-m-d');
-        $this->time = $this->editingEvent->time;
+        $this->start_date = $this->editingEvent->start_date->format('Y-m-d');
+        $this->start_time = $this->editingEvent->start_time;
+        $this->end_date = $this->editingEvent->end_date->format('Y-m-d');
+        $this->end_time = $this->editingEvent->end_time;
         $this->type = $this->editingEvent->type;
         $this->place_link = $this->editingEvent->place_link;
         $this->category = $this->editingEvent->category;
@@ -180,8 +185,10 @@ class AdminEvents extends Component
     {
         $data = $this->validate([
             'title' => 'required|string|max:255',
-            'date' => 'required|date|after_or_equal:today',
-            'time' => 'required',
+            'start_date' => 'required|date|after_or_equal:today',
+            'start_time' => 'required',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'end_time' => 'required',
             'type' => 'required|in:online,face-to-face',
             'place_link' => 'required|string|max:500',
             'category' => 'required|in:academic,sports,cultural',
@@ -195,6 +202,12 @@ class AdminEvents extends Component
             'visible_to_year_level' => 'nullable|array',
             'visible_to_college_program' => 'nullable|array',
         ]);
+
+        // Additional validation: if same date, end time must be after start time
+        if ($this->start_date === $this->end_date && $this->end_time <= $this->start_time) {
+            $this->addError('end_time', 'End time must be after start time on the same day.');
+            return;
+        }
         
         // Handle banner upload
         $bannerPath = $this->banner ? $this->banner->store('event-banners', 'public') : null;
@@ -202,8 +215,10 @@ class AdminEvents extends Component
         // Create the event
         $event = Event::create([
             'title' => $this->title,
-            'date' => $this->date,
-            'time' => $this->time,
+            'start_date' => $this->start_date,
+            'start_time' => $this->start_time,
+            'end_date' => $this->end_date,
+            'end_time' => $this->end_time,
             'type' => $this->type,
             'place_link' => $this->place_link,
             'category' => $this->category,
@@ -232,8 +247,10 @@ class AdminEvents extends Component
         if ($this->editingEvent) {
             $data = $this->validate([
                 'title' => 'required|string|max:255',
-                'date' => 'required|date',
-                'time' => 'required',
+                'start_date' => 'required|date',
+                'start_time' => 'required',
+                'end_date' => 'required|date|after_or_equal:start_date',
+                'end_time' => 'required',
                 'type' => 'required|in:online,face-to-face',
                 'place_link' => 'required|string|max:500',
                 'category' => 'required|in:academic,sports,cultural',
@@ -247,6 +264,12 @@ class AdminEvents extends Component
                 'visible_to_year_level' => 'nullable|array',
                 'visible_to_college_program' => 'nullable|array',
             ]);
+
+             // Additional validation for time logic
+            if ($this->start_date === $this->end_date && $this->end_time <= $this->start_time) {
+                $this->addError('end_time', 'End time must be after start time on the same day.');
+                return;
+            }
             
             // Handle banner upload if new banner is provided
             if ($this->banner) {
@@ -368,14 +391,17 @@ class AdminEvents extends Component
     
     public function getEventStatsProperty()
     {
+        $now = now();
+    
         return [
             'total' => Event::where('is_archived', false)->count(),
             'ongoing' => Event::where('is_archived', false)
-                ->where('date', now()->format('Y-m-d'))
+                ->where('start_date', '<=', $now->format('Y-m-d'))
+                ->where('end_date', '>=', $now->format('Y-m-d'))
                 ->where('status', 'published')
                 ->count(),
             'upcoming' => Event::where('is_archived', false)
-                ->where('date', '>', now()->format('Y-m-d'))
+                ->where('start_date', '>', $now->format('Y-m-d'))
                 ->where('status', 'published')
                 ->count(),
             'paid' => Event::where('is_archived', false)
@@ -387,14 +413,28 @@ class AdminEvents extends Component
     private function resetForm()
     {
         $this->reset([
-            'title', 'date', 'time', 'type', 'place_link', 
+            'title', 'start_date', 'start_time', 'end_date', 'end_time', 'type', 'place_link', 
             'category', 'description', 'banner', 'require_payment', 'payment_amount',
             'visibility_type', 'visible_to_grade_level', 'visible_to_shs_strand',
             'visible_to_year_level', 'visible_to_college_program'
         ]);
         $this->resetErrorBag();
-        $this->date = now()->format('Y-m-d');
-        $this->time = now()->format('H:i');
+        $this->start_date = now()->format('Y-m-d');
+        $this->start_time = now()->format('H:i');
+        $this->end_date = now()->addHours(2)->format('Y-m-d');
+        $this->end_time = now()->addHours(2)->format('H:i');
+    }
+
+    // Add helper method for duration presets (optional)
+    public function setDuration($hours)
+    {
+        $this->end_date = $this->start_date;
+        $this->end_time = \Carbon\Carbon::parse($this->start_time)->addHours($hours)->format('H:i');
+        
+        // If adding hours crosses midnight, adjust date
+        if (\Carbon\Carbon::parse($this->start_time)->addHours($hours)->format('Y-m-d') > $this->start_date) {
+            $this->end_date = \Carbon\Carbon::parse($this->start_date)->addDay()->format('Y-m-d');
+        }
     }
     
     public function render()

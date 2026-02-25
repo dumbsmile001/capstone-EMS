@@ -54,39 +54,42 @@ class StudentEvents extends Component
     
     public function getEventsProperty()
     {
-        $user = Auth::user();
-        
+         $user = Auth::user();
+    
         return Event::where('status', 'published')
             ->where('is_archived', false)
-            ->where('date', '>=', now()->format('Y-m-d'))
+            ->where(function($query) {
+                // Only show events that haven't ended yet
+                $query->where('end_date', '>', now()->toDateString())
+                    ->orWhere(function($q) {
+                        $q->where('end_date', now()->toDateString())
+                        ->where('end_time', '>', now()->format('H:i:s'));
+                    });
+            })
             ->where(function($query) use ($user) {
-                // Events visible to all
+                // Visibility conditions...
                 $query->where('visibility_type', 'all')
-                    // OR events visible to user's grade level
                     ->orWhere(function($q) use ($user) {
                         $q->where('visibility_type', 'grade_level')
-                          ->whereJsonContains('visible_to_grade_level', (string)$user->grade_level);
+                        ->whereJsonContains('visible_to_grade_level', (string)$user->grade_level);
                     })
-                    // OR events visible to user's SHS strand
                     ->orWhere(function($q) use ($user) {
                         $q->where('visibility_type', 'shs_strand')
-                          ->whereJsonContains('visible_to_shs_strand', $user->shs_strand);
+                        ->whereJsonContains('visible_to_shs_strand', $user->shs_strand);
                     })
-                    // OR events visible to user's year level
                     ->orWhere(function($q) use ($user) {
                         $q->where('visibility_type', 'year_level')
-                          ->whereJsonContains('visible_to_year_level', (string)$user->year_level);
+                        ->whereJsonContains('visible_to_year_level', (string)$user->year_level);
                     })
-                    // OR events visible to user's college program
                     ->orWhere(function($q) use ($user) {
                         $q->where('visibility_type', 'college_program')
-                          ->whereJsonContains('visible_to_college_program', $user->college_program);
+                        ->whereJsonContains('visible_to_college_program', $user->college_program);
                     });
             })
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
                     $q->where('title', 'like', '%' . $this->search . '%')
-                      ->orWhere('description', 'like', '%' . $this->search . '%');
+                    ->orWhere('description', 'like', '%' . $this->search . '%');
                 });
             })
             ->when($this->filterType, function ($query) {
@@ -102,8 +105,8 @@ class StudentEvents extends Component
                     $query->where('require_payment', false);
                 }
             })
-            ->orderBy($this->sortBy, $this->sortDirection)
-            ->orderBy('time')
+            ->orderBy($this->sortBy === 'date' ? 'start_date' : $this->sortBy, $this->sortDirection)
+            ->orderBy('start_time')
             ->paginate($this->eventsPerPage);
     }
 
@@ -121,11 +124,11 @@ class StudentEvents extends Component
     
     public function registerForEvent($eventId)
     {
-        $event = Event::findOrFail($eventId);
+         $event = Event::findOrFail($eventId);
 
-         // Check if event date is past
-        if ($this->isEventDatePassed($event)) {
-            session()->flash('error', 'Cannot register for past events.');
+        // Check if event can be registered for
+        if (!$event->canRegister()) {
+            session()->flash('error', 'Registration is closed for this event.');
             return;
         }
         
@@ -136,7 +139,6 @@ class StudentEvents extends Component
         }
 
         try {
-            // Update existing registration or create new one
             Registration::updateOrCreate(
                 [
                     'event_id' => $eventId,
@@ -148,9 +150,7 @@ class StudentEvents extends Component
                 ]
             );
 
-            // Reload data
             $this->loadUserRegistrations();
-            
             session()->flash('success', 'Successfully registered for ' . $event->title);
             
         } catch (\Exception $e) {
@@ -160,11 +160,11 @@ class StudentEvents extends Component
 
     public function cancelRegistration($eventId)
     {
-        $event = Event::findOrFail($eventId);
+         $event = Event::findOrFail($eventId);
 
-        // Check if event date is past
-        if ($this->isEventDatePassed($event)) {
-            session()->flash('error', 'Cannot cancel registration for past events.');
+        // Check if cancellation is allowed
+        if (!$event->canCancelRegistration()) {
+            session()->flash('error', 'Cannot cancel registration at this time.');
             return;
         }
 

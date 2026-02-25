@@ -6,13 +6,13 @@ use App\Models\AuditLog;
 use App\Models\Event;
 use App\Models\User;
 use App\Traits\LogsActivity;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Spatie\Permission\Models\Role;
+use Carbon\Carbon;
 
 class AdminDashboard extends Component
 {
@@ -27,21 +27,23 @@ class AdminDashboard extends Component
     public $role;
     public $grade_level;
     public $year_level;
-    public $shs_strand;      // Changed from $program
-    public $college_program; // Added
+    public $shs_strand;
+    public $college_program;
 
     // Search and filter properties
     public $search = '';
     public $filterGradeLevel = '';
     public $filterYearLevel = '';
-    public $filterSHSStrand = '';   // Changed from $filterProgram
-    public $filterCollegeProgram = ''; // Added
+    public $filterSHSStrand = '';
+    public $filterCollegeProgram = '';
     public $filterRole = '';
     
-    // Events properties
+    // Events properties - UPDATED
     public string $title = '';
-    public $date;
-    public $time;
+    public $start_date;        // Changed from 'date'
+    public $start_time;        // Changed from 'time'
+    public $end_date;          // New
+    public $end_time;          // New
     public string $type = '';
     public $place_link = '';
     public string $category = '';
@@ -73,10 +75,9 @@ class AdminDashboard extends Component
     public $selectedEvent = null;
 
      // Available programs and roles for filters
-    public $availableSHSStrands = [];      // Changed
-    public $availableCollegePrograms = []; // Added
+    public $availableSHSStrands = [];
+    public $availableCollegePrograms = [];
     public $availableRoles = [];
-    // Add this property
     public $recentActivities = [];
     protected $paginationTheme = 'bootstrap';
     public $perPage = 10;
@@ -91,7 +92,12 @@ class AdminDashboard extends Component
     public function mount()
     {
         $this->loadFilterOptions();
-        $this->loadRecentActivities(); // Add this line
+        $this->loadRecentActivities();
+        // Initialize dates - ADD THIS
+        $this->start_date = now()->format('Y-m-d');
+        $this->start_time = now()->format('H:i');
+        $this->end_date = now()->addHours(2)->format('Y-m-d');
+        $this->end_time = now()->addHours(2)->format('H:i');
     }
 
     public function loadFilterOptions()
@@ -124,8 +130,6 @@ class AdminDashboard extends Component
     }
     public function openLogDetailsModal($logId)
     {
-        // You can redirect to the audit logs page with the log ID or open a modal
-        // For simplicity, we'll redirect to the audit logs page
         return redirect()->route('admin.audit-logs');
     }
 
@@ -171,7 +175,7 @@ class AdminDashboard extends Component
     public function resetFilters()
     {
         $this->reset(['search', 'filterGradeLevel', 'filterYearLevel', 'filterSHSStrand', 'filterCollegeProgram', 'filterRole']);
-        $this->gotoPage(1); // Use gotoPage instead of resetPage
+        $this->gotoPage(1);
     }
 
     // Apply filters
@@ -198,8 +202,8 @@ class AdminDashboard extends Component
                 'Student ID' => $user->student_id ?? 'N/A',
                 'Grade Level' => $user->grade_level ? 'Grade ' . $user->grade_level : 'N/A',
                 'Year Level' => $user->year_level ? 'Year ' . $user->year_level : 'N/A',
-                'SHS Strand' => $user->shs_strand ?? 'N/A', // UPDATED
-                'College Program' => $user->college_program ?? 'N/A', // ADDED
+                'SHS Strand' => $user->shs_strand ?? 'N/A',
+                'College Program' => $user->college_program ?? 'N/A',
                 'Role' => $user->roles->first()->name ?? 'N/A',
                 'Created At' => $user->created_at->format('Y-m-d H:i:s'),
                 'Updated At' => $user->updated_at->format('Y-m-d H:i:s'),
@@ -311,8 +315,8 @@ class AdminDashboard extends Component
             $this->email = $this->editingUser->email;
             $this->grade_level = $this->editingUser->grade_level;
             $this->year_level = $this->editingUser->year_level;
-            $this->shs_strand = $this->editingUser->shs_strand;      // UPDATED
-            $this->college_program = $this->editingUser->college_program; // ADDED
+            $this->shs_strand = $this->editingUser->shs_strand;
+            $this->college_program = $this->editingUser->college_program;
             
             // Get the first role name (assuming users have one primary role)
             $this->role = $this->editingUser->roles->first()->name ?? 'student';
@@ -368,8 +372,8 @@ class AdminDashboard extends Component
                 'email' => $this->email,
                 'grade_level' => $this->grade_level,
                 'year_level' => $this->year_level,
-                'shs_strand' => $this->grade_level ? $this->shs_strand : null, // Only set if grade_level is selected
-                'college_program' => $this->year_level ? $this->college_program : null, // Only set if year_level is selected
+                'shs_strand' => $this->grade_level ? $this->shs_strand : null,
+                'college_program' => $this->year_level ? $this->college_program : null,
             ]);
 
             // Update role
@@ -414,14 +418,16 @@ class AdminDashboard extends Component
         $this->resetErrorBag();
     }
 
-    // Existing event methods remain the same...
+    // UPDATED: Event methods with new fields
     public function updateEvent()
     {
         if ($this->editingEvent) {
             $data = $this->validate([
                 'title' => 'required|string|max:255',
-                'date' => 'required|date',
-                'time' => 'required',
+                'start_date' => 'required|date',
+                'start_time' => 'required',
+                'end_date' => 'required|date|after_or_equal:start_date',
+                'end_time' => 'required',
                 'type' => 'required|in:online,face-to-face',
                 'place_link' => 'required|string|max:500',
                 'category' => 'required|in:academic,sports,cultural',
@@ -435,6 +441,13 @@ class AdminDashboard extends Component
                 'visible_to_year_level' => 'nullable|array',
                 'visible_to_college_program' => 'nullable|array',
             ]);
+
+            // Additional validation for time logic
+            if ($this->start_date === $this->end_date && $this->end_time <= $this->start_time) {
+                $this->addError('end_time', 'End time must be after start time on the same day.');
+                return;
+            }
+
             // Handle banner upload if new banner is provided
             if ($this->banner) {
                 $data['banner'] = $this->banner->store('event-banners', 'public');
@@ -468,13 +481,15 @@ class AdminDashboard extends Component
         // Validate the data
         $data = $this->validate([
             'title' => 'required|string|max:255',
-            'date' => 'required|date|after_or_equal:today',
-            'time' => 'required',
+            'start_date' => 'required|date|after_or_equal:today',
+            'start_time' => 'required',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'end_time' => 'required',
             'type' => 'required|in:online,face-to-face',
             'place_link' => 'required|string|max:500',
             'category' => 'required|in:academic,sports,cultural',
             'description' => 'required|string|min:10',
-            'banner' => 'nullable|image|max:2048', // 2MB max
+            'banner' => 'nullable|image|max:2048',
             'require_payment' => 'boolean',
             'payment_amount' => 'nullable|required_if:require_payment,true|numeric|min:0',
             'visibility_type' => 'required|in:all,grade_level,shs_strand,year_level,college_program',
@@ -484,13 +499,21 @@ class AdminDashboard extends Component
             'visible_to_college_program' => 'nullable|array',
         ]);
 
+        // Additional validation: if same date, end time must be after start time
+        if ($this->start_date === $this->end_date && $this->end_time <= $this->start_time) {
+            $this->addError('end_time', 'End time must be after start time on the same day.');
+            return;
+        }
+
         $bannerPath = $this->banner ? $this->banner->store('event-banners', 'public') : null;
 
         // Create the event
         $event = Event::create([
             'title' => $this->title,
-            'date' => $this->date,
-            'time' => $this->time,
+            'start_date' => $this->start_date,
+            'start_time' => $this->start_time,
+            'end_date' => $this->end_date,
+            'end_time' => $this->end_time,
             'type' => $this->type,
             'place_link' => $this->place_link,
             'category' => $this->category,
@@ -519,20 +542,21 @@ class AdminDashboard extends Component
         session()->flash('success', 'Event created successfully!');
     }
 
+    // UPDATED: Get upcoming events with new date fields
     public function getUpcomingEvents()
     {
-         return Event::where('date', '>=', Carbon::today())
+        return Event::where('start_date', '>=', Carbon::today())
             ->where('status', 'published')
             ->where('is_archived', false)
-            ->orderBy('date', 'asc')
-            ->orderBy('time', 'asc')
+            ->orderBy('start_date', 'asc')
+            ->orderBy('start_time', 'asc')
             ->limit(3)
             ->get();
     }
 
     public function openEventDetailsModal($eventId)
     {
-        $this->selectedEvent = Event::findOrFail($eventId);
+        $this->selectedEvent = Event::with('creator')->findOrFail($eventId);
         $this->showEventDetailsModal = true;
     }
 
@@ -543,6 +567,7 @@ class AdminDashboard extends Component
     }
 
     public function openCreateModal(){
+        $this->resetForm(); // Reset to default values
         $this->showCreateModal = true;
     }
     
@@ -556,17 +581,18 @@ class AdminDashboard extends Component
     {
         if ($eventId) {
             $this->editingEvent = Event::findOrFail($eventId);
-            // Populate form fields with existing data
+            // Populate form fields with existing data - UPDATED
             $this->title = $this->editingEvent->title;
-            $this->date = $this->editingEvent->date;
-            $this->time = $this->editingEvent->time;
+            $this->start_date = $this->editingEvent->start_date->format('Y-m-d');
+            $this->start_time = $this->editingEvent->start_time;
+            $this->end_date = $this->editingEvent->end_date->format('Y-m-d');
+            $this->end_time = $this->editingEvent->end_time;
             $this->type = $this->editingEvent->type;
             $this->place_link = $this->editingEvent->place_link;
             $this->category = $this->editingEvent->category;
             $this->description = $this->editingEvent->description;
             $this->require_payment = $this->editingEvent->require_payment;
             $this->payment_amount = $this->editingEvent->payment_amount;
-            // In the openEditModal method, add:
             $this->visibility_type = $this->editingEvent->visibility_type;
             $this->visible_to_grade_level = $this->editingEvent->visible_to_grade_level ?? [];
             $this->visible_to_shs_strand = $this->editingEvent->visible_to_shs_strand ?? [];
@@ -625,12 +651,28 @@ class AdminDashboard extends Component
     private function resetForm()
     {
         $this->reset([
-            'title', 'date', 'time', 'type', 'place_link', 
+            'title', 'start_date', 'start_time', 'end_date', 'end_time', 'type', 'place_link', 
             'category', 'description', 'banner', 'require_payment', 'payment_amount',
             'visibility_type', 'visible_to_grade_level', 'visible_to_shs_strand',
             'visible_to_year_level', 'visible_to_college_program'
         ]);
         $this->resetErrorBag();
+        $this->start_date = now()->format('Y-m-d');
+        $this->start_time = now()->format('H:i');
+        $this->end_date = now()->addHours(2)->format('Y-m-d');
+        $this->end_time = now()->addHours(2)->format('H:i');
+    }
+
+    // Add helper method for duration presets
+    public function setDuration($hours)
+    {
+        $this->end_date = $this->start_date;
+        $this->end_time = \Carbon\Carbon::parse($this->start_time)->addHours($hours)->format('H:i');
+        
+        // If adding hours crosses midnight, adjust date
+        if (\Carbon\Carbon::parse($this->start_time)->addHours($hours)->format('Y-m-d') > $this->start_date) {
+            $this->end_date = \Carbon\Carbon::parse($this->start_date)->addDay()->format('Y-m-d');
+        }
     }
 
     public function render()
@@ -650,12 +692,13 @@ class AdminDashboard extends Component
         $usersCount = User::count();
         $eventsCount = Event::count();
         
-        // FIXED: Count all archived events (using is_archived field)
+        // Count all archived events (using is_archived field)
         $archivedEvents = Event::where('is_archived', true)->count();
         
-        // FIXED: Count upcoming events (published and not archived)
-        $upcomingEvents = Event::where('date', '>=', now()->format('Y-m-d'))
+        // UPDATED: Count upcoming events (published and not archived)
+        $upcomingEvents = Event::where('start_date', '>=', now()->format('Y-m-d'))
                             ->where('is_archived', false)
+                            ->where('status', 'published')
                             ->count();
         
         return view('livewire.admin-dashboard', [
@@ -665,8 +708,8 @@ class AdminDashboard extends Component
             'eventsCount' => $eventsCount,
             'archivedEvents' => $archivedEvents,
             'upcomingEvents' => $upcomingEvents,
-            'upcomingEventsData' => $upcomingEventsData, // Pass upcoming events to view
-            'users' => $this->users, // Use the computed property
+            'upcomingEventsData' => $upcomingEventsData,
+            'users' => $this->users,
         ])->layout('layouts.app');
     }
 }

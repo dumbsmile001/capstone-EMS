@@ -7,7 +7,7 @@ use App\Models\User;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
-use App\Traits\LogsActivity; // Add this
+use App\Traits\LogsActivity;
 
 class AdminArchivedEvents extends Component
 {
@@ -27,7 +27,6 @@ class AdminArchivedEvents extends Component
     public $showDeleteConfirmation = false;
     public $selectedEventId = null;
     public $selectedEventTitle = '';
-     // Add a new property to track the current action
     public $currentAction = null;
     public $currentEventId = null;
 
@@ -65,9 +64,6 @@ class AdminArchivedEvents extends Component
             $this->currentEventId = $eventId;
             $this->showRestoreConfirmation = true;
         }
-        // Log the restore action
-        $this->logActivity('RESTORE', $event,
-                auth()->user()->first_name . ' ' . auth()->user()->last_name . ' restored event: ' . $event->title);
     }
 
     public function confirmDelete($eventId)
@@ -81,12 +77,30 @@ class AdminArchivedEvents extends Component
             $this->showDeleteConfirmation = true;
         }
     }
+    
     public function confirmAction()
     {
         if ($this->currentAction === 'restore' && $this->selectedEventId) {
             $this->unarchiveEvent($this->selectedEventId);
+            
+            // Log the restore action
+            $event = Event::find($this->selectedEventId);
+            if ($event) {
+                $this->logActivity('RESTORE', $event,
+                    auth()->user()->first_name . ' ' . auth()->user()->last_name . ' restored event: ' . $event->title);
+            }
         } elseif ($this->currentAction === 'delete_permanent' && $this->selectedEventId) {
-            $this->deleteArchivedEvent($this->selectedEventId);
+            $event = Event::find($this->selectedEventId);
+            if ($event) {
+                $eventTitle = $event->title;
+                
+                // Log permanent deletion
+                $this->logActivity('DELETE_PERMANENT', $event,
+                    auth()->user()->first_name . ' ' . auth()->user()->last_name . ' permanently deleted archived event: ' . $eventTitle);
+                
+                $event->delete();
+                session()->flash('success', 'Event "' . $eventTitle . '" deleted permanently!');
+            }
         }
         
         // Reset the action trackers
@@ -94,7 +108,10 @@ class AdminArchivedEvents extends Component
         $this->currentEventId = null;
         $this->selectedEventId = null;
         $this->selectedEventTitle = '';
+        $this->showRestoreConfirmation = false;
+        $this->showDeleteConfirmation = false;
     }
+
     public function unarchiveEvent($eventId)
     {
         $event = Event::findOrFail($eventId);
@@ -104,18 +121,6 @@ class AdminArchivedEvents extends Component
         } else {
             session()->flash('error', 'Failed to restore event.');
         }
-    }
-
-    public function deleteArchivedEvent($eventId)
-    {
-        $event = Event::findOrFail($eventId);
-        $eventTitle = $event->title;
-        
-        // Log permanent deletion
-        $this->logActivity('DELETE_PERMANENT', $event,
-            auth()->user()->first_name . ' ' . auth()->user()->last_name . ' permanently deleted archived event: ' . $eventTitle);
-        $event->delete();
-        session()->flash('success', 'Event "' . $eventTitle . '" deleted permanently!');
     }
 
     public function exportArchivedEvents()
@@ -128,13 +133,15 @@ class AdminArchivedEvents extends Component
 
         $this->showExportModal = false;
         
-        // Prepare data for export
+        // Prepare data for export - UPDATED with new date/time fields
         $data = $events->map(function ($event) {
             return [
                 'Event Name' => $event->title,
                 'Description' => $event->description,
-                'Date' => $event->date->format('Y-m-d'),
-                'Time' => \Carbon\Carbon::parse($event->time)->format('g:i A'),
+                'Start Date' => $event->start_date->format('Y-m-d'),
+                'Start Time' => \Carbon\Carbon::parse($event->start_time)->format('g:i A'),
+                'End Date' => $event->end_date->format('Y-m-d'),
+                'End Time' => \Carbon\Carbon::parse($event->end_time)->format('g:i A'),
                 'Category' => ucfirst($event->category),
                 'Type' => ucfirst(str_replace('-', ' ', $event->type)),
                 'Creator' => $event->creator ? $event->creator->first_name . ' ' . $event->creator->last_name : 'Unknown',

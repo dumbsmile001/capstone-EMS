@@ -14,8 +14,10 @@ class OrganizerEvents extends Component
     use WithFileUploads, WithPagination, LogsActivity;
 
     public string $title = '';
-    public $date;
-    public $time;
+    public $start_date;        // Changed
+    public $start_time;        // Changed
+    public $end_date;          // New
+    public $end_time;          // New
     public string $type = '';
     public $place_link = '';
     public string $category = '';
@@ -66,8 +68,10 @@ class OrganizerEvents extends Component
     public function mount()
     {
         // Initialize with today's date for create form
-        $this->date = now()->format('Y-m-d');
-        $this->time = now()->format('H:i');
+        $this->start_date = now()->format('Y-m-d');
+        $this->start_time = now()->format('H:i');
+        $this->end_date = now()->addHours(2)->format('Y-m-d');  // Default end 2 hours later
+        $this->end_time = now()->addHours(2)->format('H:i');
 
         // Check if user is organizer
         if (!auth()->user()->hasRole('organizer')) {
@@ -92,15 +96,16 @@ class OrganizerEvents extends Component
         
         // Populate form fields
         $this->title = $this->editingEvent->title;
-        $this->date = $this->editingEvent->date->format('Y-m-d');
-        $this->time = $this->editingEvent->time;
+        $this->start_date = $this->editingEvent->start_date->format('Y-m-d');
+        $this->start_time = $this->editingEvent->start_time;
+        $this->end_date = $this->editingEvent->end_date->format('Y-m-d');
+        $this->end_time = $this->editingEvent->end_time;
         $this->type = $this->editingEvent->type;
         $this->place_link = $this->editingEvent->place_link;
         $this->category = $this->editingEvent->category;
         $this->description = $this->editingEvent->description;
         $this->require_payment = $this->editingEvent->require_payment;
         $this->payment_amount = $this->editingEvent->payment_amount;
-        // Add these lines:
         $this->visibility_type = $this->editingEvent->visibility_type;
         $this->visible_to_grade_level = $this->editingEvent->visible_to_grade_level ?? [];
         $this->visible_to_shs_strand = $this->editingEvent->visible_to_shs_strand ?? [];
@@ -157,8 +162,10 @@ class OrganizerEvents extends Component
     {
         $data = $this->validate([
             'title' => 'required|string|max:255',
-            'date' => 'required|date|after_or_equal:today',
-            'time' => 'required',
+            'start_date' => 'required|date|after_or_equal:today',
+            'start_time' => 'required',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'end_time' => 'required',
             'type' => 'required|in:online,face-to-face',
             'place_link' => 'required|string|max:500',
             'category' => 'required|in:academic,sports,cultural',
@@ -173,14 +180,22 @@ class OrganizerEvents extends Component
             'visible_to_college_program' => 'nullable|array',
         ]);
 
+        // Additional validation: if same date, end time must be after start time
+        if ($this->start_date === $this->end_date && $this->end_time <= $this->start_time) {
+            $this->addError('end_time', 'End time must be after start time on the same day.');
+            return;
+        }
+
         // Handle banner upload
         $bannerPath = $this->banner ? $this->banner->store('event-banners', 'public') : null;
 
         // Create the event
         $event = Event::create([
             'title' => $this->title,
-            'date' => $this->date,
-            'time' => $this->time,
+            'start_date' => $this->start_date,
+            'start_time' => $this->start_time,
+            'end_date' => $this->end_date,
+            'end_time' => $this->end_time,
             'type' => $this->type,
             'place_link' => $this->place_link,
             'category' => $this->category,
@@ -209,8 +224,10 @@ class OrganizerEvents extends Component
         if ($this->editingEvent) {
             $data = $this->validate([
                 'title' => 'required|string|max:255',
-                'date' => 'required|date',
-                'time' => 'required',
+                'start_date' => 'required|date',
+                'start_time' => 'required',
+                'end_date' => 'required|date|after_or_equal:start_date',
+                'end_time' => 'required',
                 'type' => 'required|in:online,face-to-face',
                 'place_link' => 'required|string|max:500',
                 'category' => 'required|in:academic,sports,cultural',
@@ -224,6 +241,12 @@ class OrganizerEvents extends Component
                 'visible_to_year_level' => 'nullable|array',
                 'visible_to_college_program' => 'nullable|array',
             ]);
+
+            // Additional validation for time logic
+            if ($this->start_date === $this->end_date && $this->end_time <= $this->start_time) {
+                $this->addError('end_time', 'End time must be after start time on the same day.');
+                return;
+            }
 
             // Get old values for logging
             $oldValues = $this->editingEvent->toArray();
@@ -337,24 +360,25 @@ class OrganizerEvents extends Component
                     $query->where('require_payment', false);
                 }
             })
-            ->orderBy($this->sortBy, $this->sortDirection)
+            ->orderBy($this->sortBy === 'date' ? 'start_date' : $this->sortBy, $this->sortDirection)
             ->paginate($this->eventsPerPage);
     }
 
     public function getEventStatsProperty()
     {
         $userId = Auth::id();
-        $today = now()->format('Y-m-d');
+        $now = now();
         
         return [
             'total' => Event::where('created_by', $userId)->count(),
             'ongoing' => Event::where('created_by', $userId)
-                ->where('date', $today)
-                ->where('status', 'published')
+                ->where('start_date', '<=', $now->format('Y-m-d'))
+                ->where('end_date', '>=', $now->format('Y-m-d'))
+                ->where('is_archived', false)
                 ->count(),
             'upcoming' => Event::where('created_by', $userId)
-                ->where('date', '>', $today)
-                ->where('status', 'published')
+                ->where('start_date', '>', $now->format('Y-m-d'))
+                ->where('is_archived', false)
                 ->count(),
             'paid' => Event::where('created_by', $userId)
                 ->where('require_payment', true)
@@ -365,14 +389,27 @@ class OrganizerEvents extends Component
     private function resetForm()
     {
        $this->reset([
-            'title', 'date', 'time', 'type', 'place_link', 
+            'title', 'start_date', 'start_time', 'end_date', 'end_time', 'type', 'place_link', 
             'category', 'description', 'banner', 'require_payment', 'payment_amount',
             'visibility_type', 'visible_to_grade_level', 'visible_to_shs_strand',
             'visible_to_year_level', 'visible_to_college_program'
         ]);
         $this->resetErrorBag();
-        $this->date = now()->format('Y-m-d');
-        $this->time = now()->format('H:i');
+        $this->start_date = now()->format('Y-m-d');
+        $this->start_time = now()->format('H:i');
+        $this->end_date = now()->addHours(2)->format('Y-m-d');
+        $this->end_time = now()->addHours(2)->format('H:i');
+    }
+
+    public function setDuration($hours)
+    {
+        $this->end_date = $this->start_date;
+        $this->end_time = \Carbon\Carbon::parse($this->start_time)->addHours($hours)->format('H:i');
+        
+        // If adding hours crosses midnight, adjust date
+        if (\Carbon\Carbon::parse($this->start_time)->addHours($hours)->format('Y-m-d') > $this->start_date) {
+            $this->end_date = \Carbon\Carbon::parse($this->start_date)->addDay()->format('Y-m-d');
+        }
     }
 
     public function render()

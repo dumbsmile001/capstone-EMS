@@ -230,11 +230,14 @@
                                         </div>
                                     @endif
 
-                                    <!-- Date Badge - Bottom Left -->
+                                   <!-- Update the date badge (around line 180) -->
                                     <div class="absolute bottom-2 left-2 flex items-center gap-2">
                                         <div class="bg-white/90 backdrop-blur-sm rounded-lg px-2 py-1 shadow-lg">
                                             <span class="text-[10px] font-semibold text-gray-800">
-                                                {{ $event->date->format('M d, Y') }}
+                                                {{ $event->start_date->format('M d, Y') }}
+                                                @if($event->start_date->format('Y-m-d') != $event->end_date->format('Y-m-d'))
+                                                    - {{ $event->end_date->format('M d, Y') }}
+                                                @endif
                                             </span>
                                         </div>
                                     </div>
@@ -299,29 +302,30 @@
                             </div>
 
                             <!-- Action Buttons - Fixed height at bottom -->
+                            <!-- Update the action buttons based on event state -->
                             <div class="px-4 pb-4 flex gap-2 border-t border-gray-100 pt-3 mt-auto">
-                                @if($this->isRegistered($event->id))
-                                    <button 
-                                        wire:click="cancelRegistration({{ $event->id }})" 
-                                        wire:confirm="Are you sure you want to cancel your registration?"
-                                        @if($isPastEvent) disabled @endif
-                                        class="flex-1 px-2 py-2 {{ $isPastEvent ? 'bg-gray-300 cursor-not-allowed' : 'bg-red-500 hover:bg-red-600' }} text-white text-xs font-medium rounded-xl transition-all duration-200 transform hover:scale-105 hover:shadow-lg hover:shadow-red-200 flex items-center justify-center gap-1 group"
-                                    >
-                                        <svg class="w-3.5 h-3.5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                        </svg>
-                                        <span>Cancel</span>
-                                    </button>
+                                @if($event->canRegister())
+                                    @if($this->isRegistered($event->id))
+                                        <button wire:click="cancelRegistration({{ $event->id }})" 
+                                            wire:confirm="Are you sure you want to cancel your registration?"
+                                            class="flex-1 px-2 py-2 bg-red-500 hover:bg-red-600 text-white text-xs font-medium rounded-xl transition-all duration-200 transform hover:scale-105 hover:shadow-lg hover:shadow-red-200 flex items-center justify-center gap-1 group">
+                                            <svg class="w-3.5 h-3.5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                            </svg>
+                                            <span>Cancel</span>
+                                        </button>
+                                    @else
+                                        <button wire:click="registerForEvent({{ $event->id }})" 
+                                            class="flex-1 px-2 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-xl transition-all duration-200 transform hover:scale-105 hover:shadow-lg hover:shadow-blue-200 flex items-center justify-center gap-1 group">
+                                            <svg class="w-3.5 h-3.5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            <span>Register</span>
+                                        </button>
+                                    @endif
                                 @else
-                                    <button 
-                                        wire:click="registerForEvent({{ $event->id }})" 
-                                        @if($isPastEvent) disabled @endif
-                                        class="flex-1 px-2 py-2 {{ $isPastEvent ? 'bg-gray-300 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700' }} text-white text-xs font-medium rounded-xl transition-all duration-200 transform hover:scale-105 hover:shadow-lg hover:shadow-blue-200 flex items-center justify-center gap-1 group"
-                                    >
-                                        <svg class="w-3.5 h-3.5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                        <span>Register</span>
+                                    <button disabled class="flex-1 px-2 py-2 bg-gray-300 cursor-not-allowed text-white text-xs font-medium rounded-xl">
+                                        {{ $event->hasStarted() ? 'Event Started' : 'Registration Closed' }}
                                     </button>
                                 @endif
                                 
