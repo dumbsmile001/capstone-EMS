@@ -4,13 +4,14 @@ namespace App\Livewire;
 
 use App\Models\Event;
 use App\Models\Registration;
-use Livewire\Component;
-use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 
 class StudentEvents extends Component
 {
-    use WithPagination;
+    use WithPagination, WithFileUploads;
 
     // Search and filter
     public $search = '';
@@ -22,6 +23,10 @@ class StudentEvents extends Component
     // Sort options
     public $sortBy = 'date';
     public $sortDirection = 'asc';
+
+    // Modal controls
+    public $showEventDetailsModal = false;
+    public $selectedEvent = null;
     
     // User registrations
     public $userRegistrations = [];
@@ -101,10 +106,28 @@ class StudentEvents extends Component
             ->orderBy('time')
             ->paginate($this->eventsPerPage);
     }
+
+     public function openEventDetailsModal($eventId)
+    {
+        $this->selectedEvent = Event::with('creator')->find($eventId);
+        $this->showEventDetailsModal = true;
+    }
+    
+    public function closeEventDetailsModal()
+    {
+        $this->showEventDetailsModal = false;
+        $this->selectedEvent = null;
+    }
     
     public function registerForEvent($eventId)
     {
         $event = Event::findOrFail($eventId);
+
+         // Check if event date is past
+        if ($this->isEventDatePassed($event)) {
+            session()->flash('error', 'Cannot register for past events.');
+            return;
+        }
         
         // Check if already actively registered
         if ($this->isRegistered($eventId)) {
@@ -137,6 +160,14 @@ class StudentEvents extends Component
 
     public function cancelRegistration($eventId)
     {
+        $event = Event::findOrFail($eventId);
+
+        // Check if event date is past
+        if ($this->isEventDatePassed($event)) {
+            session()->flash('error', 'Cannot cancel registration for past events.');
+            return;
+        }
+
         $registration = Registration::where('event_id', $eventId)
             ->where('user_id', Auth::id())
             ->first();
@@ -156,6 +187,13 @@ class StudentEvents extends Component
         
         $registration = $this->userRegistrations->get($eventId);
         return in_array($registration->status, ['registered', 'attended']);
+    }
+
+    public function isEventDatePassed($event)
+    {
+        $eventDate = \Carbon\Carbon::parse($event->date);
+        $today = \Carbon\Carbon::today();
+        return $eventDate->lt($today);
     }
     
     public function getRegistrationStatus($eventId)
