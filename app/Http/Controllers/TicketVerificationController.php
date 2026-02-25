@@ -22,11 +22,14 @@ class TicketVerificationController extends Controller
             abort(404, 'Ticket not found');
         }
 
-        // Check if ticket is valid for verification
-        if (!$ticket->isActive()) {
+        // Check if ticket was JUST marked as used (within the last 30 seconds)
+        $justMarkedAsUsed = $ticket->isUsed() && $ticket->used_at && $ticket->used_at->diffInSeconds(now()) < 30;
+
+        // If ticket is used and NOT just marked as used, show invalid view
+        if ($ticket->isUsed() && !$justMarkedAsUsed) {
             return view('tickets.verification-invalid', [
                 'ticket' => $ticket,
-                'message' => 'This ticket is no longer valid for entry.'
+                'message' => 'This ticket has already been used for entry.'
             ]);
         }
 
@@ -35,15 +38,14 @@ class TicketVerificationController extends Controller
             'registration' => $ticket->registration,
             'event' => $ticket->registration->event,
             'user' => $ticket->registration->user,
-            'organizer' => $ticket->registration->event->user
+            'organizer' => $ticket->registration->event->user,
+            'justMarkedAsUsed' => $justMarkedAsUsed // Pass this flag to the view
         ]);
     }
 
     /**
      * Mark ticket as used (for event organizers)
      */
-    // In TicketVerificationController.php, update the markAsUsed method:
-
     public function markAsUsed(Request $request, string $ticketNumber)
     {
         // Require authentication for this action
