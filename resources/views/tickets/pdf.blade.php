@@ -279,12 +279,20 @@
                     <div class="detail-section">
                         <h3>Event Information</h3>
                         <div class="detail-row">
-                            <span class="detail-label">Event Date:</span>
-                            <span class="detail-value">{{ \Carbon\Carbon::parse($event->date)->format('M j, Y') }}</span>
+                            <span class="detail-label">Event Dates:</span>
+                            <span class="detail-value">
+                                {{ \Carbon\Carbon::parse($event->start_date)->format('M j, Y') }}
+                                @if(\Carbon\Carbon::parse($event->start_date)->format('Y-m-d') != \Carbon\Carbon::parse($event->end_date)->format('Y-m-d'))
+                                    - {{ \Carbon\Carbon::parse($event->end_date)->format('M j, Y') }}
+                                @endif
+                            </span>
                         </div>
                         <div class="detail-row">
                             <span class="detail-label">Event Time:</span>
-                            <span class="detail-value">{{ \Carbon\Carbon::parse($event->time)->format('g:i A') }}</span>
+                            <span class="detail-value">
+                                {{ \Carbon\Carbon::parse($event->start_time)->format('g:i A') }} - 
+                                {{ \Carbon\Carbon::parse($event->end_time)->format('g:i A') }}
+                            </span>
                         </div>
                         <div class="detail-row">
                             <span class="detail-label">Event Type:</span>

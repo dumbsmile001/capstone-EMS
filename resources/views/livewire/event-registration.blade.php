@@ -31,17 +31,19 @@
                         <p class="text-sm text-gray-600 mb-3">{{ Str::limit($event->description, 150) }}</p>
                         
                         <div class="flex flex-wrap gap-2 text-sm text-gray-600 mb-3">
+                            <!-- In event-registration.blade.php, update the date and time display -->
                             <span class="flex items-center">
                                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                 </svg>
-                                {{ $event->date->format('F j, Y') }}
+                                {{ \Carbon\Carbon::parse($event->start_date)->format('F j, Y') }}
                             </span>
                             <span class="flex items-center">
                                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                 </svg>
-                                {{ \Carbon\Carbon::parse($event->time)->format('g:i A') }}
+                                {{ \Carbon\Carbon::parse($event->start_time)->format('g:i A') }} - 
+                                {{ \Carbon\Carbon::parse($event->end_time)->format('g:i A') }}
                             </span>
                             <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded-full text-xs">
                                 {{ ucfirst($event->type) }}

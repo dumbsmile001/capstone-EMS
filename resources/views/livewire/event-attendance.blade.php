@@ -182,24 +182,28 @@
                                         </td>
 
                                         <!-- Event Details -->
+                                        <!-- In event-attendance.blade.php, update the event details column (around line 180-190) -->
                                         <td class="px-6 py-4">
                                             <div class="text-sm font-medium text-gray-900">
-                                                {{ $ticket->registration->event->title }}</div>
+                                                {{ $ticket->registration->event->title }}
+                                            </div>
                                             <div class="text-xs text-gray-500 mt-1">
-                                                {{ Str::limit($ticket->registration->event->description, 60) }}</div>
+                                                {{ Str::limit($ticket->registration->event->description, 60) }}
+                                            </div>
                                             <div class="mt-2">
                                                 <div class="text-sm text-gray-900">
-                                                    {{ $ticket->registration->event->date->format('M d, Y') }}
-                                                    at
-                                                    {{ \Carbon\Carbon::parse($ticket->registration->event->time)->format('g:i A') }}
+                                                    {{ $ticket->registration->event->start_date->format('M d, Y') }} - 
+                                                    {{ $ticket->registration->event->end_date->format('M d, Y') }}
+                                                </div>
+                                                <div class="text-sm text-gray-600">
+                                                    {{ \Carbon\Carbon::parse($ticket->registration->event->start_time)->format('g:i A') }} - 
+                                                    {{ \Carbon\Carbon::parse($ticket->registration->event->end_time)->format('g:i A') }}
                                                 </div>
                                                 <div class="flex flex-wrap gap-1 mt-1">
-                                                    <span
-                                                        class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">
+                                                    <span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">
                                                         {{ ucfirst($ticket->registration->event->category) }}
                                                     </span>
-                                                    <span
-                                                        class="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-800">
+                                                    <span class="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-800">
                                                         {{ ucfirst(str_replace('-', ' ', $ticket->registration->event->type)) }}
                                                     </span>
                                                 </div>

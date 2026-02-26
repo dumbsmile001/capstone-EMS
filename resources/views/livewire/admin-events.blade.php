@@ -1004,7 +1004,7 @@
 
                 <!-- Event Details Grid with improved borders and spacing -->
                 <div class="grid grid-cols-2 gap-4">
-                    <!-- Date -->
+                    <!-- Start Date -->
                     <div
                         class="bg-white p-4 rounded-xl border border-gray-200 hover:border-green-300 transition-all duration-200">
                         <div class="flex items-center space-x-3">
@@ -1016,14 +1016,31 @@
                                 </svg>
                             </div>
                             <div>
-                                <p class="text-xs text-gray-500">Date</p>
-                                <p class="font-semibold text-gray-800">{{ $selectedEvent->date->format('F j, Y') }}
-                                </p>
+                                <p class="text-xs text-gray-500">Start Date</p>
+                                <p class="font-semibold text-gray-800">{{ \Carbon\Carbon::parse($selectedEvent->start_date)->format('F j, Y') }}</p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Time -->
+                    <!-- End Date -->
+                    <div
+                        class="bg-white p-4 rounded-xl border border-gray-200 hover:border-green-300 transition-all duration-200">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-2 bg-green-100 rounded-lg">
+                                <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500">End Date</p>
+                                <p class="font-semibold text-gray-800">{{ \Carbon\Carbon::parse($selectedEvent->end_date)->format('F j, Y') }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Start Time -->
                     <div
                         class="bg-white p-4 rounded-xl border border-gray-200 hover:border-green-300 transition-all duration-200">
                         <div class="flex items-center space-x-3">
@@ -1035,9 +1052,28 @@
                                 </svg>
                             </div>
                             <div>
-                                <p class="text-xs text-gray-500">Time</p>
+                                <p class="text-xs text-gray-500">Start Time</p>
                                 <p class="font-semibold text-gray-800">
-                                    {{ \Carbon\Carbon::parse($selectedEvent->time)->format('g:i A') }}</p>
+                                    {{ \Carbon\Carbon::parse($selectedEvent->start_time)->format('g:i A') }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- End Time -->
+                    <div
+                        class="bg-white p-4 rounded-xl border border-gray-200 hover:border-green-300 transition-all duration-200">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-2 bg-green-100 rounded-lg">
+                                <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500">End Time</p>
+                                <p class="font-semibold text-gray-800">
+                                    {{ \Carbon\Carbon::parse($selectedEvent->end_time)->format('g:i A') }}</p>
                             </div>
                         </div>
                     </div>

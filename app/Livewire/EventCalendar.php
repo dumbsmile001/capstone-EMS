@@ -29,15 +29,15 @@ class EventCalendar extends Component
         $firstDay = Carbon::create($this->currentYear, $this->currentMonth, 1);
         $lastDay = $firstDay->copy()->endOfMonth();
         
-        // Get events for this month
+        // Get events for this month - UPDATED: using start_date instead of date
         $events = Event::where('created_by', Auth::id())
-            ->whereMonth('date', $this->currentMonth)
-            ->whereYear('date', $this->currentYear)
+            ->whereMonth('start_date', $this->currentMonth)
+            ->whereYear('start_date', $this->currentYear)
             ->where('status', 'published')
             ->where('is_archived', false)
             ->get()
             ->groupBy(function($event) {
-                return Carbon::parse($event->date)->format('Y-m-d');
+                return Carbon::parse($event->start_date)->format('Y-m-d');
             });
         
         $this->calendarDays = [];
@@ -84,12 +84,25 @@ class EventCalendar extends Component
     
     public function showDateEvents($date)
     {
+        // UPDATED: using start_date instead of date, and ordering by start_time
         $events = Event::where('created_by', Auth::id())
-            ->whereDate('date', $date)
+            ->whereDate('start_date', $date)
             ->where('status', 'published')
             ->where('is_archived', false)
-            ->orderBy('time')
-            ->get();
+            ->orderBy('start_time')
+            ->get()
+            ->map(function($event) {
+                return [
+                    'id' => $event->id,
+                    'title' => $event->title,
+                    'start_time' => $event->start_time,
+                    'end_time' => $event->end_time,
+                    'type' => $event->type,
+                    'category' => $event->category,
+                    'require_payment' => $event->require_payment,
+                    'payment_amount' => $event->payment_amount,
+                ];
+            });
         
         // Dispatch event to show modal in the parent component
         $this->dispatch('showDateEventsModal', [

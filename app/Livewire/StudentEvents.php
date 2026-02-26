@@ -21,7 +21,7 @@ class StudentEvents extends Component
     public $eventsPerPage = 12;
     
     // Sort options
-    public $sortBy = 'date';
+    public $sortBy = 'start_date';
     public $sortDirection = 'asc';
 
     // Modal controls
@@ -54,16 +54,19 @@ class StudentEvents extends Component
     
     public function getEventsProperty()
     {
-         $user = Auth::user();
+        $user = Auth::user();
+        $now = now();
+        $today = $now->toDateString();
+        $currentTime = $now->format('H:i:s');
     
         return Event::where('status', 'published')
             ->where('is_archived', false)
-            ->where(function($query) {
+            ->where(function($query) use ($today, $currentTime) {
                 // Only show events that haven't ended yet
-                $query->where('end_date', '>', now()->toDateString())
-                    ->orWhere(function($q) {
-                        $q->where('end_date', now()->toDateString())
-                        ->where('end_time', '>', now()->format('H:i:s'));
+                $query->where('end_date', '>', $today)
+                    ->orWhere(function($q) use ($today, $currentTime) {
+                        $q->where('end_date', $today)
+                          ->where('end_time', '>', $currentTime);
                     });
             })
             ->where(function($query) use ($user) {
@@ -71,25 +74,25 @@ class StudentEvents extends Component
                 $query->where('visibility_type', 'all')
                     ->orWhere(function($q) use ($user) {
                         $q->where('visibility_type', 'grade_level')
-                        ->whereJsonContains('visible_to_grade_level', (string)$user->grade_level);
+                          ->whereJsonContains('visible_to_grade_level', (string)$user->grade_level);
                     })
                     ->orWhere(function($q) use ($user) {
                         $q->where('visibility_type', 'shs_strand')
-                        ->whereJsonContains('visible_to_shs_strand', $user->shs_strand);
+                          ->whereJsonContains('visible_to_shs_strand', $user->shs_strand);
                     })
                     ->orWhere(function($q) use ($user) {
                         $q->where('visibility_type', 'year_level')
-                        ->whereJsonContains('visible_to_year_level', (string)$user->year_level);
+                          ->whereJsonContains('visible_to_year_level', (string)$user->year_level);
                     })
                     ->orWhere(function($q) use ($user) {
                         $q->where('visibility_type', 'college_program')
-                        ->whereJsonContains('visible_to_college_program', $user->college_program);
+                          ->whereJsonContains('visible_to_college_program', $user->college_program);
                     });
             })
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
                     $q->where('title', 'like', '%' . $this->search . '%')
-                    ->orWhere('description', 'like', '%' . $this->search . '%');
+                      ->orWhere('description', 'like', '%' . $this->search . '%');
                 });
             })
             ->when($this->filterType, function ($query) {
@@ -105,12 +108,12 @@ class StudentEvents extends Component
                     $query->where('require_payment', false);
                 }
             })
-            ->orderBy($this->sortBy === 'date' ? 'start_date' : $this->sortBy, $this->sortDirection)
+            ->orderBy($this->sortBy, $this->sortDirection)
             ->orderBy('start_time')
             ->paginate($this->eventsPerPage);
     }
 
-     public function openEventDetailsModal($eventId)
+    public function openEventDetailsModal($eventId)
     {
         $this->selectedEvent = Event::with('creator')->find($eventId);
         $this->showEventDetailsModal = true;
@@ -124,7 +127,7 @@ class StudentEvents extends Component
     
     public function registerForEvent($eventId)
     {
-         $event = Event::findOrFail($eventId);
+        $event = Event::findOrFail($eventId);
 
         // Check if event can be registered for
         if (!$event->canRegister()) {
@@ -160,7 +163,7 @@ class StudentEvents extends Component
 
     public function cancelRegistration($eventId)
     {
-         $event = Event::findOrFail($eventId);
+        $event = Event::findOrFail($eventId);
 
         // Check if cancellation is allowed
         if (!$event->canCancelRegistration()) {
@@ -191,9 +194,13 @@ class StudentEvents extends Component
 
     public function isEventDatePassed($event)
     {
-        $eventDate = \Carbon\Carbon::parse($event->date);
-        $today = \Carbon\Carbon::today();
-        return $eventDate->lt($today);
+        $now = now();
+        $today = $now->toDateString();
+        $currentTime = $now->format('H:i:s');
+        
+        // Event has passed if end date is in the past, or if it's today but end time has passed
+        return $event->end_date < $today || 
+               ($event->end_date == $today && $event->end_time < $currentTime);
     }
     
     public function getRegistrationStatus($eventId)
@@ -220,10 +227,19 @@ class StudentEvents extends Component
     public function getEventStatsProperty()
     {
         $user = Auth::user();
+        $now = now();
+        $today = $now->toDateString();
+        $currentTime = $now->format('H:i:s');
         
         $query = Event::where('status', 'published')
             ->where('is_archived', false)
-            ->where('date', '>=', now()->format('Y-m-d'))
+            ->where(function($q) use ($today, $currentTime) {
+                $q->where('end_date', '>', $today)
+                  ->orWhere(function($q2) use ($today, $currentTime) {
+                      $q2->where('end_date', $today)
+                         ->where('end_time', '>', $currentTime);
+                  });
+            })
             ->where(function($q) use ($user) {
                 $q->where('visibility_type', 'all')
                   ->orWhere(function($query) use ($user) {
@@ -249,8 +265,12 @@ class StudentEvents extends Component
             'paid' => $query->where('require_payment', true)->count(),
             'free' => $query->where('require_payment', false)->count(),
             'registered' => Auth::user()->registrations()
-                ->whereHas('event', function($q) {
-                    $q->where('date', '>=', now()->format('Y-m-d'));
+                ->whereHas('event', function($q) use ($today, $currentTime) {
+                    $q->where('end_date', '>', $today)
+                      ->orWhere(function($q2) use ($today, $currentTime) {
+                          $q2->where('end_date', $today)
+                             ->where('end_time', '>', $currentTime);
+                      });
                 })
                 ->whereIn('status', ['registered', 'attended'])
                 ->count(),

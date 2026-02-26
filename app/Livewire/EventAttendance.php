@@ -51,7 +51,7 @@ class EventAttendance extends Component
 
         $this->showExportModal = false;
         
-        // Prepare data for export
+        // Prepare data for export - UPDATED with new date fields
         $data = $attendance->map(function ($ticket) {
             return [
                 'Ticket Number' => $ticket->ticket_number,
@@ -62,8 +62,10 @@ class EventAttendance extends Component
                 'Year Level' => $ticket->registration->user->year_level ?? 'N/A',
                 'Program/Strand' => $ticket->registration->user->college_program ?? $ticket->registration->user->shs_strand ?? 'N/A',
                 'Event Name' => $ticket->registration->event->title,
-                'Event Date' => $ticket->registration->event->date->format('Y-m-d'),
-                'Event Time' => \Carbon\Carbon::parse($ticket->registration->event->time)->format('g:i A'),
+                'Event Start Date' => $ticket->registration->event->start_date->format('Y-m-d'),
+                'Event End Date' => $ticket->registration->event->end_date->format('Y-m-d'),
+                'Event Start Time' => \Carbon\Carbon::parse($ticket->registration->event->start_time)->format('g:i A'),
+                'Event End Time' => \Carbon\Carbon::parse($ticket->registration->event->end_time)->format('g:i A'),
                 'Event Category' => ucfirst($ticket->registration->event->category),
                 'Event Type' => ucfirst(str_replace('-', ' ', $ticket->registration->event->type)),
                 'Payment Type' => $ticket->registration->event->require_payment ? 'Paid' : 'Free',

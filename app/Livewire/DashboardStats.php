@@ -28,14 +28,22 @@ class DashboardStats extends Component
                    $registration->payment_status === 'pending';
         })->count();
 
+        // Get current date and time for comparison
+        $now = now();
+        $today = $now->toDateString();
+        $currentTime = $now->format('H:i:s');
+
         $this->stats = [
             'my_events' => $registrations->where('status', 'registered')->count(),
             'upcoming_events' => $registrations->where('status', 'registered')
-                ->filter(function($registration) {
-                    return $registration->event->date >= now()->format('Y-m-d');
+                ->filter(function($registration) use ($today, $currentTime) {
+                    $event = $registration->event;
+                    // Event is upcoming if start date is in the future, or if it's today but start time is in the future
+                    return $event->start_date > $today || 
+                           ($event->start_date == $today && $event->start_time > $currentTime);
                 })->count(),
-            'my_tickets' => $ticketsCount, // Will update when we implement ticketing
-            'pending_payments' => $pendingPaymentsCount, // Will update when we implement payments
+            'my_tickets' => $ticketsCount,
+            'pending_payments' => $pendingPaymentsCount,
         ];
     }
 

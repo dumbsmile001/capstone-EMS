@@ -17,7 +17,7 @@ class ArchivedEvents extends Component
     public $filterType = '';
     public $filterPayment = '';
     public $eventsPerPage = 10;
-    public $exportFormat = 'xlsx'; // Add export format property
+    public $exportFormat = 'xlsx';
     public $showExportModal = false;
 
     // Confirmation modal properties
@@ -100,9 +100,8 @@ class ArchivedEvents extends Component
             session()->flash('error', 'You are not authorized to delete this event.');
             return;
         }
-        // Store event info for logging
-        $eventInfo = $event;
         
+        $eventInfo = $event;
         $event->delete();
         
         // Log permanent deletion
@@ -111,7 +110,7 @@ class ArchivedEvents extends Component
         session()->flash('success', 'Event deleted permanently!');
     }
 
-    // Add export method for archived events
+    // Update export method for archived events
     public function exportArchivedEvents()
     {
         $events = $this->getFilteredEventsQuery()->get();
@@ -126,8 +125,10 @@ class ArchivedEvents extends Component
             return [
                 'Event Name' => $event->title,
                 'Description' => $event->description,
-                'Date' => $event->date->format('Y-m-d'),
-                'Time' => \Carbon\Carbon::parse($event->time)->format('g:i A'),
+                'Start Date' => $event->start_date->format('Y-m-d'),
+                'Start Time' => \Carbon\Carbon::parse($event->start_time)->format('g:i A'),
+                'End Date' => $event->end_date->format('Y-m-d'),
+                'End Time' => \Carbon\Carbon::parse($event->end_time)->format('g:i A'),
                 'Category' => ucfirst($event->category),
                 'Type' => ucfirst(str_replace('-', ' ', $event->type)),
                 'Payment Type' => $event->require_payment ? 'Paid' : 'Free',
@@ -233,7 +234,7 @@ class ArchivedEvents extends Component
 
     public function openExportModal()
     {
-        $this->exportFormat = 'xlsx'; // Reset to default
+        $this->exportFormat = 'xlsx';
         $this->showExportModal = true;
     }
 

@@ -145,7 +145,7 @@
                             <span class="text-sm text-gray-600">Sort by:</span>
                             <select wire:model.live="sortBy"
                                 class="text-sm border border-gray-300 rounded-lg px-3 py-1 focus:ring-blue-500 focus:border-blue-500">
-                                <option value="date">Date</option>
+                                <option value="start_date">Date</option>
                                 <option value="title">Title</option>
                                 <option value="created_at">Created</option>
                             </select>
@@ -188,7 +188,7 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     @foreach ($events as $event)
                         @php
-                            $isPastEvent = \Carbon\Carbon::parse($event->date)->lt(\Carbon\Carbon::today());
+                            $isPastEvent = $event->hasEnded();
                         @endphp
                         <div
                             class="group relative bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden border border-gray-100 hover:border-blue-200 flex flex-col h-[420px]">
@@ -230,13 +230,13 @@
                                         </div>
                                     @endif
 
-                                   <!-- Update the date badge (around line 180) -->
+                                    <!-- Date badge -->
                                     <div class="absolute bottom-2 left-2 flex items-center gap-2">
                                         <div class="bg-white/90 backdrop-blur-sm rounded-lg px-2 py-1 shadow-lg">
                                             <span class="text-[10px] font-semibold text-gray-800">
-                                                {{ $event->start_date->format('M d, Y') }}
-                                                @if($event->start_date->format('Y-m-d') != $event->end_date->format('Y-m-d'))
-                                                    - {{ $event->end_date->format('M d, Y') }}
+                                                {{ \Carbon\Carbon::parse($event->start_date)->format('M d, Y') }}
+                                                @if(\Carbon\Carbon::parse($event->start_date)->format('Y-m-d') != \Carbon\Carbon::parse($event->end_date)->format('Y-m-d'))
+                                                    - {{ \Carbon\Carbon::parse($event->end_date)->format('M d, Y') }}
                                                 @endif
                                             </span>
                                         </div>
@@ -302,7 +302,6 @@
                             </div>
 
                             <!-- Action Buttons - Fixed height at bottom -->
-                            <!-- Update the action buttons based on event state -->
                             <div class="px-4 pb-4 flex gap-2 border-t border-gray-100 pt-3 mt-auto">
                                 @if($event->canRegister())
                                     @if($this->isRegistered($event->id))
@@ -380,12 +379,12 @@
         </div>
     </div>
 
-    <!-- Event Details Modal (copied from organizer-events.blade.php) -->
+    <!-- Event Details Modal -->
     <x-custom-modal model="showEventDetailsModal" maxWidth="lg" title="Event Details"
         description="View complete event information" headerBg="green">
         @if ($selectedEvent)
             @php
-                $isPastEvent = \Carbon\Carbon::parse($selectedEvent->date)->lt(\Carbon\Carbon::today());
+                $isPastEvent = $selectedEvent->hasEnded();
             @endphp
             <div class="space-y-5">
                 <!-- Banner Section with improved styling -->
@@ -446,7 +445,7 @@
 
                 <!-- Event Details Grid with improved borders and spacing -->
                 <div class="grid grid-cols-2 gap-4">
-                    <!-- Date -->
+                    <!-- Start Date -->
                     <div
                         class="bg-white p-4 rounded-xl border border-gray-200 hover:border-green-300 transition-all duration-200">
                         <div class="flex items-center space-x-3">
@@ -458,14 +457,31 @@
                                 </svg>
                             </div>
                             <div>
-                                <p class="text-xs text-gray-500">Date</p>
-                                <p class="font-semibold text-gray-800">{{ $selectedEvent->date->format('F j, Y') }}
-                                </p>
+                                <p class="text-xs text-gray-500">Start Date</p>
+                                <p class="font-semibold text-gray-800">{{ \Carbon\Carbon::parse($selectedEvent->start_date)->format('F j, Y') }}</p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Time -->
+                    <!-- End Date -->
+                    <div
+                        class="bg-white p-4 rounded-xl border border-gray-200 hover:border-green-300 transition-all duration-200">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-2 bg-green-100 rounded-lg">
+                                <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500">End Date</p>
+                                <p class="font-semibold text-gray-800">{{ \Carbon\Carbon::parse($selectedEvent->end_date)->format('F j, Y') }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Start Time -->
                     <div
                         class="bg-white p-4 rounded-xl border border-gray-200 hover:border-green-300 transition-all duration-200">
                         <div class="flex items-center space-x-3">
@@ -477,9 +493,28 @@
                                 </svg>
                             </div>
                             <div>
-                                <p class="text-xs text-gray-500">Time</p>
+                                <p class="text-xs text-gray-500">Start Time</p>
                                 <p class="font-semibold text-gray-800">
-                                    {{ \Carbon\Carbon::parse($selectedEvent->time)->format('g:i A') }}</p>
+                                    {{ \Carbon\Carbon::parse($selectedEvent->start_time)->format('g:i A') }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- End Time -->
+                    <div
+                        class="bg-white p-4 rounded-xl border border-gray-200 hover:border-green-300 transition-all duration-200">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-2 bg-green-100 rounded-lg">
+                                <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500">End Time</p>
+                                <p class="font-semibold text-gray-800">
+                                    {{ \Carbon\Carbon::parse($selectedEvent->end_time)->format('g:i A') }}</p>
                             </div>
                         </div>
                     </div>
@@ -609,7 +644,7 @@
                                         <p class="text-lg font-bold text-blue-600">You are registered for this event</p>
                                     </div>
                                 </div>
-                                @if(!$isPastEvent)
+                                @if(!$isPastEvent && $selectedEvent->canCancelRegistration())
                                     <button 
                                         wire:click="cancelRegistration({{ $selectedEvent->id }})" 
                                         wire:confirm="Are you sure you want to cancel your registration?"
@@ -635,7 +670,7 @@
                         <span>Close</span>
                     </button>
                     
-                    @if(!$isPastEvent && !$this->isRegistered($selectedEvent->id))
+                    @if(!$isPastEvent && !$this->isRegistered($selectedEvent->id) && $selectedEvent->canRegister())
                         <button type="button" wire:click="registerForEvent({{ $selectedEvent->id }})" wire:click="closeEventDetailsModal"
                             class="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-200 font-medium flex items-center justify-center space-x-2 group shadow-lg shadow-blue-200">
                             <span>Register Now</span>

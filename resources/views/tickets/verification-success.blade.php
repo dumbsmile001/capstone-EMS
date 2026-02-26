@@ -48,12 +48,26 @@
                         <h3 class="font-bold text-lg text-gray-800">{{ $event->title }}</h3>
                         <div class="mt-2 grid grid-cols-2 gap-3">
                             <div>
-                                <p class="text-xs text-gray-600">Date</p>
-                                <p class="font-medium">{{ \Carbon\Carbon::parse($event->date)->format('M j, Y') }}</p>
+                                <p class="text-xs text-gray-600">Start Date</p>
+                                <p class="font-medium">{{ \Carbon\Carbon::parse($event->start_date)->format('M j, Y') }}</p>
                             </div>
                             <div>
-                                <p class="text-xs text-gray-600">Time</p>
-                                <p class="font-medium">{{ \Carbon\Carbon::parse($event->time)->format('g:i A') }}</p>
+                                <p class="text-xs text-gray-600">End Date</p>
+                                <p class="font-medium">
+                                    @if(\Carbon\Carbon::parse($event->start_date)->format('Y-m-d') != \Carbon\Carbon::parse($event->end_date)->format('Y-m-d'))
+                                        {{ \Carbon\Carbon::parse($event->end_date)->format('M j, Y') }}
+                                    @else
+                                        Same day
+                                    @endif
+                                </p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-600">Start Time</p>
+                                <p class="font-medium">{{ \Carbon\Carbon::parse($event->start_time)->format('g:i A') }}</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-600">End Time</p>
+                                <p class="font-medium">{{ \Carbon\Carbon::parse($event->end_time)->format('g:i A') }}</p>
                             </div>
                         </div>
                         <div class="mt-2">

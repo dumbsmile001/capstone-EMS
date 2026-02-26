@@ -7,7 +7,6 @@ use App\Models\Registration;
 use App\Traits\LogsActivity;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination; // Add this
@@ -227,38 +226,56 @@ class OrganizerDashboard extends Component
     }
 
     // Method to update all card data
+    // Update updateCardData() method (around line 110)
     public function updateCardData()
     {
         $userId = Auth::id();
-        $today = now()->format('Y-m-d');
+        $now = now();
         
         // 1. Total Event Registrations (all registrations for organizer's events)
         $this->eventRegistrationsCount = Registration::whereHas('event', function($query) use ($userId) {
             $query->where('created_by', $userId);
         })->count();
 
-        // 2. Ongoing Events (events happening today)
+        // 2. Ongoing Events (events currently happening)
         $this->ongoingEventsCount = Event::where('created_by', $userId)
-            ->where('date', $today)
+            ->where('start_date', '<=', $now->toDateString())
+            ->where('end_date', '>=', $now->toDateString())
+            ->where(function($q) use ($now) {
+                $q->where('end_date', '>', $now->toDateString())
+                ->orWhere(function($q2) use ($now) {
+                    $q2->where('end_date', $now->toDateString())
+                        ->where('end_time', '>', $now->format('H:i:s'));
+                });
+            })
             ->where('status', 'published')
+            ->where('is_archived', false)
             ->count();
 
         // 3. Upcoming Events (events with future dates)
         $this->upcomingEventsCount = Event::where('created_by', $userId)
-            ->where('date', '>', $today)
+            ->where(function($query) use ($now) {
+                $query->where('start_date', '>', $now->toDateString())
+                    ->orWhere(function($q) use ($now) {
+                        $q->where('start_date', $now->toDateString())
+                        ->where('start_time', '>', $now->format('H:i:s'));
+                    });
+            })
             ->where('status', 'published')
+            ->where('is_archived', false)
             ->count();
 
         // 4. Pending Payments - ONLY for paid events
-        // Option 1: Using Registration model with event join
         $this->pendingPaymentsCount = Registration::whereHas('event', function($query) use ($userId) {
                 $query->where('created_by', $userId)
-                    ->where('require_payment', true); // Only count registrations for paid events
+                    ->where('require_payment', true);
             })
-            ->where('payment_status', 'pending') // Only count pending payments
+            ->where('payment_status', 'pending')
             ->count();
     }
+
      // Update the loadPayments method to be a computed property
+    // Update getPaymentsProperty() method (around line 150)
     public function getPaymentsProperty()
     {
         $userId = Auth::id();
@@ -338,12 +355,18 @@ class OrganizerDashboard extends Component
         $userId = Auth::id();
         
         return Event::where('created_by', $userId)
-            ->where('date', '>=', now()->format('Y-m-d'))
+            ->where(function($query) {
+                $query->where('start_date', '>', now()->toDateString())
+                    ->orWhere(function($q) {
+                        $q->where('start_date', now()->toDateString())
+                        ->where('start_time', '>', now()->format('H:i:s'));
+                    });
+            })
             ->where('status', 'published')
             ->where('is_archived', false)
-            ->orderBy('date', 'asc')
-            ->orderBy('time', 'asc')
-            ->limit(5) // You can adjust this limit
+            ->orderBy('start_date', 'asc')
+            ->orderBy('start_time', 'asc')
+            ->limit(5)
             ->get();
     }
 

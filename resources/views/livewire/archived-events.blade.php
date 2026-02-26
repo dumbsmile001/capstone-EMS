@@ -140,11 +140,15 @@
                                                 </div>
                                             </div>
                                         </td>
+                                        <!-- In archived-events.blade.php, update the date & time column (around line 130-140) -->
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">{{ $event->date->format('M d, Y') }}
+                                            <div class="text-sm text-gray-900">
+                                                {{ $event->start_date->format('M d, Y') }} - {{ $event->end_date->format('M d, Y') }}
                                             </div>
                                             <div class="text-xs text-gray-500">
-                                                {{ \Carbon\Carbon::parse($event->time)->format('g:i A') }}</div>
+                                                {{ \Carbon\Carbon::parse($event->start_time)->format('g:i A') }} - 
+                                                {{ \Carbon\Carbon::parse($event->end_time)->format('g:i A') }}
+                                            </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex flex-col gap-1">

@@ -259,15 +259,14 @@
                     <div class="grid grid-cols-2 gap-4 mb-6">
                         <div class="space-y-2">
                             <div>
-                                <p class="text-xs text-gray-500">Event Date</p>
+                                <p class="text-xs text-gray-500">Event Date & Time</p>
                                 <p class="font-medium">
-                                    {{ \Carbon\Carbon::parse($selectedTicketRegistration->event->date)->format('F j, Y') }}
+                                    {{ \Carbon\Carbon::parse($selectedTicketRegistration->event->start_date)->format('F j, Y') }} - 
+                                    {{ \Carbon\Carbon::parse($selectedTicketRegistration->event->end_date)->format('F j, Y') }}
                                 </p>
-                            </div>
-                            <div>
-                                <p class="text-xs text-gray-500">Event Time</p>
-                                <p class="font-medium">
-                                    {{ \Carbon\Carbon::parse($selectedTicketRegistration->event->time)->format('g:i A') }}
+                                <p class="text-sm text-gray-600">
+                                    {{ \Carbon\Carbon::parse($selectedTicketRegistration->event->start_time)->format('g:i A') }} - 
+                                    {{ \Carbon\Carbon::parse($selectedTicketRegistration->event->end_time)->format('g:i A') }}
                                 </p>
                             </div>
                             <div>

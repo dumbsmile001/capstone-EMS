@@ -24,7 +24,7 @@
 
                     <!-- Tabbed Tables Section -->
                     <div class="bg-white rounded-lg shadow-md p-6" x-data="{ activeTab: 'registrations' }">
-                        <!-- Add this in the events section header -->
+                        <!-- In the events section header, update this part: -->
                         <div class="flex justify-between items-center mb-4">
                             <h2 class="text-xl font-semibold text-gray-800">Upcoming Events</h2>
                             <a href="{{ route('student.events') }}" 

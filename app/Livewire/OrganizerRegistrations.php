@@ -63,6 +63,8 @@ class OrganizerRegistrations extends Component
         $this->showExportModal = false;
     }
 
+    // In OrganizerRegistrations.php, update getExportData() and exportRegistrations() methods
+
     public function exportRegistrations()
     {
         // Log the export activity
@@ -78,8 +80,10 @@ class OrganizerRegistrations extends Component
                 'Student ID' => $registration->user->student_id ?? 'N/A',
                 'Email' => $registration->user->email,
                 'Event' => $registration->event->title,
-                'Event Date' => $registration->event->date ? \Carbon\Carbon::parse($registration->event->date)->format('Y-m-d') : 'N/A',
-                'Event Time' => $registration->event->time ? \Carbon\Carbon::parse($registration->event->time)->format('H:i') : 'N/A',
+                'Event Start Date' => $registration->event->start_date ? \Carbon\Carbon::parse($registration->event->start_date)->format('Y-m-d') : 'N/A',
+                'Event Start Time' => $registration->event->start_time ? \Carbon\Carbon::parse($registration->event->start_time)->format('H:i') : 'N/A',
+                'Event End Date' => $registration->event->end_date ? \Carbon\Carbon::parse($registration->event->end_date)->format('Y-m-d') : 'N/A',
+                'Event End Time' => $registration->event->end_time ? \Carbon\Carbon::parse($registration->event->end_time)->format('H:i') : 'N/A',
                 'Registration Date' => $registration->registered_at ? \Carbon\Carbon::parse($registration->registered_at)->format('Y-m-d H:i:s') : 'N/A',
                 'Registration Status' => ucfirst($registration->status ?? 'N/A'),
                 'Ticket Status' => $registration->ticket ? $registration->ticket->status : 'No Ticket',

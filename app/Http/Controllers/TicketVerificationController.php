@@ -39,7 +39,7 @@ class TicketVerificationController extends Controller
             'event' => $ticket->registration->event,
             'user' => $ticket->registration->user,
             'organizer' => $ticket->registration->event->user,
-            'justMarkedAsUsed' => $justMarkedAsUsed // Pass this flag to the view
+            'justMarkedAsUsed' => $justMarkedAsUsed
         ]);
     }
 
@@ -72,6 +72,19 @@ class TicketVerificationController extends Controller
         // Check if ticket is already used
         if ($ticket->isUsed()) {
             return response()->json(['message' => 'Ticket already used'], 200);
+        }
+        
+        // Check if event has already ended - using the new date/time fields
+        $event = $ticket->registration->event;
+        $now = now();
+        $today = $now->toDateString();
+        $currentTime = $now->format('H:i:s');
+        
+        $eventHasEnded = $event->end_date < $today || 
+                        ($event->end_date == $today && $event->end_time < $currentTime);
+        
+        if ($eventHasEnded) {
+            return response()->json(['error' => 'Cannot mark ticket as used - event has already ended'], 400);
         }
         
         // Mark as used

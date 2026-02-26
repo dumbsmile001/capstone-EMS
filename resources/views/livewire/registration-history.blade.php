@@ -16,7 +16,16 @@
                         <td class="px-4 py-3 text-sm text-gray-900">{{ $registration->event->title }}</td>
                         <td class="px-4 py-3 text-sm text-gray-600 capitalize">{{ $registration->event->category }}</td>
                         <td class="px-4 py-3 text-sm text-gray-600">
-                            {{ $registration->event->date->format('F j, Y') }}
+                            {{ $registration->event->start_date->format('F j, Y') }}
+                            @if($registration->event->start_date != $registration->event->end_date)
+                                <br>
+                                <span class="text-xs">to {{ $registration->event->end_date->format('F j, Y') }}</span>
+                            @endif
+                            <br>
+                            <span class="text-xs text-gray-500">
+                                {{ \Carbon\Carbon::parse($registration->event->start_time)->format('g:i A') }} - 
+                                {{ \Carbon\Carbon::parse($registration->event->end_time)->format('g:i A') }}
+                            </span>
                         </td>
                         <td class="px-4 py-3 text-sm text-gray-600 font-medium">
                             {{ $registration->registered_at->format('F j, Y') }}

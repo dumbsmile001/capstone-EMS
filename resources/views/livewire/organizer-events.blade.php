@@ -172,10 +172,10 @@
                                         </span>
                                     </div>
                                     <!-- Update the event status badges based on current state -->
-                                    <div class="absolute bottom-2 left-2 flex items-center gap-2">
+                                   <div class="absolute bottom-2 left-2 flex items-center gap-2">
                                         <div class="bg-white/90 backdrop-blur-sm rounded-lg px-2 py-1 shadow-lg">
                                             <span class="text-[10px] font-semibold text-gray-800">
-                                                {{ $event->start_date->format('M d, Y') }} - {{ $event->end_date->format('M d, Y') }}
+                                                {{ $event->start_date->format('M d') }} - {{ $event->end_date->format('M d, Y') }}
                                             </span>
                                         </div>
                                     </div>
@@ -305,7 +305,7 @@
                         </path>
                     </svg>
                     <h3 class="mt-2 text-sm font-medium text-gray-900">
-                        @if ($search || $filterType || $filterCategory || $filterPayment || $filterCreator || $filterStatus)
+                        @if ($search || $filterType || $filterCategory || $filterPayment)
                             No events found matching your filters
                         @else
                             No events in the system
@@ -686,32 +686,63 @@
                 </div>
 
                 <!-- Date and Time -->
-                <div class="space-y-1.5">
-                    <label class="flex items-center space-x-2 text-sm font-semibold text-blue-900">
-                        <svg class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                        <span>Date & Time</span>
-                    </label>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div class="relative group">
-                            <input type="date" wire:model="date"
-                                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
-                            @error('date')
-                                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        <div class="relative group">
-                            <input type="time" wire:model="time"
-                                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
-                            @error('time')
-                                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-                </div>
+                <!-- Replace the old Date & Time section with this new Start & End Date/Time section -->
+<div class="space-y-1.5">
+    <label class="flex items-center space-x-2 text-sm font-semibold text-blue-900">
+        <svg class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+        <span>Event Schedule</span>
+    </label>
+    
+    <!-- Start Date & Time -->
+    <div class="grid grid-cols-2 gap-3 mb-2">
+        <div class="relative group">
+            <label class="block text-xs text-gray-600 mb-1">Start Date</label>
+            <input type="date" wire:model="start_date"
+                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
+            @error('start_date')
+                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+            @enderror
+        </div>
+        <div class="relative group">
+            <label class="block text-xs text-gray-600 mb-1">Start Time</label>
+            <input type="time" wire:model="start_time"
+                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
+            @error('start_time')
+                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+            @enderror
+        </div>
+    </div>
+    
+    <!-- End Date & Time -->
+    <div class="grid grid-cols-2 gap-3">
+        <div class="relative group">
+            <label class="block text-xs text-gray-600 mb-1">End Date</label>
+            <input type="date" wire:model="end_date" min="{{ $start_date }}"
+                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
+            @error('end_date')
+                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+            @enderror
+        </div>
+        <div class="relative group">
+            <label class="block text-xs text-gray-600 mb-1">End Time</label>
+            <input type="time" wire:model="end_time"
+                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
+            @error('end_time')
+                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+            @enderror
+        </div>
+    </div>
+    
+    <!-- Quick duration presets (optional but helpful) -->
+    <div class="flex gap-2 mt-2">
+        <button type="button" wire:click="setDuration(1)" class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">1 Hour</button>
+        <button type="button" wire:click="setDuration(2)" class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">2 Hours</button>
+        <button type="button" wire:click="setDuration(4)" class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">4 Hours</button>
+        <button type="button" wire:click="setDuration(24)" class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">Full Day</button>
+    </div>
+</div>
 
                 <!-- Event Type and Location/Link -->
                 <div class="space-y-1.5">
@@ -975,7 +1006,7 @@
 
                 <!-- Event Details Grid with improved borders and spacing -->
                 <div class="grid grid-cols-2 gap-4">
-                    <!-- Date -->
+                    <!-- Start Date -->
                     <div
                         class="bg-white p-4 rounded-xl border border-gray-200 hover:border-green-300 transition-all duration-200">
                         <div class="flex items-center space-x-3">
@@ -987,14 +1018,31 @@
                                 </svg>
                             </div>
                             <div>
-                                <p class="text-xs text-gray-500">Date</p>
-                                <p class="font-semibold text-gray-800">{{ $selectedEvent->date->format('F j, Y') }}
-                                </p>
+                                <p class="text-xs text-gray-500">Start Date</p>
+                                <p class="font-semibold text-gray-800">{{ \Carbon\Carbon::parse($selectedEvent->start_date)->format('F j, Y') }}</p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Time -->
+                    <!-- End Date -->
+                    <div
+                        class="bg-white p-4 rounded-xl border border-gray-200 hover:border-green-300 transition-all duration-200">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-2 bg-green-100 rounded-lg">
+                                <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500">End Date</p>
+                                <p class="font-semibold text-gray-800">{{ \Carbon\Carbon::parse($selectedEvent->end_date)->format('F j, Y') }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Start Time -->
                     <div
                         class="bg-white p-4 rounded-xl border border-gray-200 hover:border-green-300 transition-all duration-200">
                         <div class="flex items-center space-x-3">
@@ -1006,9 +1054,28 @@
                                 </svg>
                             </div>
                             <div>
-                                <p class="text-xs text-gray-500">Time</p>
+                                <p class="text-xs text-gray-500">Start Time</p>
                                 <p class="font-semibold text-gray-800">
-                                    {{ \Carbon\Carbon::parse($selectedEvent->time)->format('g:i A') }}</p>
+                                    {{ \Carbon\Carbon::parse($selectedEvent->start_time)->format('g:i A') }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- End Time -->
+                    <div
+                        class="bg-white p-4 rounded-xl border border-gray-200 hover:border-green-300 transition-all duration-200">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-2 bg-green-100 rounded-lg">
+                                <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500">End Time</p>
+                                <p class="font-semibold text-gray-800">
+                                    {{ \Carbon\Carbon::parse($selectedEvent->end_time)->format('g:i A') }}</p>
                             </div>
                         </div>
                     </div>
@@ -1177,14 +1244,14 @@
                                     d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
                         </div>
+                        <!-- Update the delete modal date display (around line 670-680) -->
                         <div class="flex-1 min-w-0">
                             <p class="text-sm font-medium text-gray-900 truncate">
-                                {{ $deletingEvent->date->format('F j, Y') }} at
-                                {{ \Carbon\Carbon::parse($deletingEvent->time)->format('g:i A') }}
+                                {{ $deletingEvent->start_date->format('M d') }} - {{ $deletingEvent->end_date->format('M d, Y') }}
                             </p>
                             <p class="text-xs text-gray-500">
-                                {{ ucfirst($deletingEvent->category) }} •
-                                {{ $deletingEvent->type === 'online' ? '🌐 Online' : '📍 In-Person' }}
+                                {{ \Carbon\Carbon::parse($deletingEvent->start_time)->format('g:i A') }} - 
+                                {{ \Carbon\Carbon::parse($deletingEvent->end_time)->format('g:i A') }}
                             </p>
                         </div>
                     </div>
@@ -1254,7 +1321,7 @@
                         </div>
                         <div class="flex-1">
                             <p class="text-sm font-medium text-gray-900">
-                                {{ $archivingEvent->date->format('F j, Y') }}
+                                {{ $archivingEvent->end_date->format('F j, Y') }}
                             </p>
                             <p class="text-xs text-gray-600">
                                 Status: <span class="font-medium capitalize">{{ $archivingEvent->status }}</span>

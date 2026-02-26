@@ -47,7 +47,7 @@
                     <div class="space-y-4">
                         @forelse($upcomingEventsData as $event)
                             @php
-                                $eventDate = \Carbon\Carbon::parse($event->date);
+                                $startDate = \Carbon\Carbon::parse($event->start_date);
                                 $borderColor = match ($loop->index % 3) {
                                     0 => 'border-blue-500',
                                     1 => 'border-green-500',
@@ -65,13 +65,14 @@
                             <div class="flex items-center space-x-4 p-4 border-l-4 {{ $borderColor }} {{ $bgColor }} rounded-lg hover:shadow-md transition-all cursor-pointer transform hover:scale-[1.02]"
                                 wire:click="openEventDetailsModal({{ $event->id }})">
                                 <div class="text-center min-w-12">
-                                    <div class="text-2xl font-bold text-gray-800">{{ $eventDate->format('d') }}</div>
-                                    <div class="text-xs text-gray-600 uppercase">{{ $eventDate->format('M') }}</div>
+                                    <div class="text-2xl font-bold text-gray-800">{{ $startDate->format('d') }}</div>
+                                    <div class="text-xs text-gray-600 uppercase">{{ $startDate->format('M') }}</div>
                                 </div>
                                 <div class="flex-1">
                                     <h3 class="font-semibold text-gray-800">{{ $event->title }}</h3>
                                     <p class="text-sm text-gray-600">
-                                        {{ \Carbon\Carbon::parse($event->time)->format('g:i A') }} •
+                                        {{ \Carbon\Carbon::parse($event->start_time)->format('g:i A') }} - 
+                                        {{ \Carbon\Carbon::parse($event->end_time)->format('g:i A') }} •
                                         {{ $event->type === 'online' ? 'Online' : 'In-person' }}
                                     </p>
                                     @if ($event->require_payment)
@@ -549,20 +550,18 @@
 
                 <!-- Event Details Grid -->
                 <div class="grid grid-cols-2 gap-4">
+                    <!-- In the Event Details Modal, update the date and time display sections -->
                     <!-- Date -->
                     <div class="bg-white p-4 rounded-xl border border-gray-200 hover:border-green-300 transition-all">
                         <div class="flex items-center space-x-3">
                             <div class="p-2 bg-green-100 rounded-lg">
-                                <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                 </svg>
                             </div>
                             <div>
-                                <p class="text-xs text-gray-500">Date</p>
-                                <p class="font-semibold text-gray-800">{{ $selectedEvent->date->format('F j, Y') }}
-                                </p>
+                                <p class="text-xs text-gray-500">Start Date</p>
+                                <p class="font-semibold text-gray-800">{{ \Carbon\Carbon::parse($selectedEvent->start_date)->format('F j, Y') }}</p>
                             </div>
                         </div>
                     </div>
@@ -571,16 +570,16 @@
                     <div class="bg-white p-4 rounded-xl border border-gray-200 hover:border-green-300 transition-all">
                         <div class="flex items-center space-x-3">
                             <div class="p-2 bg-green-100 rounded-lg">
-                                <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                             </div>
                             <div>
                                 <p class="text-xs text-gray-500">Time</p>
                                 <p class="font-semibold text-gray-800">
-                                    {{ \Carbon\Carbon::parse($selectedEvent->time)->format('g:i A') }}</p>
+                                    {{ \Carbon\Carbon::parse($selectedEvent->start_time)->format('g:i A') }} - 
+                                    {{ \Carbon\Carbon::parse($selectedEvent->end_time)->format('g:i A') }}
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -739,12 +738,14 @@
                             <div class="flex-1">
                                 <h4 class="font-semibold text-gray-800 text-lg mb-2">{{ $event['title'] }}</h4>
                                 <div class="grid grid-cols-2 gap-3 text-sm">
+                                    <!-- Update the time display in the calendar events modal -->
                                     <div class="flex items-center space-x-2 text-gray-600">
                                         <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                                                 d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                         </svg>
-                                        <span>{{ \Carbon\Carbon::parse($event['time'])->format('g:i A') }}</span>
+                                        <span>{{ \Carbon\Carbon::parse($event['start_time'])->format('g:i A') }} - 
+                                            {{ \Carbon\Carbon::parse($event['end_time'])->format('g:i A') }}</span>
                                     </div>
                                     <div class="flex items-center space-x-2 text-gray-600">
                                         <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">

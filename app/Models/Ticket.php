@@ -58,8 +58,62 @@ class Ticket extends Model
         return $this->status === 'used';
     }
 
+    /**
+     * Check if ticket is valid for entry based on event timing
+     */
+    public function isValidForEntry()
+    {
+        if (!$this->isActive()) {
+            return false;
+        }
+
+        $now = now();
+        $today = $now->toDateString();
+        $currentTime = $now->format('H:i:s');
+        
+        $event = $this->registration->event;
+        
+        // Check if event has started (or is starting now)
+        $eventHasStarted = $event->start_date < $today || 
+                          ($event->start_date == $today && $event->start_time <= $currentTime);
+        
+        // Check if event has ended
+        $eventHasEnded = $event->end_date < $today || 
+                        ($event->end_date == $today && $event->end_time < $currentTime);
+        
+        // Ticket is valid if event has started but not ended yet
+        return $eventHasStarted && !$eventHasEnded;
+    }
+
+    /**
+     * Check if ticket can be used (for organizers to mark as used)
+     */
+    public function canBeUsed()
+    {
+        if (!$this->isActive()) {
+            return false;
+        }
+
+        $now = now();
+        $today = $now->toDateString();
+        $currentTime = $now->format('H:i:s');
+        
+        $event = $this->registration->event;
+        
+        // Check if event has ended
+        $eventHasEnded = $event->end_date < $today || 
+                        ($event->end_date == $today && $event->end_time < $currentTime);
+        
+        // Cannot use ticket if event has already ended
+        return !$eventHasEnded;
+    }
+
     public function markAsUsed()
     {
+        if (!$this->canBeUsed()) {
+            throw new \Exception('Cannot mark ticket as used - event has already ended');
+        }
+
         $this->update([
             'status' => 'used',
             'used_at' => now(),
