@@ -1253,6 +1253,10 @@
                                 {{ \Carbon\Carbon::parse($deletingEvent->start_time)->format('g:i A') }} - 
                                 {{ \Carbon\Carbon::parse($deletingEvent->end_time)->format('g:i A') }}
                             </p>
+                            <p class="text-xs text-gray-500">
+                                {{ ucfirst($deletingEvent->category) }} •
+                                {{ $deletingEvent->type === 'online' ? '🌐 Online' : '📍 In-Person' }}
+                            </p>
                         </div>
                     </div>
                 </div>

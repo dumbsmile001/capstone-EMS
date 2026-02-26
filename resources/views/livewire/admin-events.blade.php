@@ -1242,10 +1242,13 @@
                                     d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
                         </div>
-                        <div class="flex-1 min-w-0">
+                       <div class="flex-1 min-w-0">
                             <p class="text-sm font-medium text-gray-900 truncate">
-                                {{ $deletingEvent->date->format('F j, Y') }} at
-                                {{ \Carbon\Carbon::parse($deletingEvent->time)->format('g:i A') }}
+                                {{ $deletingEvent->start_date->format('M d') }} - {{ $deletingEvent->end_date->format('M d, Y') }}
+                            </p>
+                            <p class="text-xs text-gray-500">
+                                {{ \Carbon\Carbon::parse($deletingEvent->start_time)->format('g:i A') }} - 
+                                {{ \Carbon\Carbon::parse($deletingEvent->end_time)->format('g:i A') }}
                             </p>
                             <p class="text-xs text-gray-500">
                                 {{ ucfirst($deletingEvent->category) }} •
