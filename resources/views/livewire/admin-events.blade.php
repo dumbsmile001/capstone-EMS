@@ -1322,7 +1322,7 @@
                         </div>
                         <div class="flex-1">
                             <p class="text-sm font-medium text-gray-900">
-                                {{ $archivingEvent->date->format('F j, Y') }}
+                                {{ $archivingEvent->end_date->format('F j, Y') }}
                             </p>
                             <p class="text-xs text-gray-600">
                                 Status: <span class="font-medium capitalize">{{ $archivingEvent->status }}</span>
