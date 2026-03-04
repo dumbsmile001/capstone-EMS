@@ -125,7 +125,7 @@ class AdminDashboard extends Component
     {
         $this->recentActivities = AuditLog::with('user')
             ->latest()
-            ->limit(3)
+            ->limit(4)
             ->get();
     }
     public function openLogDetailsModal($logId)
