@@ -15,9 +15,10 @@
             <div class="mb-8">
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between">
                     <div>
-                        <h1 class="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-                            Announcements
-                        </h1>
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="h-10 w-2 bg-gradient-to-b from-green-600 to-green-500 rounded-full"></div>
+                            <h1 class="text-3xl font-bold text-gray-800">Announcements</h1>
+                        </div>
                         <p class="mt-2 text-gray-600">Keep everyone informed and engaged with important updates</p>
                     </div>
                     
