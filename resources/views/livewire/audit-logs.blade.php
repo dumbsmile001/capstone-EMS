@@ -13,15 +13,37 @@
         <div class="flex-1 p-6 mt-20 lg:mt-24 overflow-y-auto">
             <!-- Page Header -->
             <div class="mb-6">
-                <h1 class="text-2xl font-bold text-gray-800">Audit Logs</h1>
-                <p class="text-sm text-gray-600 mt-1">Track all system activities and user actions</p>
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800">Audit Logs</h1>
+                        <p class="text-sm text-gray-600 mt-1">Track all system activities and user actions</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <a href="{{ route('dashboard.admin') }}"
+                            class="px-4 py-2.5 bg-white border-2 border-blue-600 text-blue-600 rounded-xl hover:bg-blue-50 transition-all duration-200 font-medium flex items-center gap-2 shadow-sm hover:shadow">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                            </svg>
+                            Back to Dashboard
+                        </a>
+                        <button wire:click="openExportModal"
+                            class="px-4 py-2.5 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-xl hover:from-green-700 hover:to-green-800 transition-all duration-200 font-medium flex items-center gap-2 shadow-lg shadow-green-200">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            Export
+                        </button>
+                    </div>
+                </div>
             </div>
-
             <!-- Filters Card -->
             <div class="bg-white rounded-lg shadow-md p-6 mb-6">
                 <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center">
                     <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
                     </svg>
                     Filter Logs
                 </h3>
@@ -31,8 +53,10 @@
                     <div class="md:col-span-2">
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                 </svg>
                             </div>
                             <input type="text" wire:model.live.debounce.300ms="search"
@@ -46,7 +70,7 @@
                         <select wire:model.live="filterAction"
                             class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500">
                             <option value="">All Actions</option>
-                            @foreach($availableActions as $action)
+                            @foreach ($availableActions as $action)
                                 <option value="{{ $action }}">{{ $action }}</option>
                             @endforeach
                         </select>
@@ -66,7 +90,7 @@
                         <select wire:model.live="filterModel"
                             class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500">
                             <option value="">All Models</option>
-                            @foreach($modelTypes as $type)
+                            @foreach ($modelTypes as $type)
                                 <option value="{{ $type }}">{{ $type }}</option>
                             @endforeach
                         </select>
@@ -113,13 +137,27 @@
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Model</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">IP Address</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Time</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    User</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Action</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Description</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Model</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    IP Address</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Actions</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
@@ -129,9 +167,10 @@
                                         {{ $log->created_at->format('M d, Y H:i') }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        @if($log->user)
+                                        @if ($log->user)
                                             <div class="flex items-center">
-                                                <div class="flex-shrink-0 h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center">
+                                                <div
+                                                    class="flex-shrink-0 h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center">
                                                     <span class="text-sm font-medium text-blue-800">
                                                         {{ substr($log->user->first_name ?? 'U', 0, 1) }}{{ substr($log->user->last_name ?? 'N', 0, 1) }}
                                                     </span>
@@ -148,15 +187,15 @@
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                       <x-action-badge :action="$log->action" />
+                                        <x-action-badge :action="$log->action" />
                                     </td>
                                     <td class="px-6 py-4 text-sm text-gray-600 max-w-xs truncate">
                                         {{ $log->description }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                        @if($log->model_type)
+                                        @if ($log->model_type)
                                             <span class="font-medium">{{ $log->model_name }}</span>
-                                            @if($log->model_id)
+                                            @if ($log->model_id)
                                                 <span class="text-gray-400">#{{ $log->model_id }}</span>
                                             @endif
                                         @else
@@ -169,9 +208,12 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <button wire:click="openLogDetailsModal({{ $log->id }})"
                                             class="text-blue-600 hover:text-blue-900 mr-3">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                             </svg>
                                         </button>
                                     </td>
@@ -180,12 +222,14 @@
                                 <tr>
                                     <td colspan="7" class="px-6 py-12 text-center text-gray-500">
                                         <div class="flex flex-col items-center justify-center">
-                                            <svg class="w-16 h-16 mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                            <svg class="w-16 h-16 mb-4 text-gray-400" fill="none"
+                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                             </svg>
                                             <p class="text-lg font-medium text-gray-600">No audit logs found</p>
                                             <p class="text-sm text-gray-500 mt-1">
-                                                @if($search || $filterAction || $filterUser || $filterModel || $dateFrom || $dateTo)
+                                                @if ($search || $filterAction || $filterUser || $filterModel || $dateFrom || $dateTo)
                                                     Try adjusting your filters
                                                 @else
                                                     No activities have been logged yet
@@ -200,7 +244,7 @@
                 </div>
 
                 <!-- Pagination -->
-                @if($logs && method_exists($logs, 'links'))
+                @if ($logs && method_exists($logs, 'links'))
                     <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
                         {{ $logs->links() }}
                     </div>
@@ -211,30 +255,34 @@
 
     <!-- Log Details Modal -->
     <x-custom-modal model="showLogDetailsModal" maxWidth="lg" title="Log Details" headerBg="blue">
-        @if($selectedLog)
+        @if ($selectedLog)
             <div class="space-y-5">
                 <!-- Basic Info Card -->
                 <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-5 rounded-xl border border-blue-200">
                     <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs text-blue-600 font-medium">{{ $selectedLog->created_at->format('F j, Y g:i A') }}</span>
+                        <span
+                            class="text-xs text-blue-600 font-medium">{{ $selectedLog->created_at->format('F j, Y g:i A') }}</span>
                         <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-semibold">
                             ID: {{ $selectedLog->id }}
                         </span>
                     </div>
-                    
+
                     <div class="flex items-center space-x-3">
-                        @if($selectedLog->user)
-                            <div class="flex-shrink-0 h-10 w-10 bg-blue-200 rounded-full flex items-center justify-center">
+                        @if ($selectedLog->user)
+                            <div
+                                class="flex-shrink-0 h-10 w-10 bg-blue-200 rounded-full flex items-center justify-center">
                                 <span class="text-sm font-bold text-blue-800">
                                     {{ substr($selectedLog->user->first_name ?? 'U', 0, 1) }}{{ substr($selectedLog->user->last_name ?? 'N', 0, 1) }}
                                 </span>
                             </div>
                             <div>
-                                <p class="font-semibold text-gray-800">{{ $selectedLog->user->first_name }} {{ $selectedLog->user->last_name }}</p>
+                                <p class="font-semibold text-gray-800">{{ $selectedLog->user->first_name }}
+                                    {{ $selectedLog->user->last_name }}</p>
                                 <p class="text-sm text-gray-600">{{ $selectedLog->user->email }}</p>
                             </div>
                         @else
-                            <div class="flex-shrink-0 h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center">
+                            <div
+                                class="flex-shrink-0 h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center">
                                 <span class="text-sm font-bold text-gray-600">SY</span>
                             </div>
                             <div>
@@ -250,12 +298,12 @@
                     <div class="bg-white p-4 rounded-xl border border-gray-200">
                         <p class="text-xs text-gray-500 mb-2">Action</p>
                         <div class="flex items-center space-x-2">
-                            <span class="w-2 h-2 rounded-full 
-                                @if($selectedLog->action === 'CREATE') bg-green-500
+                            <span
+                                class="w-2 h-2 rounded-full 
+                                @if ($selectedLog->action === 'CREATE') bg-green-500
                                 @elseif($selectedLog->action === 'UPDATE') bg-yellow-500
                                 @elseif($selectedLog->action === 'DELETE') bg-red-500
-                                @else bg-blue-500
-                                @endif">
+                                @else bg-blue-500 @endif">
                             </span>
                             <span class="font-semibold text-gray-800">{{ $selectedLog->action }}</span>
                         </div>
@@ -268,25 +316,27 @@
                 </div>
 
                 <!-- Model Details -->
-                @if($selectedLog->model_type)
+                @if ($selectedLog->model_type)
                     <div class="bg-white p-4 rounded-xl border border-gray-200">
                         <p class="text-xs text-gray-500 mb-2">Affected Model</p>
                         <div class="flex items-center space-x-2">
                             <span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">
                                 {{ $selectedLog->model_name }}
                             </span>
-                            @if($selectedLog->model_id)
-                                <span class="text-gray-500">ID: <span class="font-mono">{{ $selectedLog->model_id }}</span></span>
+                            @if ($selectedLog->model_id)
+                                <span class="text-gray-500">ID: <span
+                                        class="font-mono">{{ $selectedLog->model_id }}</span></span>
                             @endif
                         </div>
                     </div>
                 @endif
 
                 <!-- Old Values -->
-                @if(!empty($selectedLog->old_values))
+                @if (!empty($selectedLog->old_values))
                     <div class="bg-white p-4 rounded-xl border border-gray-200">
                         <p class="text-xs text-gray-500 mb-2 flex items-center">
-                            <svg class="w-4 h-4 mr-1 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-4 h-4 mr-1 text-red-500" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
                             </svg>
                             Old Values
@@ -298,11 +348,13 @@
                 @endif
 
                 <!-- New Values -->
-                @if(!empty($selectedLog->new_values))
+                @if (!empty($selectedLog->new_values))
                     <div class="bg-white p-4 rounded-xl border border-gray-200">
                         <p class="text-xs text-gray-500 mb-2 flex items-center">
-                            <svg class="w-4 h-4 mr-1 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                            <svg class="w-4 h-4 mr-1 text-green-500" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 4v16m8-8H4" />
                             </svg>
                             New Values
                         </p>
@@ -330,12 +382,149 @@
                     <button wire:click="closeLogDetailsModal"
                         class="px-6 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-all duration-200 font-medium flex items-center space-x-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
                         </svg>
                         <span>Close</span>
                     </button>
                 </div>
             </div>
         @endif
+    </x-custom-modal>
+    <!-- Export Modal with green Theme -->
+    <x-custom-modal model="showExportModal" maxWidth="lg" title="Export Audit Logs"
+        description="Export audit logs data with current filters" headerBg="green">
+        <div class="space-y-6">
+            <!-- Current Filters Summary Card -->
+            <div class="bg-gradient-to-br from-green-50 to-indigo-50 p-5 rounded-xl border border-green-200">
+                <div class="flex items-center space-x-2 mb-3">
+                    <div class="p-1.5 bg-green-200 rounded-lg">
+                        <svg class="w-4 h-4 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-green-800">Active Filters</h3>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 text-sm">
+                    <div class="space-y-2">
+                        <p class="text-green-700">
+                            <span class="font-medium">Search:</span>
+                            <span class="text-green-600">{{ $search ?: 'None' }}</span>
+                        </p>
+                        <p class="text-green-700">
+                            <span class="font-medium">Action:</span>
+                            <span class="text-green-600">{{ $filterAction ?: 'All' }}</span>
+                        </p>
+                        <p class="text-green-700">
+                            <span class="font-medium">User:</span>
+                            <span class="text-green-600">{{ $filterUser ?: 'All' }}</span>
+                        </p>
+                    </div>
+                    <div class="space-y-2">
+                        <p class="text-green-700">
+                            <span class="font-medium">Model:</span>
+                            <span class="text-green-600">{{ $filterModel ?: 'All' }}</span>
+                        </p>
+                        <p class="text-green-700">
+                            <span class="font-medium">Date Range:</span>
+                            <span class="text-green-600">
+                                @if ($dateFrom || $dateTo)
+                                    {{ $dateFrom ?: 'Any' }} to {{ $dateTo ?: 'Any' }}
+                                @else
+                                    All Dates
+                                @endif
+                            </span>
+                        </p>
+                        <p class="text-green-700">
+                            <span class="font-medium">Per Page:</span>
+                            <span class="text-green-600">{{ $perPage }}</span>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Total Records Badge -->
+                <div class="mt-3 pt-3 border-t border-green-200">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-green-700">Logs to export:</span>
+                        <span class="px-3 py-1 bg-green-200 text-green-800 rounded-full text-sm font-semibold">
+                            {{ $logs->total() }} logs
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Export Format Selection -->
+            <div class="space-y-3">
+                <label class="flex items-center space-x-2 text-sm font-semibold text-green-800">
+                    <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <span>Choose Export Format</span>
+                </label>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <!-- Excel Option -->
+                    <label class="relative cursor-pointer">
+                        <input type="radio" wire:model="exportFormat" value="xlsx" class="sr-only peer">
+                        <div
+                            class="p-4 bg-white border-2 border-gray-200 rounded-xl peer-checked:border-green-500 peer-checked:bg-green-50 hover:border-green-300 transition-all duration-200">
+                            <div class="flex flex-col items-center text-center">
+                                <div class="p-3 bg-green-100 rounded-full mb-2">
+                                    <svg class="w-8 h-8 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" />
+                                        <path d="M14 2v6h6M8 13h8M8 17h4" stroke="white" stroke-width="2" />
+                                    </svg>
+                                </div>
+                                <span class="font-semibold text-gray-800">Excel</span>
+                                <span class="text-xs text-gray-500 mt-1">.xlsx format</span>
+                            </div>
+                        </div>
+                    </label>
+
+                    <!-- CSV Option -->
+                    <label class="relative cursor-pointer">
+                        <input type="radio" wire:model="exportFormat" value="csv" class="sr-only peer">
+                        <div
+                            class="p-4 bg-white border-2 border-gray-200 rounded-xl peer-checked:border-green-500 peer-checked:bg-green-50 hover:border-green-300 transition-all duration-200">
+                            <div class="flex flex-col items-center text-center">
+                                <div class="p-3 bg-green-100 rounded-full mb-2">
+                                    <svg class="w-8 h-8 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" />
+                                        <text x="8" y="18" fill="white" font-size="10"
+                                            font-weight="bold">CSV</text>
+                                    </svg>
+                                </div>
+                                <span class="font-semibold text-gray-800">CSV</span>
+                                <span class="text-xs text-gray-500 mt-1">Comma separated</span>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex space-x-3 pt-4 border-t-2 border-gray-100">
+                <button type="button" wire:click="closeExportModal"
+                    class="flex-1 px-6 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-all duration-200 font-medium flex items-center justify-center space-x-2 group">
+                    <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    <span>Cancel</span>
+                </button>
+                <button type="button" wire:click="exportAuditLogs"
+                    class="flex-1 px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-xl hover:from-green-700 hover:to-green-800 transition-all duration-200 font-medium flex items-center justify-center space-x-2 group shadow-lg shadow-green-200">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    <span>Export</span>
+                </button>
+            </div>
+        </div>
     </x-custom-modal>
 </div>
