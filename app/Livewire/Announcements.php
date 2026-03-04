@@ -6,7 +6,8 @@ use App\Models\Announcement;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
-use App\Traits\LogsActivity; // Add this
+use App\Traits\LogsActivity;
+use Livewire\Attributes\Url;
 
 class Announcements extends Component
 {
@@ -17,6 +18,15 @@ class Announcements extends Component
     public string $category = 'general';
     public string $description = '';
     public ?int $editingId = null;
+    // Add this property at the top with other properties
+    public $perPage = 10;
+
+    // Search and filter properties
+    #[Url(history: true)]
+    public string $search = '';
+    public string $categoryFilter = '';
+    public string $sortField = 'created_at';
+    public string $sortDirection = 'desc';
 
     // Modal flags
     public $showAnnouncementModal = false;
@@ -24,6 +34,46 @@ class Announcements extends Component
 
     // For delete confirmation
     public $announcementToDelete = null;
+
+    // Stats properties
+    public $totalCount = 0;
+    public $generalCount = 0;
+    public $eventCount = 0;
+    public $reminderCount = 0;
+    public $thisMonthCount = 0;
+    public $recentActivities = [];
+
+    public function mount()
+    {
+        $this->loadStats();
+    }
+
+    protected function loadStats()
+    {
+        $this->totalCount = Announcement::count();
+        $this->generalCount = Announcement::where('category', 'general')->count();
+        $this->eventCount = Announcement::where('category', 'event')->count();
+        $this->reminderCount = Announcement::where('category', 'reminder')->count();
+        $this->thisMonthCount = Announcement::whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->count();
+
+        // Load recent activities (you can customize this based on your activity log implementation)
+        $this->recentActivities = [
+            [
+                'message' => 'New announcement created',
+                'time' => '5 minutes ago',
+                'type' => 'create'
+            ],
+            // Add more activities as needed
+        ];
+    }
+
+    // Add this method
+    public function updatedPerPage()
+    {
+        $this->resetPage();
+    }
 
     public function createAnnouncement()
     {
@@ -40,13 +90,16 @@ class Announcements extends Component
             'user_id' => Auth::id(),
         ]);
 
-        // Log the announcement creation with specific action
-        $this->logActivity('ANNOUNCEMENT_CREATE', $announcement,
+        // Log the announcement creation
+        $this->logActivity('CREATE', $announcement,
             auth()->user()->first_name . ' ' . auth()->user()->last_name . ' created announcement: ' . $announcement->title);
 
         $this->reset('title', 'category', 'description');
         $this->showAnnouncementModal = false;
         $this->editingId = null;
+
+        // Reload stats
+        $this->loadStats();
 
         session()->flash('success', 'Announcement created successfully!');
     }
@@ -95,7 +148,7 @@ class Announcements extends Component
         ]);
 
         // Log the announcement update
-        $this->logActivity('ANNOUNCEMENT_UPDATE', $announcement,
+        $this->logActivity('UPDATE', $announcement,
             auth()->user()->first_name . ' ' . auth()->user()->last_name . ' updated announcement: ' . $announcement->title,
             $oldValues,
             $announcement->toArray()
@@ -103,6 +156,9 @@ class Announcements extends Component
 
         $this->reset('title', 'category', 'description', 'editingId');
         $this->showAnnouncementModal = false;
+
+        // Reload stats
+        $this->loadStats();
 
         session()->flash('success', 'Announcement updated successfully!');
     }
@@ -136,11 +192,14 @@ class Announcements extends Component
         $announcementTitle = $announcement->title;
 
         // Log before deletion
-        $this->logActivity('ANNOUNCEMENT_DELETE', $announcement,
+        $this->logActivity('DELETE', $announcement,
             auth()->user()->first_name . ' ' . auth()->user()->last_name . ' deleted announcement: ' . $announcementTitle);
 
-        $this->announcementToDelete->delete();
+        $announcement->delete();
         $this->closeDeleteModal();
+
+        // Reload stats
+        $this->loadStats();
 
         session()->flash('success', 'Announcement deleted successfully!');
     }
@@ -188,6 +247,35 @@ class Announcements extends Component
         $this->showDeleteModal = false;
         $this->announcementToDelete = null;
     }
+
+    public function updatedSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedCategoryFilter()
+    {
+        $this->resetPage();
+    }
+
+    public function sortBy($field)
+    {
+        if ($this->sortField === $field) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortField = $field;
+            $this->sortDirection = 'asc';
+        }
+    }
+
+    public function clearFilters()
+    {
+        $this->search = '';
+        $this->categoryFilter = '';
+        $this->sortField = 'created_at';
+        $this->sortDirection = 'desc';
+        $this->resetPage();
+    }
     
     public function render()
     {
@@ -195,17 +283,44 @@ class Announcements extends Component
         $userInitials = strtoupper(substr($user->first_name ?? 'U', 0, 1) . substr($user->last_name ?? 'S', 0, 1));
         $userRole = $user->getRoleNames()->first() ?? 'User';
         
-        // Get announcements from database, ordered by latest first
-        $announcements = Announcement::with('user')
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
+        // Build query with filters
+        $query = Announcement::with('user');
+
+        // Apply search filter
+        if (!empty($this->search)) {
+            $query->where(function($q) {
+                $q->where('title', 'like', '%' . $this->search . '%')
+                  ->orWhere('description', 'like', '%' . $this->search . '%');
+            });
+        }
+
+        // Apply category filter
+        if (!empty($this->categoryFilter)) {
+            $query->where('category', $this->categoryFilter);
+        }
+
+        // Apply sorting
+        $query->orderBy($this->sortField, $this->sortDirection);
+        
+        // Get paginated results
+        $announcements = $query->paginate(10);
         
         return view('livewire.announcements', [
             'userInitials' => $userInitials,
             'userRole' => ucfirst($userRole),
             'announcements' => $announcements,
-            'editingId' => $this->editingId, // Add this line
-            'announcementToDelete' => $this->announcementToDelete, // Also add this
+            'editingId' => $this->editingId,
+            'announcementToDelete' => $this->announcementToDelete,
+            'totalCount' => $this->totalCount,
+            'generalCount' => $this->generalCount,
+            'eventCount' => $this->eventCount,
+            'reminderCount' => $this->reminderCount,
+            'thisMonthCount' => $this->thisMonthCount,
+            'recentActivities' => $this->recentActivities,
+            'search' => $this->search,
+            'categoryFilter' => $this->categoryFilter,
+            'sortField' => $this->sortField,
+            'sortDirection' => $this->sortDirection,
         ])->layout('layouts.app');
     }
 }
