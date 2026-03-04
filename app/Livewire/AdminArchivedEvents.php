@@ -8,6 +8,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
 use App\Traits\LogsActivity;
+use Carbon\Carbon;
 
 class AdminArchivedEvents extends Component
 {
@@ -21,6 +22,10 @@ class AdminArchivedEvents extends Component
     public $eventsPerPage = 10;
     public $exportFormat = 'xlsx';
     public $showExportModal = false;
+    
+    // New properties for sorting
+    public $sortField = 'archived_at';
+    public $sortDirection = 'desc';
     
     // Confirmation modal properties
     public $showRestoreConfirmation = false;
@@ -36,6 +41,8 @@ class AdminArchivedEvents extends Component
         'filterType' => ['except' => ''],
         'filterPayment' => ['except' => ''],
         'filterCreator' => ['except' => ''],
+        'sortField' => ['except' => 'archived_at'],
+        'sortDirection' => ['except' => 'desc'],
         'eventsPerPage' => ['except' => 10],
     ];
 
@@ -133,7 +140,7 @@ class AdminArchivedEvents extends Component
 
         $this->showExportModal = false;
         
-        // Prepare data for export - UPDATED with new date/time fields
+        // Prepare data for export
         $data = $events->map(function ($event) {
             return [
                 'Event Name' => $event->title,
@@ -216,17 +223,26 @@ class AdminArchivedEvents extends Component
                     $sheet->getStyle($column . '1')->getFont()->setBold(true);
                     $sheet->getStyle($column . '1')->getFill()
                         ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
-                        ->getStartColor()->setARGB('FFE0E0E0');
+                        ->getStartColor()->setARGB('FF1E40AF'); // Blue color
+                    $sheet->getStyle($column . '1')->getFont()->getColor()->setARGB('FFFFFFFF'); // White text
                     $column++;
                 }
                 
                 // Add data
                 $row = 2;
-                foreach ($data as $item) {
+                foreach ($data as $index => $item) {
                     $column = 'A';
                     foreach ($item as $value) {
                         $sheet->setCellValue($column . $row, $value);
                         $column++;
+                    }
+                    
+                    // Alternate row colors
+                    if ($index % 2 === 0) {
+                        $sheet->getStyle('A' . $row . ':' . $column . $row)
+                            ->getFill()
+                            ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                            ->getStartColor()->setARGB('FFF0F9FF'); // Light blue
                     }
                     $row++;
                 }
@@ -236,9 +252,6 @@ class AdminArchivedEvents extends Component
                 for ($col = 'A'; $col <= $lastColumn; $col++) {
                     $sheet->getColumnDimension($col)->setAutoSize(true);
                 }
-                
-                // Add some styling
-                $sheet->getStyle('A1:' . $lastColumn . '1')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM);
                 
                 $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
                 $writer->save('php://output');
@@ -257,12 +270,21 @@ class AdminArchivedEvents extends Component
         $this->showExportModal = false;
     }
 
+    public function resetFilters()
+    {
+        $this->reset(['search', 'filterCategory', 'filterType', 'filterPayment', 'filterCreator', 'sortField', 'sortDirection']);
+        $this->sortField = 'archived_at';
+        $this->sortDirection = 'desc';
+    }
+
     public function getFilteredEventsQuery()
     {
         return Event::where('is_archived', true)
             ->when($this->search, function ($query) {
-                $query->where('title', 'like', '%' . $this->search . '%')
-                    ->orWhere('description', 'like', '%' . $this->search . '%');
+                $query->where(function($q) {
+                    $q->where('title', 'like', '%' . $this->search . '%')
+                        ->orWhere('description', 'like', '%' . $this->search . '%');
+                });
             })
             ->when($this->filterType, function ($query) {
                 $query->where('type', $this->filterType);
@@ -282,12 +304,36 @@ class AdminArchivedEvents extends Component
             })
             ->withCount('registrations')
             ->with('creator')
-            ->orderBy('archived_at', 'desc');
+            ->orderBy($this->sortField, $this->sortDirection);
     }
 
     public function getEventsProperty()
     {
         return $this->getFilteredEventsQuery()->paginate($this->eventsPerPage);
+    }
+
+    // New computed properties for stats
+    public function getThisMonthCountProperty()
+    {
+        return Event::where('is_archived', true)
+            ->whereMonth('archived_at', Carbon::now()->month)
+            ->whereYear('archived_at', Carbon::now()->year)
+            ->count();
+    }
+
+    public function getTotalRegistrationsProperty()
+    {
+        return Event::where('is_archived', true)
+            ->withCount('registrations')
+            ->get()
+            ->sum('registrations_count');
+    }
+
+    public function getPaidEventsCountProperty()
+    {
+        return Event::where('is_archived', true)
+            ->where('require_payment', true)
+            ->count();
     }
 
     public function render()
@@ -299,6 +345,9 @@ class AdminArchivedEvents extends Component
             'userInitials' => $userInitials,
             'events' => $this->events,
             'creators' => $this->creators,
+            'thisMonthCount' => $this->thisMonthCount,
+            'totalRegistrations' => $this->totalRegistrations,
+            'paidEventsCount' => $this->paidEventsCount,
         ])->layout('layouts.app');
     }
 }

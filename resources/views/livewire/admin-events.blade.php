@@ -30,7 +30,7 @@
             <!-- Search and Filter Section - Redesigned -->
 <div class="mb-6 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
     <!-- Header with gradient -->
-    <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4">
+    <div class="bg-gradient-to-r from-blue-600 to-yellow-500 px-6 py-4">
         <div class="flex items-center justify-between">
             <div class="flex items-center space-x-3">
                 <div class="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
