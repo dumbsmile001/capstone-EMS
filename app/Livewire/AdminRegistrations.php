@@ -571,6 +571,11 @@ class AdminRegistrations extends Component
         return $buttons;
     }
 
+    public function canDownloadTicket($registration)
+    {
+        return $registration->ticket && $registration->ticket->isActive();
+    }
+
     public function render()
     {
         return view('livewire.admin-registrations', [
