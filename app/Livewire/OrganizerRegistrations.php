@@ -63,8 +63,6 @@ class OrganizerRegistrations extends Component
         $this->showExportModal = false;
     }
 
-    // In OrganizerRegistrations.php, update getExportData() and exportRegistrations() methods
-
     public function exportRegistrations()
     {
         // Log the export activity
@@ -281,7 +279,7 @@ class OrganizerRegistrations extends Component
             'payment_verified_by' => Auth::id(),
         ]);
 
-         // Log payment verification
+        // Log payment verification
         $this->logActivity('VERIFY_PAYMENT', $registration, null, $oldValues, [
             'payment_status' => 'verified',
             'payment_verified_at' => now()->toDateTimeString(),
@@ -302,7 +300,6 @@ class OrganizerRegistrations extends Component
         $this->showRejectModal = true;
     }
 
-    // Fix the confirmPaymentRejection method
     public function confirmPaymentRejection()
     {
         $registration = Registration::with(['user', 'ticket'])->find($this->selectedRegistrationId);
@@ -322,7 +319,7 @@ class OrganizerRegistrations extends Component
             ]);
         }
 
-         // Log payment rejection
+        // Log payment rejection
         $this->logActivity('REJECT_PAYMENT', $registration, null, $oldValues, [
             'payment_status' => 'rejected',
             'payment_verified_at' => now()->toDateTimeString(),
@@ -336,7 +333,6 @@ class OrganizerRegistrations extends Component
         session()->flash('info', 'Payment rejected for ' . $registration->user->first_name . ' ' . $registration->user->last_name);
     }
 
-    // Fix the closeRejectModal method
     public function closeRejectModal()
     {
         $this->showRejectModal = false;
@@ -347,6 +343,12 @@ class OrganizerRegistrations extends Component
     public function resetPaymentStatus($registrationId)
     {
         $registration = Registration::with(['user', 'ticket'])->find($registrationId);
+        
+        // Check if ticket is used - prevent reset
+        if ($registration->ticket && $registration->ticket->isUsed()) {
+            session()->flash('error', 'Cannot reset payment status for a registration with a used ticket.');
+            return;
+        }
 
         $oldValues = ['payment_status' => $registration->payment_status];
         
@@ -381,6 +383,12 @@ class OrganizerRegistrations extends Component
     public function generateTicket($registrationId)
     {
         $registration = Registration::with(['user', 'event', 'ticket'])->find($registrationId);
+        
+        // Check if ticket exists and is used - prevent generation
+        if ($registration->ticket && $registration->ticket->isUsed()) {
+            session()->flash('error', 'Cannot generate a new ticket for a registration with a used ticket.');
+            return;
+        }
         
         // Check if registration is eligible for ticket generation
         if (!$this->isEligibleForTicket($registration)) {
@@ -435,6 +443,12 @@ class OrganizerRegistrations extends Component
     {
         $registration = Registration::with(['user', 'event', 'ticket'])->find($registrationId);
         
+        // Check if ticket is used - prevent regeneration
+        if ($registration->ticket && $registration->ticket->isUsed()) {
+            session()->flash('error', 'Cannot regenerate a used ticket.');
+            return;
+        }
+        
         // Check if registration is eligible for ticket regeneration
         if (!$this->isEligibleForTicket($registration)) {
             session()->flash('error', 'Cannot regenerate ticket. Payment not verified or registration incomplete.');
@@ -443,7 +457,16 @@ class OrganizerRegistrations extends Component
 
         if ($registration->ticket) {
             try {
+                $oldStatus = $registration->ticket->status;
+                $oldNumber = $registration->ticket->ticket_number;
                 $registration->regenerateTicket();
+                
+                // Log ticket regeneration
+                $this->logActivity('REGENERATE_TICKET', $registration, null, 
+                    ['ticket_status' => $oldStatus, 'ticket_number' => $oldNumber],
+                    ['ticket_status' => $registration->ticket->status, 'ticket_number' => $registration->ticket->ticket_number]
+                );
+                
                 session()->flash('success', 'Ticket regenerated for ' . $registration->user->first_name);
             } catch (\Exception $e) {
                 session()->flash('error', 'Failed to regenerate ticket: ' . $e->getMessage());
@@ -491,6 +514,18 @@ class OrganizerRegistrations extends Component
     public function getActionButtons($registration)
     {
         $buttons = [];
+        
+        // First, check if ticket exists and is used - this overrides everything
+        if ($registration->ticket && $registration->ticket->isUsed()) {
+            return [
+                'verify' => false,
+                'reject' => false,
+                'generate' => false,
+                'view' => true, // Still allow viewing used tickets
+                'regenerate' => false,
+                'reset' => false,
+            ];
+        }
         
         if ($registration->event->require_payment) {
             // Paid event logic

@@ -16,26 +16,33 @@
             <!-- Overview Cards - Modern Redesign (Matching Admin Dashboard) -->
             <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
                 <!-- Event Registrations Card -->
-                <div class="group relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
+                <div
+                    class="group relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
                     <!-- Gradient Background Effect -->
-                    <div class="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-700 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
-                    
+                    <div
+                        class="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-700 opacity-0 group-hover:opacity-10 transition-opacity duration-300">
+                    </div>
+
                     <!-- Top Accent Line -->
                     <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-400 to-blue-600"></div>
-                    
+
                     <div class="relative p-6">
                         <div class="flex items-center justify-between mb-4">
                             <!-- Icon Container with Gradient Background -->
-                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center shadow-lg shadow-blue-200">
+                            <div
+                                class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center shadow-lg shadow-blue-200">
                                 <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                        d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
+                                    </path>
                                 </svg>
                             </div>
-                            
+
                             <!-- Status Badge -->
-                            <span class="px-3 py-1 text-xs font-medium text-blue-600 bg-blue-50 rounded-full">Total</span>
+                            <span
+                                class="px-3 py-1 text-xs font-medium text-blue-600 bg-blue-50 rounded-full">Total</span>
                         </div>
-                        
+
                         <!-- Card Content -->
                         <div>
                             <h3 class="text-sm font-medium text-gray-500 mb-1">Event Registrations</h3>
@@ -47,20 +54,27 @@
                 </div>
 
                 <!-- Ongoing Events Card -->
-                <div class="group relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-green-600 to-green-700 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+                <div
+                    class="group relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-br from-green-600 to-green-700 opacity-0 group-hover:opacity-10 transition-opacity duration-300">
+                    </div>
                     <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-green-400 to-green-600"></div>
-                    
+
                     <div class="relative p-6">
                         <div class="flex items-center justify-between mb-4">
-                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-green-500 to-green-600 text-white flex items-center justify-center shadow-lg shadow-green-200">
+                            <div
+                                class="w-14 h-14 rounded-2xl bg-gradient-to-br from-green-500 to-green-600 text-white flex items-center justify-center shadow-lg shadow-green-200">
                                 <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                    </path>
                                 </svg>
                             </div>
-                            <span class="px-3 py-1 text-xs font-medium text-green-600 bg-green-50 rounded-full">Active</span>
+                            <span
+                                class="px-3 py-1 text-xs font-medium text-green-600 bg-green-50 rounded-full">Active</span>
                         </div>
-                        
+
                         <div>
                             <h3 class="text-sm font-medium text-gray-500 mb-1">Ongoing Events</h3>
                             <div class="flex items-end justify-between">
@@ -71,20 +85,26 @@
                 </div>
 
                 <!-- Upcoming Events Card -->
-                <div class="group relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-yellow-600 to-yellow-700 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+                <div
+                    class="group relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-br from-yellow-600 to-yellow-700 opacity-0 group-hover:opacity-10 transition-opacity duration-300">
+                    </div>
                     <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-yellow-400 to-yellow-600"></div>
-                    
+
                     <div class="relative p-6">
                         <div class="flex items-center justify-between mb-4">
-                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-yellow-500 to-yellow-600 text-white flex items-center justify-center shadow-lg shadow-yellow-200">
+                            <div
+                                class="w-14 h-14 rounded-2xl bg-gradient-to-br from-yellow-500 to-yellow-600 text-white flex items-center justify-center shadow-lg shadow-yellow-200">
                                 <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                             </div>
-                            <span class="px-3 py-1 text-xs font-medium text-yellow-600 bg-yellow-50 rounded-full">Upcoming</span>
+                            <span
+                                class="px-3 py-1 text-xs font-medium text-yellow-600 bg-yellow-50 rounded-full">Upcoming</span>
                         </div>
-                        
+
                         <div>
                             <h3 class="text-sm font-medium text-gray-500 mb-1">Upcoming Events</h3>
                             <div class="flex items-end justify-between">
@@ -95,20 +115,27 @@
                 </div>
 
                 <!-- Pending Payments Card -->
-                <div class="group relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-orange-600 to-orange-700 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+                <div
+                    class="group relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-br from-orange-600 to-orange-700 opacity-0 group-hover:opacity-10 transition-opacity duration-300">
+                    </div>
                     <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-orange-400 to-orange-600"></div>
-                    
+
                     <div class="relative p-6">
                         <div class="flex items-center justify-between mb-4">
-                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 text-white flex items-center justify-center shadow-lg shadow-orange-200">
+                            <div
+                                class="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 text-white flex items-center justify-center shadow-lg shadow-orange-200">
                                 <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                        d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z">
+                                    </path>
                                 </svg>
                             </div>
-                            <span class="px-3 py-1 text-xs font-medium text-orange-600 bg-orange-50 rounded-full">Pending</span>
+                            <span
+                                class="px-3 py-1 text-xs font-medium text-orange-600 bg-orange-50 rounded-full">Pending</span>
                         </div>
-                        
+
                         <div>
                             <h3 class="text-sm font-medium text-gray-500 mb-1">Pending Payments</h3>
                             <div class="flex items-end justify-between">
@@ -162,7 +189,7 @@
                                 <div class="flex-1">
                                     <h3 class="font-semibold text-gray-800">{{ $event->title }}</h3>
                                     <p class="text-sm text-gray-600">
-                                        {{ \Carbon\Carbon::parse($event->start_time)->format('g:i A') }} - 
+                                        {{ \Carbon\Carbon::parse($event->start_time)->format('g:i A') }} -
                                         {{ \Carbon\Carbon::parse($event->end_time)->format('g:i A') }} •
                                         {{ $event->type === 'online' ? 'Online' : 'In-person' }}
                                     </p>
@@ -193,7 +220,8 @@
                                 <p class="text-sm text-gray-500 mt-1">Create your first event to get started</p>
                                 <a href="{{ route('organizer.events') }}"
                                     class="mt-4 inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
-                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M12 4v16m8-8H4" />
                                     </svg>
@@ -240,11 +268,19 @@
                     <!-- Payments Table -->
                     <div x-show="activeTab === 'payments'" x-transition>
                         <!-- Search and Filter Controls for Payments -->
-                        <div class="mb-4 p-4 bg-gray-50 border border-gray-200 rounded-lg">
-                            <div class="flex justify-between items-center mb-4">
-                                <h3 class="text-lg font-semibold text-gray-700">Payments Management</h3>
+                        <div
+                            class="mb-4 p-5 bg-gradient-to-br from-yellow-50 to-yellow-50 bg-white/80 backdrop-blur-sm border border-yellow-100 rounded-xl">
+                            <div class="flex justify-between items-center mb-5">
+                                <h3 class="text-lg font-semibold text-yellow-900 flex items-center gap-2">
+                                    <svg class="w-5 h-5 text-yellow-500" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                                    </svg>
+                                    Payments Management
+                                </h3>
                                 <button wire:click="openExportModal('payments')"
-                                    class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium flex items-center gap-2">
+                                    class="px-4 py-2 bg-gradient-to-r from-green-600 to-green-800 text-white rounded-lg hover:from-green-500 hover:to-green-600 transition-all duration-200 text-sm font-medium flex items-center gap-2 shadow-md shadow-green-200">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -252,70 +288,82 @@
                                     Export to Excel/CSV
                                 </button>
                             </div>
-                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-                                <!-- Student Search -->
-                                <div class="md:col-span-2">
-                                    <div class="relative">
-                                        <div
-                                            class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                            <svg class="w-4 h-4 text-gray-500" aria-hidden="true"
-                                                xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                viewBox="0 0 20 20">
-                                                <path stroke="currentColor" stroke-linecap="round"
-                                                    stroke-linejoin="round" stroke-width="2"
-                                                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
-                                            </svg>
+
+                            <!-- Filter Grid -->
+                            <div class="space-y-4">
+                                <!-- First Row -->
+                                <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                                    <!-- Search Box - Expanded -->
+                                    <div class="md:col-span-2">
+                                        <div class="relative group">
+                                            <div
+                                                class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                                <svg class="w-4 h-4 text-yellow-400 group-focus-within:text-yellow-500 transition-colors"
+                                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                                </svg>
+                                            </div>
+                                            <input type="text" wire:model.live.debounce.300ms="paymentSearch"
+                                                class="block w-full pl-10 pr-4 py-2.5 text-sm border-2 border-yellow-200 rounded-xl bg-white focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-yellow-300"
+                                                placeholder="Search by student name, email, or ID...">
                                         </div>
-                                        <input type="text" wire:model.live.debounce.300ms="paymentSearch"
-                                            class="block w-full pl-10 pr-4 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500"
-                                            placeholder="Search by student name, email, or ID...">
+                                    </div>
+
+                                    <!-- Event Filter -->
+                                    <div>
+                                        <select wire:model.live="filterPaymentEvent"
+                                            class="block w-full px-3 py-2.5 text-sm border-2 border-yellow-200 rounded-xl bg-white focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 hover:border-yellow-300 appearance-none cursor-pointer">
+                                            <option value="">📋 All Events</option>
+                                            @foreach ($paidEvents as $event)
+                                                <option value="{{ $event->id }}">
+                                                    {{ Str::limit($event->title, 25) }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    <!-- Payment Status Filter -->
+                                    <div>
+                                        <select wire:model.live="filterPaymentStatus"
+                                            class="block w-full px-3 py-2.5 text-sm border-2 border-yellow-200 rounded-xl bg-white focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 hover:border-yellow-300">
+                                            <option value="">💰 All Status</option>
+                                            <option value="pending">Pending</option>
+                                            <option value="verified">Verified</option>
+                                            <option value="rejected">Rejected</option>
+                                        </select>
                                     </div>
                                 </div>
 
-                                <!-- Event Filter -->
-                                <div>
-                                    <select wire:model.live="filterPaymentEvent"
-                                        class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500">
-                                        <option value="">All Events</option>
-                                        @foreach ($paidEvents as $event)
-                                            <option value="{{ $event->id }}">{{ Str::limit($event->title, 20) }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                                <!-- Second Row -->
+                                <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                                    <!-- Results Per Page -->
+                                    <div>
+                                        <select wire:model.live="paymentsPerPage"
+                                            class="block w-full px-3 py-2.5 text-sm border-2 border-yellow-200 rounded-xl bg-white focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 hover:border-yellow-300">
+                                            <option value="10">📄 10 per page</option>
+                                            <option value="25">📄 25 per page</option>
+                                            <option value="50">📄 50 per page</option>
+                                            <option value="100">📄 100 per page</option>
+                                        </select>
+                                    </div>
 
-                                <!-- Payment Status Filter -->
-                                <div>
-                                    <select wire:model.live="filterPaymentStatus"
-                                        class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500">
-                                        <option value="">All Status</option>
-                                        <option value="pending">Pending</option>
-                                        <option value="verified">Verified</option>
-                                        <option value="rejected">Rejected</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <!-- Results Per Page -->
-                                <div>
-                                    <select wire:model.live="paymentsPerPage"
-                                        class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500">
-                                        <option value="10">10 per page</option>
-                                        <option value="25">25 per page</option>
-                                        <option value="50">50 per page</option>
-                                    </select>
-                                </div>
-
-                                <!-- Reset Filters Button -->
-                                <div class="md:col-span-2">
-                                    <button wire:click="resetPaymentFilters"
-                                        class="w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                                        Reset All Filters
-                                    </button>
+                                    <!-- Reset Filters Button - spans 3 columns -->
+                                    <div class="md:col-span-3">
+                                        <button wire:click="resetPaymentFilters"
+                                            class="w-full px-4 py-2.5 text-sm font-medium text-yellow-700 bg-yellow-50 border-2 border-yellow-200 rounded-xl hover:bg-yellow-50 hover:border-yellow-400 hover:text-yellow-700 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 flex items-center justify-center gap-2">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                            </svg>
+                                            Reset All Filters
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
                         <!-- Success/Info Messages -->
                         @if (session()->has('success'))
                             <div class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
@@ -328,141 +376,230 @@
                                 {{ session('info') }}
                             </div>
                         @endif
-                        <div class="overflow-x-auto">
-                            @if (count($payments) > 0)
-                                <table class="min-w-full divide-y divide-gray-200">
-                                    <thead class="bg-gray-50">
-                                        <tr>
-                                            <th
-                                                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Student Name
-                                            </th>
-                                            <th
-                                                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Email
-                                            </th>
-                                            <th
-                                                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Event
-                                            </th>
-                                            <th
-                                                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Amount
-                                            </th>
-                                            <th
-                                                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Status
-                                            </th>
-                                            <th
-                                                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Registered Date
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="bg-white divide-y divide-gray-200">
-                                        @foreach ($payments as $payment)
-                                            <tr class="hover:bg-gray-50">
-                                                <td class="px-4 py-3 text-sm text-gray-900">
-                                                    {{ $payment->user->first_name }} {{ $payment->user->last_name }}
-                                                </td>
-                                                <td class="px-4 py-3 text-sm text-gray-600">
-                                                    {{ $payment->user->email }}
-                                                </td>
-                                                <td class="px-4 py-3 text-sm text-gray-600">
-                                                    {{ Str::limit($payment->event->title, 30) }}
-                                                </td>
-                                                <td class="px-4 py-3 text-sm text-gray-600">
-                                                    ₱{{ number_format($payment->event->payment_amount, 2) }}
-                                                </td>
-                                                <td class="px-4 py-3 text-sm">
-                                                    @if ($payment->payment_status === 'verified')
+
+                        <!-- Payments Table Container -->
+                        <div class="bg-white rounded-lg shadow-md p-1.5">
+                            <div class="overflow-x-auto">
+                                <div
+                                    class="relative bg-gradient-to-br from-yellow-50 to-yellow-50 shadow-xs rounded-xl border border-yellow-100">
+                                    <div class="overflow-x-auto">
+                                        @if (count($payments) > 0)
+                                            <table class="min-w-full divide-y divide-yellow-100">
+                                                <thead class="bg-gradient-to-r from-yellow-400 to-yellow-700">
+                                                    <tr>
+                                                        <th
+                                                            class="px-4 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                                                            Student</th>
+                                                        <th
+                                                            class="px-4 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                                                            Email</th>
+                                                        <th
+                                                            class="px-4 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                                                            Event</th>
+                                                        <th
+                                                            class="px-4 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                                                            Amount</th>
+                                                        <th
+                                                            class="px-4 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                                                            Status</th>
+                                                        <th
+                                                            class="px-4 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                                                            Registered Date</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="bg-white divide-y divide-yellow-50">
+                                                    @foreach ($payments as $index => $payment)
+                                                        <tr
+                                                            class="{{ $index % 2 === 0 ? 'bg-white hover:bg-yellow-50' : 'bg-yellow-50/30 hover:bg-yellow-100' }} transition-colors duration-150 group">
+                                                            <!-- Student Name -->
+                                                            <td class="px-4 py-3">
+                                                                <div class="flex flex-col">
+                                                                    <span
+                                                                        class="text-sm font-medium text-gray-900">{{ $payment->user->first_name }}
+                                                                        {{ $payment->user->last_name }}</span>
+                                                                    <span
+                                                                        class="text-xs text-gray-500 font-mono">{{ $payment->user->student_id ?? 'N/A' }}</span>
+                                                                </div>
+                                                            </td>
+
+                                                            <!-- Email -->
+                                                            <td class="px-4 py-3">
+                                                                <span
+                                                                    class="text-sm text-gray-600">{{ $payment->user->email }}</span>
+                                                            </td>
+
+                                                            <!-- Event -->
+                                                            <td class="px-4 py-3">
+                                                                <span
+                                                                    class="text-sm text-gray-900">{{ Str::limit($payment->event->title, 25) }}</span>
+                                                            </td>
+
+                                                            <!-- Amount -->
+                                                            <td class="px-4 py-3">
+                                                                <span
+                                                                    class="text-sm font-medium text-gray-900">₱{{ number_format($payment->event->payment_amount, 2) }}</span>
+                                                            </td>
+
+                                                            <!-- Payment Status -->
+                                                            <td class="px-4 py-3">
+                                                                @if ($payment->payment_status === 'verified')
+                                                                    <div class="flex flex-col">
+                                                                        <span
+                                                                            class="px-2 py-1 bg-green-100 text-green-800 rounded-lg text-xs font-medium flex items-center gap-1">
+                                                                            <svg class="w-3 h-3" fill="currentColor"
+                                                                                viewBox="0 0 20 20">
+                                                                                <path fill-rule="evenodd"
+                                                                                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                                                                    clip-rule="evenodd" />
+                                                                            </svg>
+                                                                            Verified
+                                                                        </span>
+                                                                        @if ($payment->payment_verified_at)
+                                                                            <span
+                                                                                class="text-xs text-gray-500 mt-1">{{ \Carbon\Carbon::parse($payment->payment_verified_at)->format('M d, Y') }}</span>
+                                                                        @endif
+                                                                    </div>
+                                                                @elseif($payment->payment_status === 'pending')
+                                                                    <span
+                                                                        class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-lg text-xs font-medium flex items-center gap-1">
+                                                                        <svg class="w-3 h-3" fill="currentColor"
+                                                                            viewBox="0 0 20 20">
+                                                                            <path fill-rule="evenodd"
+                                                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                                                                                clip-rule="evenodd" />
+                                                                        </svg>
+                                                                        Pending
+                                                                    </span>
+                                                                @elseif($payment->payment_status === 'rejected')
+                                                                    <span
+                                                                        class="px-2 py-1 bg-red-100 text-red-800 rounded-lg text-xs font-medium flex items-center gap-1">
+                                                                        <svg class="w-3 h-3" fill="currentColor"
+                                                                            viewBox="0 0 20 20">
+                                                                            <path fill-rule="evenodd"
+                                                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                                                                clip-rule="evenodd" />
+                                                                        </svg>
+                                                                        Rejected
+                                                                    </span>
+                                                                @endif
+                                                            </td>
+
+                                                            <!-- Registered Date -->
+                                                            <td class="px-4 py-3 text-sm text-gray-500">
+                                                                {{ \Carbon\Carbon::parse($payment->registered_at)->format('M d, Y') }}
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                    </div>
+
+                                    <!-- Pagination -->
+                                    @if ($payments && method_exists($payments, 'links'))
+                                        <div
+                                            class="px-4 py-4 bg-white/80 backdrop-blur-sm border-t border-yellow-100 rounded-b-xl">
+                                            <div class="flex items-center justify-between">
+                                                <div class="text-sm text-yellow-700">
+                                                    Showing <span
+                                                        class="font-semibold">{{ $payments->firstItem() ?? 0 }}</span>
+                                                    to <span
+                                                        class="font-semibold">{{ $payments->lastItem() ?? 0 }}</span>
+                                                    of <span class="font-semibold">{{ $payments->total() }}</span>
+                                                    results
+                                                </div>
+
+                                                <div class="flex items-center space-x-2">
+                                                    @if ($payments->onFirstPage())
                                                         <span
-                                                            class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-medium">
-                                                            <svg class="inline w-4 h-4 mr-1" fill="currentColor"
-                                                                viewBox="0 0 20 20">
-                                                                <path fill-rule="evenodd"
-                                                                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                                                    clip-rule="evenodd" />
+                                                            class="px-3 py-2 bg-gray-100 text-gray-400 rounded-lg cursor-not-allowed">
+                                                            <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                                viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2" d="M15 19l-7-7 7-7" />
                                                             </svg>
-                                                            Verified
-                                                        </span>
-                                                    @elseif($payment->payment_status === 'pending')
-                                                        <span
-                                                            class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs font-medium">
-                                                            <svg class="inline w-4 h-4 mr-1" fill="currentColor"
-                                                                viewBox="0 0 20 20">
-                                                                <path fill-rule="evenodd"
-                                                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
-                                                                    clip-rule="evenodd" />
-                                                            </svg>
-                                                            Pending
-                                                        </span>
-                                                    @elseif($payment->payment_status === 'rejected')
-                                                        <span
-                                                            class="px-2 py-1 bg-red-100 text-red-800 rounded text-xs font-medium">
-                                                            <svg class="inline w-4 h-4 mr-1" fill="currentColor"
-                                                                viewBox="0 0 20 20">
-                                                                <path fill-rule="evenodd"
-                                                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                                                                    clip-rule="evenodd" />
-                                                            </svg>
-                                                            Rejected
                                                         </span>
                                                     @else
+                                                        <button wire:click="previousPage"
+                                                            class="px-3 py-2 bg-white text-yellow-600 border-2 border-yellow-200 rounded-lg hover:bg-yellow-400 hover:text-white hover:border-yellow-400 transition-all duration-200">
+                                                            <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                                viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2" d="M15 19l-7-7 7-7" />
+                                                            </svg>
+                                                        </button>
+                                                    @endif
+
+                                                    @foreach ($payments->getUrlRange(max(1, $payments->currentPage() - 2), min($payments->lastPage(), $payments->currentPage() + 2)) as $page => $url)
+                                                        <button wire:click="gotoPage({{ $page }})"
+                                                            class="px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 
+                                            {{ $page === $payments->currentPage()
+                                                ? 'bg-gradient-to-r from-yellow-600 to-yellow-700 text-white shadow-md shadow-yellow-200'
+                                                : 'bg-white text-yellow-700 border-2 border-yellow-200 hover:bg-yellow-400 hover:text-white hover:border-yellow-400' }}">
+                                                            {{ $page }}
+                                                        </button>
+                                                    @endforeach
+
+                                                    @if ($payments->hasMorePages())
+                                                        <button wire:click="nextPage"
+                                                            class="px-3 py-2 bg-white text-yellow-600 border-2 border-yellow-200 rounded-lg hover:bg-yellow-400 hover:text-white hover:border-yellow-400 transition-all duration-200">
+                                                            <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                                viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2" d="M9 5l7 7-7 7" />
+                                                            </svg>
+                                                        </button>
+                                                    @else
                                                         <span
-                                                            class="px-2 py-1 bg-gray-100 text-gray-800 rounded text-xs font-medium">
-                                                            Unknown
+                                                            class="px-3 py-2 bg-gray-100 text-gray-400 rounded-lg cursor-not-allowed">
+                                                            <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                                viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2" d="M9 5l7 7-7 7" />
+                                                            </svg>
                                                         </span>
                                                     @endif
-                                                </td>
-                                                <td class="px-4 py-3 text-sm text-gray-500">
-                                                    {{ \Carbon\Carbon::parse($payment->registered_at)->format('M d, Y') }}
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-
-                                <!-- Pagination -->
-                                @if ($payments && method_exists($payments, 'links'))
-                                    <div class="px-4 py-3 bg-gray-50 border-t border-gray-200">
-                                        {{ $payments->links() }}
-                                    </div>
-                                @endif
-                            @else
-                                <div class="text-center py-8">
-                                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                                        </path>
-                                    </svg>
-                                    <h3 class="mt-2 text-sm font-medium text-gray-900">
-                                        @if ($paymentSearch || $filterPaymentEvent || $filterPaymentStatus)
-                                            No payments found matching your filters
-                                        @else
-                                            No payments found
-                                        @endif
-                                    </h3>
-                                    <p class="mt-1 text-sm text-gray-500">
-                                        There are no pending or verified payments for your paid events yet.
-                                    </p>
-                                    <div class="mt-6">
-                                        <button wire:click="refreshPayments"
-                                            class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
-                                            <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
-                                                </path>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
+                                @else
+                                    <!-- Empty State -->
+                                    <div class="px-4 py-12 text-center text-gray-500">
+                                        <div class="flex flex-col items-center justify-center">
+                                            <svg class="w-16 h-16 mb-4 text-yellow-300" fill="none"
+                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    stroke-width="1.5"
+                                                    d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
                                             </svg>
-                                            Refresh
-                                        </button>
+                                            <p class="text-lg font-medium text-yellow-800">No payments found</p>
+                                            <p class="text-sm text-yellow-600 mt-1">
+                                                @if ($paymentSearch || $filterPaymentEvent || $filterPaymentStatus)
+                                                    Try adjusting your search or filters
+                                                @else
+                                                    No payments for your events yet
+                                                @endif
+                                            </p>
+                                            <div class="mt-6">
+                                                <button wire:click="refreshPayments"
+                                                    class="inline-flex items-center px-4 py-2 border-2 border-yellow-200 shadow-sm text-sm font-medium rounded-xl text-yellow-700 bg-yellow-50 hover:bg-yellow-100 hover:border-yellow-300 transition-all duration-200">
+                                                    <svg class="-ml-1 mr-2 h-5 w-5" fill="none"
+                                                        stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                                    </svg>
+                                                    Refresh
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
+                                    @endif
                                 </div>
-                            @endif
+                            </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -655,7 +792,8 @@
                             </div>
                             <div>
                                 <p class="text-xs text-gray-500">Start Date</p>
-                                <p class="font-semibold text-gray-800">{{ \Carbon\Carbon::parse($selectedEvent->start_date)->format('F j, Y') }}</p>
+                                <p class="font-semibold text-gray-800">
+                                    {{ \Carbon\Carbon::parse($selectedEvent->start_date)->format('F j, Y') }}</p>
                             </div>
                         </div>
                     </div>
@@ -673,7 +811,8 @@
                             </div>
                             <div>
                                 <p class="text-xs text-gray-500">End Date</p>
-                                <p class="font-semibold text-gray-800">{{ \Carbon\Carbon::parse($selectedEvent->end_date)->format('F j, Y') }}</p>
+                                <p class="font-semibold text-gray-800">
+                                    {{ \Carbon\Carbon::parse($selectedEvent->end_date)->format('F j, Y') }}</p>
                             </div>
                         </div>
                     </div>
@@ -844,92 +983,97 @@
         @endif
     </x-custom-modal>
     <!-- Add this right before the closing </div> tags of your dashboard content -->
-<!-- Calendar Events Modal (Global) -->
-<x-custom-modal 
-    model="showCalendarEventsModal" 
-    maxWidth="lg" 
-    title="{{ $selectedCalendarDate ? 'Events for ' . $selectedCalendarDate->format('F j, Y') : 'Events' }}"
-    description="{{ $calendarEventCount }} event{{ $calendarEventCount != 1 ? 's' : '' }} scheduled"
-    headerBg="blue"
-    :showCloseButton="true"
->
-    <div class="space-y-4">
-        @if(empty($selectedCalendarEvents) || count($selectedCalendarEvents) === 0)
-            <div class="text-center py-8 text-gray-500">
-                <svg class="w-16 h-16 mx-auto text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                <p class="text-lg">No events scheduled for this day</p>
-            </div>
-        @else
-            <div class="space-y-3 max-h-96 overflow-y-auto pr-2">
-                @foreach($selectedCalendarEvents as $event)
-                    <div class="p-4 border-l-4 border-blue-500 bg-blue-50 rounded-lg hover:shadow-md transition-all cursor-pointer hover:scale-[1.02] transform" wire:click="handleEventClick({{ $event['id'] }})">
-                        <div class="flex justify-between items-start">
-                            <div class="flex-1">
-                                <h4 class="font-semibold text-gray-800 text-lg mb-2">{{ $event['title'] }}</h4>
-                                <div class="grid grid-cols-2 gap-3 text-sm">
-                                    <!-- Update the time display in the calendar events modal -->
-                                    <div class="flex items-center space-x-2 text-gray-600">
-                                        <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                        <span>{{ \Carbon\Carbon::parse($event['start_time'])->format('g:i A') }} - 
-                                            {{ \Carbon\Carbon::parse($event['end_time'])->format('g:i A') }}</span>
-                                    </div>
-                                    <div class="flex items-center space-x-2 text-gray-600">
-                                        <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        </svg>
-                                        <span class="capitalize">{{ str_replace('-', ' ', $event['type']) }}</span>
-                                    </div>
-                                    <div class="flex items-center space-x-2 text-gray-600 col-span-2">
-                                        <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                                d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l5 5a2 2 0 01.586 1.414V19a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2z" />
-                                        </svg>
-                                        <span class="capitalize">{{ $event['category'] }}</span>
+    <!-- Calendar Events Modal (Global) -->
+    <x-custom-modal model="showCalendarEventsModal" maxWidth="lg"
+        title="{{ $selectedCalendarDate ? 'Events for ' . $selectedCalendarDate->format('F j, Y') : 'Events' }}"
+        description="{{ $calendarEventCount }} event{{ $calendarEventCount != 1 ? 's' : '' }} scheduled"
+        headerBg="blue" :showCloseButton="true">
+        <div class="space-y-4">
+            @if (empty($selectedCalendarEvents) || count($selectedCalendarEvents) === 0)
+                <div class="text-center py-8 text-gray-500">
+                    <svg class="w-16 h-16 mx-auto text-gray-400 mb-3" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <p class="text-lg">No events scheduled for this day</p>
+                </div>
+            @else
+                <div class="space-y-3 max-h-96 overflow-y-auto pr-2">
+                    @foreach ($selectedCalendarEvents as $event)
+                        <div class="p-4 border-l-4 border-blue-500 bg-blue-50 rounded-lg hover:shadow-md transition-all cursor-pointer hover:scale-[1.02] transform"
+                            wire:click="handleEventClick({{ $event['id'] }})">
+                            <div class="flex justify-between items-start">
+                                <div class="flex-1">
+                                    <h4 class="font-semibold text-gray-800 text-lg mb-2">{{ $event['title'] }}</h4>
+                                    <div class="grid grid-cols-2 gap-3 text-sm">
+                                        <!-- Update the time display in the calendar events modal -->
+                                        <div class="flex items-center space-x-2 text-gray-600">
+                                            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            <span>{{ \Carbon\Carbon::parse($event['start_time'])->format('g:i A') }} -
+                                                {{ \Carbon\Carbon::parse($event['end_time'])->format('g:i A') }}</span>
+                                        </div>
+                                        <div class="flex items-center space-x-2 text-gray-600">
+                                            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            </svg>
+                                            <span
+                                                class="capitalize">{{ str_replace('-', ' ', $event['type']) }}</span>
+                                        </div>
+                                        <div class="flex items-center space-x-2 text-gray-600 col-span-2">
+                                            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l5 5a2 2 0 01.586 1.414V19a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2z" />
+                                            </svg>
+                                            <span class="capitalize">{{ $event['category'] }}</span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="ml-4">
-                                @if($event['require_payment'])
-                                    <span class="inline-flex items-center px-3 py-1.5 bg-yellow-100 text-yellow-700 rounded-full text-xs font-medium">
-                                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                        ₱{{ number_format($event['payment_amount'], 2) }}
-                                    </span>
-                                @else
-                                    <span class="inline-flex items-center px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-xs font-medium">
-                                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                        Free
-                                    </span>
-                                @endif
+                                <div class="ml-4">
+                                    @if ($event['require_payment'])
+                                        <span
+                                            class="inline-flex items-center px-3 py-1.5 bg-yellow-100 text-yellow-700 rounded-full text-xs font-medium">
+                                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            ₱{{ number_format($event['payment_amount'], 2) }}
+                                        </span>
+                                    @else
+                                        <span
+                                            class="inline-flex items-center px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-xs font-medium">
+                                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            Free
+                                        </span>
+                                    @endif
+                                </div>
                             </div>
                         </div>
-                    </div>
-                @endforeach
-            </div>
-        @endif
-    </div>
+                    @endforeach
+                </div>
+            @endif
+        </div>
 
-    <!-- Modal Footer -->
-    <x-slot name="footer">
-        <button type="button" 
-                wire:click="closeCalendarEventsModal"
+        <!-- Modal Footer -->
+        <x-slot name="footer">
+            <button type="button" wire:click="closeCalendarEventsModal"
                 class="px-6 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium text-sm">
-            Close
-        </button>
-    </x-slot>
-</x-custom-modal>
+                Close
+            </button>
+        </x-slot>
+    </x-custom-modal>
 </div>
