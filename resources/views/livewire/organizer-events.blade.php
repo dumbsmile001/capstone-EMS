@@ -8,12 +8,16 @@
         <div class="fixed top-0 right-0 left-0 lg:left-64 z-30">
             <x-dashboard-header userRole="Organizer" :userInitials="$userInitials" />
         </div>
+
         <!-- Main Content -->
         <div class="flex-1 p-6 mt-20 lg:mt-24">
             <!-- Header with Stats and Create Button -->
             <div class="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
-                    <h1 class="text-2xl font-bold text-gray-800">My Events</h1>
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="h-10 w-2 bg-gradient-to-b from-green-600 to-green-500 rounded-full"></div>
+                        <h1 class="text-3xl font-bold text-gray-800">School Events</h1>
+                    </div>
                     <p class="text-gray-600">Manage and organize all your events in one place</p>
                 </div>
                 <button wire:click="openCreateModal"
@@ -24,110 +28,259 @@
                     Create New Event
                 </button>
             </div>
-            <!-- Search and Filter Section -->
-            <div class="mb-6 bg-white rounded-lg shadow p-4">
-                <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
-                    <!-- Search -->
-                    <div class="md:col-span-2">
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor"
+
+            <!-- Search and Filter Section - Redesigned to match admin -->
+            <div class="mb-6 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+                <!-- Header with gradient -->
+                <div class="bg-gradient-to-r from-blue-600 to-yellow-500 px-6 py-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                        d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
                                 </svg>
                             </div>
-                            <input type="text" wire:model.live.debounce.300ms="search"
-                                class="block w-full pl-10 pr-4 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500"
-                                placeholder="Search events...">
+                            <h2 class="text-lg font-semibold text-white">Filter Events</h2>
                         </div>
-                    </div>
-
-                    <!-- Type Filter -->
-                    <div>
-                        <select wire:model.live="filterType"
-                            class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500">
-                            <option value="">All Types</option>
-                            <option value="online">Online</option>
-                            <option value="face-to-face">Face-to-Face</option>
-                        </select>
-                    </div>
-
-                    <!-- Category Filter -->
-                    <div>
-                        <select wire:model.live="filterCategory"
-                            class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500">
-                            <option value="">All Categories</option>
-                            <option value="academic">Academic</option>
-                            <option value="sports">Sports</option>
-                            <option value="cultural">Cultural</option>
-                        </select>
-                    </div>
-
-                    <!-- Payment Filter -->
-                    <div>
-                        <select wire:model.live="filterPayment"
-                            class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500">
-                            <option value="">All Events</option>
-                            <option value="paid">Paid Events</option>
-                            <option value="free">Free Events</option>
-                        </select>
+                        <span class="text-sm text-blue-100 bg-white/10 px-3 py-1 rounded-full">
+                            {{ $events->total() }} events found
+                        </span>
                     </div>
                 </div>
 
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <!-- Sort and Per Page -->
-                    <div class="flex items-center space-x-4">
-                        <div class="flex items-center space-x-2">
-                            <span class="text-sm text-gray-600">Sort by:</span>
-                            <select wire:model.live="sortBy"
-                                class="text-sm border border-gray-300 rounded-lg px-3 py-1 focus:ring-blue-500 focus:border-blue-500">
-                                <option value="date">Date</option>
-                                <option value="title">Title</option>
-                                <option value="created_at">Created</option>
-                            </select>
-                            <button wire:click="sortBy($sortBy)" class="p-1 rounded hover:bg-gray-100">
-                                @if ($sortDirection === 'asc')
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <!-- Filter Body -->
+                <div class="p-6">
+                    <!-- Main Filters Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-6">
+                        <!-- Search - Full width on mobile, span 2 on desktop -->
+                        <div class="lg:col-span-2">
+                            <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">
+                                <span class="flex items-center gap-1">
+                                    <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 15l7-7 7 7"></path>
+                                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                     </svg>
-                                @else
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    Search Events
+                                </span>
+                            </label>
+                            <div class="relative group">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <svg class="w-5 h-5 text-gray-400 group-focus-within:text-blue-500 transition-colors"
+                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 9l-7 7-7-7"></path>
+                                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                                     </svg>
+                                </div>
+                                <input type="text" wire:model.live.debounce.300ms="search"
+                                    class="block w-full pl-10 pr-4 py-3 text-sm border-2 border-gray-200 rounded-xl bg-white 
+                               focus:ring-2 focus:ring-yellow-200 focus:border-yellow-400 
+                               transition-all duration-200 group-hover:border-blue-300"
+                                    placeholder="Search by title, description...">
+
+                                <!-- Clear search button (shows when search has value) -->
+                                @if ($search)
+                                    <button wire:click="$set('search', '')"
+                                        class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
                                 @endif
-                            </button>
+                            </div>
                         </div>
 
-                        <div class="flex items-center space-x-2">
-                            <span class="text-sm text-gray-600">Show:</span>
-                            <select wire:model.live="eventsPerPage"
-                                class="text-sm border border-gray-300 rounded-lg px-3 py-1 focus:ring-blue-500 focus:border-blue-500">
-                                <option value="12">12</option>
-                                <option value="24">24</option>
-                                <option value="48">48</option>
-                            </select>
+                        <!-- Type Filter -->
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">
+                                <span class="flex items-center gap-1">
+                                    <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M13 7h8m-8 5h5m-5 5h3M4 7h5v5H4V7zm0 10h3v-5H4v5z" />
+                                    </svg>
+                                    Event Type
+                                </span>
+                            </label>
+                            <div class="relative">
+                                <select wire:model.live="filterType"
+                                    class="w-full px-4 py-3 text-sm border-2 border-gray-200 rounded-xl bg-white 
+                               focus:ring-2 focus:ring-yellow-200 focus:border-yellow-400 
+                               transition-all duration-200 appearance-none cursor-pointer hover:border-blue-300">
+                                    <option value="">All Types</option>
+                                    <option value="online">🌐 Online</option>
+                                    <option value="face-to-face">👥 Face-to-Face</option>
+                                </select>
+                                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Category Filter -->
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">
+                                <span class="flex items-center gap-1">
+                                    <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l5 5a2 2 0 01.586 1.414V19a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2z" />
+                                    </svg>
+                                    Category
+                                </span>
+                            </label>
+                            <div class="relative">
+                                <select wire:model.live="filterCategory"
+                                    class="w-full px-4 py-3 text-sm border-2 border-gray-200 rounded-xl bg-white 
+                               focus:ring-2 focus:ring-yellow-200 focus:border-yellow-400 
+                               transition-all duration-200 appearance-none cursor-pointer hover:border-blue-300">
+                                    <option value="">All Categories</option>
+                                    <option value="academic">📚 Academic</option>
+                                    <option value="sports">⚽ Sports</option>
+                                    <option value="cultural">🎭 Cultural</option>
+                                </select>
+                                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Payment Filter -->
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">
+                                <span class="flex items-center gap-1">
+                                    <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    Payment
+                                </span>
+                            </label>
+                            <div class="relative">
+                                <select wire:model.live="filterPayment"
+                                    class="w-full px-4 py-3 text-sm border-2 border-gray-200 rounded-xl bg-white 
+                               focus:ring-2 focus:ring-yellow-200 focus:border-yellow-400 
+                               transition-all duration-200 appearance-none cursor-pointer hover:border-blue-300">
+                                    <option value="">All Events</option>
+                                    <option value="paid">💰 Paid Events</option>
+                                    <option value="free">🎁 Free Events</option>
+                                </select>
+                                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Reset Filters -->
-                    <div>
-                        <button wire:click="resetFilters"
-                            class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-2 focus:ring-blue-500">
-                            Reset Filters
-                        </button>
+                    <!-- Bottom Bar: Sort, Per Page, and Reset -->
+                    <div
+                        class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pt-4 border-t border-gray-100">
+                        <!-- Left side: Sort and Per Page -->
+                        <div class="flex flex-wrap items-center gap-4">
+                            <!-- Sort -->
+                            <div class="flex items-center space-x-3 bg-gray-50 px-4 py-2 rounded-xl">
+                                <span class="text-sm font-medium text-gray-700">Sort by:</span>
+                                <select wire:model.live="sortBy"
+                                    class="text-sm border-0 bg-transparent focus:ring-0 font-semibold text-blue-600 cursor-pointer">
+                                    <option value="date">Date</option>
+                                    <option value="title">Title</option>
+                                    <option value="created_at">Created</option>
+                                </select>
+                                <button
+                                    wire:click="$set('sortDirection', '{{ $sortDirection === 'asc' ? 'desc' : 'asc' }}')"
+                                    class="p-1.5 rounded-lg hover:bg-white transition-colors">
+                                    @if ($sortDirection === 'asc')
+                                        <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M5 15l7-7 7 7"></path>
+                                        </svg>
+                                    @else
+                                        <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19 9l-7 7-7-7"></path>
+                                        </svg>
+                                    @endif
+                                </button>
+                            </div>
+
+                            <!-- Per Page -->
+                            <div class="flex items-center space-x-3 bg-gray-50 px-4 py-2 rounded-xl">
+                                <span class="text-sm font-medium text-gray-700">Show:</span>
+                                <select wire:model.live="eventsPerPage"
+                                    class="text-sm border-0 bg-transparent focus:ring-0 font-semibold text-blue-600 cursor-pointer">
+                                    <option value="12">12</option>
+                                    <option value="24">24</option>
+                                    <option value="48">48</option>
+                                </select>
+                                <span class="text-sm text-gray-500">per page</span>
+                            </div>
+
+                            <!-- Active Filters Count (shows when filters are applied) -->
+                            @php
+                                $activeFilters = collect([
+                                    $filterType,
+                                    $filterCategory,
+                                    $filterPayment,
+                                    $search,
+                                ])
+                                    ->filter()
+                                    ->count();
+                            @endphp
+
+                            @if ($activeFilters > 0)
+                                <div class="flex items-center gap-2">
+                                    <span
+                                        class="px-2.5 py-1.5 bg-yellow-100 text-yellow-700 rounded-lg text-xs font-semibold">
+                                        {{ $activeFilters }} active {{ Str::plural('filter', $activeFilters) }}
+                                    </span>
+                                </div>
+                            @endif
+                        </div>
+
+                        <!-- Reset Filters Button -->
+                        <div>
+                            <button wire:click="resetFilters"
+                                class="group px-5 py-2.5 bg-gradient-to-r from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 
+                           border border-blue-200 rounded-xl transition-all duration-200 
+                           flex items-center gap-2 text-sm font-medium text-blue-700
+                           hover:shadow-md hover:shadow-blue-100">
+                                <svg class="w-4 h-4 group-hover:rotate-180 transition-transform duration-500"
+                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                </svg>
+                                Reset All Filters
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Events Grid -->
+            <!-- Events Grid (keeping your existing cards) -->
             @if (count($events) > 0)
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     @foreach ($events as $event)
                         <div
                             class="group relative bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden border border-gray-100 hover:border-blue-200 flex flex-col h-[420px]">
+                            <!-- Your existing event card code remains exactly the same -->
                             <!-- Clickable wrapper for entire card (except buttons) -->
                             <div wire:click="openEventDetailsModal({{ $event->id }})" class="cursor-pointer flex-1">
                                 <!-- Banner Image with Gradient Overlay - Fixed height -->
@@ -148,7 +301,7 @@
                                         class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent">
                                     </div>
 
-                                    <!-- In the events grid, update the date badge (around line 150) -->
+                                    <!-- Status Badges -->
                                     <div class="absolute top-2 right-2 flex gap-1">
                                         @if($event->isCurrentlyOngoing())
                                             <span class="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-green-100 text-green-800">
@@ -164,15 +317,15 @@
                                             </span>
                                         @endif
                                         
-                                        <!-- Keep the existing status badge (published/draft/cancelled) -->
                                         <span class="px-2 py-0.5 text-[10px] font-semibold rounded-full 
                                             {{ $event->status === 'published' ? 'bg-green-100 text-green-800' : 
                                             ($event->status === 'draft' ? 'bg-gray-100 text-gray-800' : 'bg-red-100 text-red-800') }}">
                                             {{ ucfirst($event->status) }}
                                         </span>
                                     </div>
-                                    <!-- Update the event status badges based on current state -->
-                                   <div class="absolute bottom-2 left-2 flex items-center gap-2">
+
+                                    <!-- Date Badge -->
+                                    <div class="absolute bottom-2 left-2 flex items-center gap-2">
                                         <div class="bg-white/90 backdrop-blur-sm rounded-lg px-2 py-1 shadow-lg">
                                             <span class="text-[10px] font-semibold text-gray-800">
                                                 {{ $event->start_date->format('M d') }} - {{ $event->end_date->format('M d, Y') }}
@@ -181,10 +334,8 @@
                                     </div>
                                 </div>
 
-                                <!-- Content Section - Fixed height with flex column -->
+                                <!-- Content Section -->
                                 <div class="p-4 flex flex-col h-[calc(420px-144px-60px)]">
-                                    <!-- 420px total - 144px image - 60px buttons -->
-                                    <!-- Title and Creator - Fixed height -->
                                     <div class="mb-2">
                                         <h3
                                             class="text-base font-bold text-gray-800 mb-0.5 line-clamp-1 group-hover:text-blue-600 transition-colors">
@@ -201,12 +352,10 @@
                                         </p>
                                     </div>
 
-                                    <!-- Description Preview - Single line only -->
                                     <p class="text-xs text-gray-600 mb-3 line-clamp-1">
                                         {{ $event->description }}
                                     </p>
 
-                                    <!-- Tags Row - Fixed position -->
                                     <div class="flex flex-wrap gap-1 mb-3">
                                         <span
                                             class="px-2 py-0.5 text-[10px] font-medium rounded-full bg-blue-100 text-blue-700 flex items-center gap-1">
@@ -233,7 +382,6 @@
                                         @endif
                                     </div>
 
-                                    <!-- Visibility Badge - Compact -->
                                     <div class="flex items-center gap-1 text-[10px] text-gray-500 mb-1">
                                         <svg class="w-3 h-3" fill="none" stroke="currentColor"
                                             viewBox="0 0 24 24">
@@ -248,7 +396,7 @@
                                 </div>
                             </div>
 
-                            <!-- Action Buttons - Fixed height at bottom -->
+                            <!-- Action Buttons -->
                             <div class="px-4 pb-4 flex gap-2 border-t border-gray-100 pt-3 mt-auto">
                                 <button wire:click="openEditModal({{ $event->id }})"
                                     class="flex-1 px-2 py-2 bg-yellow-500 hover:bg-yellow-600 text-white text-xs font-medium rounded-xl transition-all duration-200 transform hover:scale-105 hover:shadow-lg hover:shadow-yellow-200 flex items-center justify-center gap-1 group">
@@ -283,7 +431,6 @@
                                 @endif
                             </div>
 
-                            <!-- Hover Effect Indicator -->
                             <div
                                 class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-blue-500 to-yellow-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300">
                             </div>
@@ -291,12 +438,99 @@
                     @endforeach
                 </div>
 
-                <!-- Pagination -->
-                <div class="mt-8">
-                    {{ $events->links() }}
-                </div>
+                <!-- Pagination - Updated to match admin style -->
+                @if ($events->hasPages())
+                    <div class="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <!-- Results Info -->
+                        <div class="text-sm text-gray-600 bg-gray-50 px-4 py-2 rounded-lg">
+                            Showing
+                            <span class="font-semibold text-blue-600">{{ $events->firstItem() }}</span>
+                            to
+                            <span class="font-semibold text-blue-600">{{ $events->lastItem() }}</span>
+                            of
+                            <span class="font-semibold text-yellow-600">{{ $events->total() }}</span>
+                            results
+                        </div>
+
+                        <!-- Pagination Links -->
+                        <div class="flex items-center gap-2">
+                            @if ($events->onFirstPage())
+                                <span
+                                    class="px-4 py-2 text-sm font-medium text-gray-400 bg-gray-100 rounded-xl cursor-not-allowed">
+                                    Previous
+                                </span>
+                            @else
+                                <button wire:click="previousPage"
+                                    class="group px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-xl 
+                           hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-700 hover:text-white
+                           transition-all duration-200 flex items-center gap-2">
+                                    <svg class="w-4 h-4 group-hover:-translate-x-1 transition-transform"
+                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15 19l-7-7 7-7" />
+                                    </svg>
+                                    Previous
+                                </button>
+                            @endif
+
+                            <!-- Page Numbers -->
+                            <div class="hidden sm:flex items-center gap-1">
+                                @foreach ($events->getUrlRange(1, $events->lastPage()) as $page => $url)
+                                    @if ($page == $events->currentPage())
+                                        <span
+                                            class="w-10 h-10 flex items-center justify-center rounded-xl 
+                                   bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold
+                                   shadow-md shadow-blue-200">
+                                            {{ $page }}
+                                        </span>
+                                    @else
+                                        <button wire:click="gotoPage({{ $page }})"
+                                            class="w-10 h-10 flex items-center justify-center rounded-xl 
+                                   text-gray-600 hover:bg-yellow-50 hover:text-yellow-600 
+                                   font-medium transition-all duration-200 
+                                   hover:shadow-md hover:shadow-yellow-100">
+                                            {{ $page }}
+                                        </button>
+                                    @endif
+                                @endforeach
+                            </div>
+
+                            @if ($events->hasMorePages())
+                                <button wire:click="nextPage"
+                                    class="group px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-xl 
+                           hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-700 hover:text-white
+                           transition-all duration-200 flex items-center gap-2">
+                                    Next
+                                    <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </button>
+                            @else
+                                <span
+                                    class="px-4 py-2 text-sm font-medium text-gray-400 bg-gray-100 rounded-xl cursor-not-allowed">
+                                    Next
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                @else
+                    <!-- Simple results info when no pagination needed -->
+                    <div class="mt-8 flex justify-center">
+                        <div class="text-sm text-gray-600 bg-gray-50 px-6 py-3 rounded-xl">
+                            Showing
+                            <span class="font-semibold text-blue-600">1</span>
+                            to
+                            <span class="font-semibold text-blue-600">{{ count($events) }}</span>
+                            of
+                            <span class="font-semibold text-yellow-600">{{ count($events) }}</span>
+                            results
+                        </div>
+                    </div>
+                @endif
             @else
-                <!-- Empty State -->
+                <!-- Empty State (keeping your existing empty state) -->
                 <div class="text-center py-12 bg-white rounded-2xl shadow-sm border border-gray-100">
                     <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor"
                         viewBox="0 0 24 24">
