@@ -3,10 +3,12 @@
 namespace App\Livewire;
 
 use App\Models\Event;
+use App\Models\User;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
 use App\Traits\LogsActivity;
+use Carbon\Carbon;
 
 class ArchivedEvents extends Component
 {
@@ -19,18 +21,26 @@ class ArchivedEvents extends Component
     public $eventsPerPage = 10;
     public $exportFormat = 'xlsx';
     public $showExportModal = false;
-
+    
+    // New properties for sorting
+    public $sortField = 'archived_at';
+    public $sortDirection = 'desc';
+    
     // Confirmation modal properties
     public $showRestoreConfirmation = false;
     public $showDeleteConfirmation = false;
     public $selectedEventId = null;
     public $selectedEventTitle = '';
+    public $currentAction = null;
+    public $currentEventId = null;
 
     protected $queryString = [
         'search' => ['except' => ''],
         'filterCategory' => ['except' => ''],
         'filterType' => ['except' => ''],
         'filterPayment' => ['except' => ''],
+        'sortField' => ['except' => 'archived_at'],
+        'sortDirection' => ['except' => 'desc'],
         'eventsPerPage' => ['except' => 10],
     ];
 
@@ -47,6 +57,8 @@ class ArchivedEvents extends Component
         if ($event) {
             $this->selectedEventId = $eventId;
             $this->selectedEventTitle = $event->title;
+            $this->currentAction = 'restore';
+            $this->currentEventId = $eventId;
             $this->showRestoreConfirmation = true;
         }
     }
@@ -57,22 +69,44 @@ class ArchivedEvents extends Component
         if ($event) {
             $this->selectedEventId = $eventId;
             $this->selectedEventTitle = $event->title;
+            $this->currentAction = 'delete_permanent';
+            $this->currentEventId = $eventId;
             $this->showDeleteConfirmation = true;
         }
     }
 
     public function confirmAction()
     {
-        if ($this->showRestoreConfirmation) {
+        if ($this->currentAction === 'restore' && $this->selectedEventId) {
             $this->unarchiveEvent($this->selectedEventId);
-            $this->showRestoreConfirmation = false;
-        } elseif ($this->showDeleteConfirmation) {
-            $this->deleteArchivedEvent($this->selectedEventId);
-            $this->showDeleteConfirmation = false;
+            
+            // Log the restore action
+            $event = Event::find($this->selectedEventId);
+            if ($event) {
+                $this->logActivity('RESTORE', $event,
+                    auth()->user()->first_name . ' ' . auth()->user()->last_name . ' restored event: ' . $event->title);
+            }
+        } elseif ($this->currentAction === 'delete_permanent' && $this->selectedEventId) {
+            $event = Event::find($this->selectedEventId);
+            if ($event) {
+                $eventTitle = $event->title;
+                
+                // Log permanent deletion
+                $this->logActivity('DELETE_PERMANENT', $event,
+                    auth()->user()->first_name . ' ' . auth()->user()->last_name . ' permanently deleted archived event: ' . $eventTitle);
+                
+                $event->delete();
+                session()->flash('success', 'Event "' . $eventTitle . '" deleted permanently!');
+            }
         }
         
+        // Reset the action trackers
+        $this->currentAction = null;
+        $this->currentEventId = null;
         $this->selectedEventId = null;
         $this->selectedEventTitle = '';
+        $this->showRestoreConfirmation = false;
+        $this->showDeleteConfirmation = false;
     }
 
     public function unarchiveEvent($eventId)
@@ -84,12 +118,13 @@ class ArchivedEvents extends Component
             return;
         }
 
-        $event->unarchive();
-
-        // Log the restore activity
-        $this->logActivity('RESTORE', $event);
-
-        session()->flash('success', 'Event unarchived successfully!');
+        if ($event->unarchive()) {
+            // Log the restore activity
+            $this->logActivity('RESTORE', $event);
+            session()->flash('success', 'Event "' . $event->title . '" restored successfully!');
+        } else {
+            session()->flash('error', 'Failed to restore event.');
+        }
     }
 
     public function deleteArchivedEvent($eventId)
@@ -101,22 +136,22 @@ class ArchivedEvents extends Component
             return;
         }
         
-        $eventInfo = $event;
+        $eventTitle = $event->title;
         $event->delete();
         
         // Log permanent deletion
-        $this->logActivity('DELETE_PERMANENT', $eventInfo);
+        $this->logActivity('DELETE_PERMANENT', $eventTitle);
 
-        session()->flash('success', 'Event deleted permanently!');
+        session()->flash('success', 'Event "' . $eventTitle . '" deleted permanently!');
     }
 
-    // Update export method for archived events
     public function exportArchivedEvents()
     {
         $events = $this->getFilteredEventsQuery()->get();
 
-        // Log the export activity
-        $this->logActivity('EXPORT_ARCHIVED');
+        // Log the export action
+        $this->logActivity('EXPORT_ARCHIVED', null,
+            auth()->user()->first_name . ' ' . auth()->user()->last_name . ' exported archived events (' . $events->count() . ' records)');
 
         $this->showExportModal = false;
         
@@ -202,17 +237,26 @@ class ArchivedEvents extends Component
                     $sheet->getStyle($column . '1')->getFont()->setBold(true);
                     $sheet->getStyle($column . '1')->getFill()
                         ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
-                        ->getStartColor()->setARGB('FFE0E0E0');
+                        ->getStartColor()->setARGB('FF1E40AF'); // Blue color
+                    $sheet->getStyle($column . '1')->getFont()->getColor()->setARGB('FFFFFFFF'); // White text
                     $column++;
                 }
                 
                 // Add data
                 $row = 2;
-                foreach ($data as $item) {
+                foreach ($data as $index => $item) {
                     $column = 'A';
                     foreach ($item as $value) {
                         $sheet->setCellValue($column . $row, $value);
                         $column++;
+                    }
+                    
+                    // Alternate row colors
+                    if ($index % 2 === 0) {
+                        $sheet->getStyle('A' . $row . ':' . $column . $row)
+                            ->getFill()
+                            ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                            ->getStartColor()->setARGB('FFF0F9FF'); // Light blue
                     }
                     $row++;
                 }
@@ -223,9 +267,6 @@ class ArchivedEvents extends Component
                     $sheet->getColumnDimension($col)->setAutoSize(true);
                 }
                 
-                // Add some styling
-                $sheet->getStyle('A1:' . $lastColumn . '1')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM);
-                
                 $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
                 $writer->save('php://output');
             }, $filename, $headers);
@@ -234,7 +275,7 @@ class ArchivedEvents extends Component
 
     public function openExportModal()
     {
-        $this->exportFormat = 'xlsx';
+        $this->exportFormat = 'xlsx'; // Reset to default
         $this->showExportModal = true;
     }
 
@@ -243,7 +284,13 @@ class ArchivedEvents extends Component
         $this->showExportModal = false;
     }
 
-    // Add a method to get the query for export (without pagination)
+    public function resetFilters()
+    {
+        $this->reset(['search', 'filterCategory', 'filterType', 'filterPayment', 'sortField', 'sortDirection']);
+        $this->sortField = 'archived_at';
+        $this->sortDirection = 'desc';
+    }
+
     public function getFilteredEventsQuery()
     {
         $userId = Auth::id();
@@ -251,8 +298,10 @@ class ArchivedEvents extends Component
         return Event::where('created_by', $userId)
             ->where('is_archived', true)
             ->when($this->search, function ($query) {
-                $query->where('title', 'like', '%' . $this->search . '%')
-                    ->orWhere('description', 'like', '%' . $this->search . '%');
+                $query->where(function($q) {
+                    $q->where('title', 'like', '%' . $this->search . '%')
+                        ->orWhere('description', 'like', '%' . $this->search . '%');
+                });
             })
             ->when($this->filterType, function ($query) {
                 $query->where('type', $this->filterType);
@@ -269,12 +318,45 @@ class ArchivedEvents extends Component
             })
             ->withCount('registrations')
             ->with('creator')
-            ->orderBy('archived_at', 'desc');
+            ->orderBy($this->sortField, $this->sortDirection);
     }
 
     public function getEventsProperty()
     {
         return $this->getFilteredEventsQuery()->paginate($this->eventsPerPage);
+    }
+
+    // New computed properties for stats
+    public function getThisMonthCountProperty()
+    {
+        $userId = Auth::id();
+        
+        return Event::where('created_by', $userId)
+            ->where('is_archived', true)
+            ->whereMonth('archived_at', Carbon::now()->month)
+            ->whereYear('archived_at', Carbon::now()->year)
+            ->count();
+    }
+
+    public function getTotalRegistrationsProperty()
+    {
+        $userId = Auth::id();
+        
+        return Event::where('created_by', $userId)
+            ->where('is_archived', true)
+            ->withCount('registrations')
+            ->get()
+            ->sum('registrations_count');
+    }
+
+    public function getPaidEventsCountProperty()
+    {
+        $userId = Auth::id();
+        
+        return Event::where('created_by', $userId)
+            ->where('is_archived', true)
+            ->where('require_payment', true)
+            ->count();
     }
 
     public function render()
@@ -285,6 +367,9 @@ class ArchivedEvents extends Component
         return view('livewire.archived-events', [
             'userInitials' => $userInitials,
             'events' => $this->events,
+            'thisMonthCount' => $this->thisMonthCount,
+            'totalRegistrations' => $this->totalRegistrations,
+            'paidEventsCount' => $this->paidEventsCount,
         ])->layout('layouts.app');
     }
 }
