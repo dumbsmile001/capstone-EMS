@@ -11,50 +11,38 @@
         </div>
 
         <!-- Dashboard Content -->
-        <div class="flex-1 p-6 mt-20 lg:mt-24 overflow-y-auto">
+        <div class="flex-1 p-6 mt-20 lg:mt-24 overflow-y-auto overflow-x-hidden w-full max-w-full">
             <!-- Overview Cards -->
             <livewire:dashboard-stats />
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Main Content Area -->
-                <div class="lg:col-span-2 space-y-6">
-                    <!-- Events Section, scrollable -->
-                    <div class="bg-white rounded-lg shadow-md p-6">
-                        <livewire:event-registration />
+            
+            <!-- Main Content Area - Now full width since we removed the old events section -->
+            <div class="space-y-6 mt-6 w-full max-w-full">
+                <!-- Featured Events Carousel - Full width and visually striking -->
+                <div class="w-full max-w-full">
+                    <livewire:event-carousel />
+                </div>
+
+                <!-- Tabbed Tables Section -->
+                <div class="bg-white rounded-lg shadow-md p-6 w-full max-w-full overflow-x-auto" x-data="{ activeTab: 'registrations' }">
+                    <!-- Tabs -->
+                    <div class="border-b border-gray-200 mb-4">
+                        <nav class="flex space-x-4">
+                            <button @click="activeTab = 'registrations'" :class="activeTab === 'registrations' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'" class="px-4 py-2 font-medium text-sm transition-colors">
+                                Registration History
+                            </button>
+                            <button @click="activeTab = 'tickets'" :class="activeTab === 'tickets' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'" class="px-4 py-2 font-medium text-sm transition-colors">
+                                Tickets
+                            </button>
+                        </nav>
                     </div>
 
-                    <!-- Tabbed Tables Section -->
-                    <div class="bg-white rounded-lg shadow-md p-6" x-data="{ activeTab: 'registrations' }">
-                        <!-- In the events section header, update this part: -->
-                        <div class="flex justify-between items-center mb-4">
-                            <h2 class="text-xl font-semibold text-gray-800">Upcoming Events</h2>
-                            <a href="{{ route('student.events') }}" 
-                            class="px-4 py-2 text-sm text-blue-600 hover:text-blue-700 font-medium">
-                                View All Events →
-                            </a>
+                    <!-- Tab Content -->
+                    <div class="overflow-x-auto">
+                        <div x-show="activeTab === 'registrations'" x-transition>
+                            <livewire:registration-history />
                         </div>
-                        
-                        <!-- Tabs -->
-                        <div class="border-b border-gray-200 mb-4">
-                            <nav class="flex space-x-4">
-                                <button @click="activeTab = 'registrations'" :class="activeTab === 'registrations' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'" class="px-4 py-2 font-medium text-sm transition-colors">
-                                    Registration History
-                                </button>
-                                <button @click="activeTab = 'tickets'" :class="activeTab === 'tickets' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'" class="px-4 py-2 font-medium text-sm transition-colors">
-                                    Tickets
-                                </button>
-                            </nav>
-                        </div>
-
-                        <!-- Tab Content -->
-                        <div class="overflow-x-auto">
-                            <!-- Replace the Registration History Table section with: -->
-                            <div x-show="activeTab === 'registrations'" x-transition>
-                                <livewire:registration-history />
-                            </div>
-                            <!-- Tickets Table -->
-                            <div x-show="activeTab === 'tickets'" x-transition>
-                                <livewire:student-tickets />
-                            </div>
+                        <div x-show="activeTab === 'tickets'" x-transition>
+                            <livewire:student-tickets />
                         </div>
                     </div>
                 </div>
