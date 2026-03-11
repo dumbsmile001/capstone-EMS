@@ -3,33 +3,50 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use Livewire\WithPagination;
 use App\Models\Registration;
 use Illuminate\Support\Facades\Auth;
-use App\Services\TicketPdfService;
 
 class StudentTickets extends Component
 {
-    public $tickets;
+    use WithPagination;
+
+    public $search = '';
+    public $filterTicketStatus = '';
+    public $perPage = 10;
     public $showTicketModal = false;
     public $selectedTicket = null;
 
-    public function mount()
+    protected $queryString = [
+        'search' => ['except' => ''],
+        'filterTicketStatus' => ['except' => ''],
+        'perPage' => ['except' => 10],
+    ];
+
+    public function updatingSearch()
     {
-        $this->loadTickets();
+        $this->resetPage();
     }
 
-    public function loadTickets()
+    public function updatingFilterTicketStatus()
     {
-        $this->tickets = Auth::user()->registrations()
-            ->with(['event', 'ticket'])
-            ->whereHas('ticket') // Only show registrations with tickets
-            ->orderBy('registered_at', 'desc')
-            ->get();
+        $this->resetPage();
+    }
+
+    public function updatingPerPage()
+    {
+        $this->resetPage();
+    }
+
+    public function resetFilters()
+    {
+        $this->reset(['search', 'filterTicketStatus', 'perPage']);
+        $this->resetPage();
     }
 
     public function viewTicket($registrationId)
     {
-        $this->selectedTicket = Registration::with(['event', 'ticket'])
+        $this->selectedTicket = Registration::with(['event', 'ticket', 'user'])
             ->where('id', $registrationId)
             ->where('user_id', Auth::id())
             ->first();
@@ -41,41 +58,38 @@ class StudentTickets extends Component
         }
     }
 
-    // In StudentTickets.php component, update the downloadTicket method:
-
-    public function downloadTicket($registrationId)
-    {
-        $registration = Registration::with(['event', 'ticket'])
-            ->where('id', $registrationId)
-            ->where('user_id', Auth::id())
-            ->first();
-
-        if ($registration && $registration->ticket && $registration->ticket->isActive()) {
-            // Redirect to the download route
-            return $this->redirect(route('ticket.download', $registration->ticket->id), navigate: false);
-        } else {
-            session()->flash('error', 'Ticket not found, inactive, or you do not have permission to download it.');
-            return null;
-        }
-    }
-
     public function closeTicketModal()
     {
         $this->showTicketModal = false;
         $this->selectedTicket = null;
     }
 
-    // Helper method to generate PDF (placeholder)
-    private function generateTicketPdf($registration)
-    {
-        // This is where you would generate the PDF content
-        // Example using a blade view:
-        // return view('tickets.pdf', ['registration' => $registration])->render();
-        return "PDF content for ticket: " . $registration->ticket->ticket_number;
-    }
-
     public function render()
     {
-        return view('livewire.student-tickets');
+        $tickets = Auth::user()->registrations()
+            ->with(['event', 'ticket'])
+            ->whereHas('ticket')
+            ->when($this->search, function ($query) {
+                $query->whereHas('event', function ($q) {
+                    $q->where('title', 'like', '%' . $this->search . '%');
+                });
+            })
+            ->when($this->filterTicketStatus, function ($query) {
+                $query->whereHas('ticket', function ($q) {
+                    if ($this->filterTicketStatus === 'active') {
+                        $q->where('status', 'active');
+                    } elseif ($this->filterTicketStatus === 'pending_payment') {
+                        $q->where('status', 'pending_payment');
+                    } elseif ($this->filterTicketStatus === 'used') {
+                        $q->where('status', 'used');
+                    }
+                });
+            })
+            ->orderBy('registered_at', 'desc')
+            ->paginate($this->perPage);
+
+        return view('livewire.student-tickets', [
+            'tickets' => $tickets,
+        ]);
     }
 }
