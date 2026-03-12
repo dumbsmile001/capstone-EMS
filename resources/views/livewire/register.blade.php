@@ -204,6 +204,7 @@
                 </div>
             </div>
 
+            {{-- 
             @if (Laravel\Jetstream\Jetstream::hasTermsAndPrivacyPolicyFeature())
                 <div class="mt-4">
                     <label for="terms" class="flex items-start">
@@ -217,7 +218,7 @@
                     </label>
                     @error('terms') <span class="text-red-600 text-xs sm:text-sm mt-1 block">{{ $message }}</span> @enderror
                 </div>
-            @endif
+            @endif --}}
 
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-end mt-6 gap-3">
                 <a class="underline text-xs sm:text-sm text-blue-600 hover:text-blue-700 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors" href="{{ route('login') }}">
