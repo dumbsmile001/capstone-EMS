@@ -6,12 +6,9 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use Livewire\WithFileUploads;
 
 class UserProfile extends Component
 {
-    use WithFileUploads;
-
     public $user;
     public $first_name;
     public $middle_name;
@@ -35,9 +32,6 @@ class UserProfile extends Component
     public $selectedUserId;
     public $showUserManagement = false;
     
-    // Profile photo
-    public $photo;
-    
     // UI state
     public $activeTab = 'profile'; // profile, security, admin (for admin users)
 
@@ -49,16 +43,6 @@ class UserProfile extends Component
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $this->user->id,
         ];
-
-        // Add student-specific fields if user is a student
-        if ($this->user->isStudent()) {
-            $rules['student_id'] = 'required|string|unique:users,student_id,' . $this->user->id;
-            $rules['grade_level'] = 'nullable|string';
-            $rules['year_level'] = 'nullable|string';
-            $rules['shs_strand'] = 'nullable|string';
-            $rules['college_program'] = 'nullable|string';
-        }
-
         return $rules;
     }
 
@@ -106,10 +90,6 @@ class UserProfile extends Component
             'college_program' => $this->college_program,
         ]);
 
-        if ($this->photo) {
-            $this->user->updateProfilePhoto($this->photo);
-        }
-
         session()->flash('message', 'Profile updated successfully!');
         $this->dispatch('profile-updated');
     }
@@ -149,8 +129,15 @@ class UserProfile extends Component
         $this->selectedRole = $user->getRoleNames()->first() ?? 'student';
     }
 
+    public function getUserInitialsAttribute()
+    {
+        return strtoupper(substr($this->first_name, 0, 1) . substr($this->last_name, 0, 1));
+    }
+
     public function render()
     {
-        return view('livewire.user-profile')->layout('layouts.app');
+        return view('livewire.user-profile', [
+            'userInitials' => $this->getUserInitialsAttribute()
+        ])->layout('layouts.app');
     }
 }
