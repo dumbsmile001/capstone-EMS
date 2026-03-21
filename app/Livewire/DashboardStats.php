@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Event;
 
 class DashboardStats extends Component
 {
@@ -33,15 +34,28 @@ class DashboardStats extends Component
         $today = $now->toDateString();
         $currentTime = $now->format('H:i:s');
 
+        // Get all upcoming events visible to the student (NEW LOGIC)
+        $upcomingEventsCount = Event::where('status', 'published')
+            ->where('is_archived', false)
+            ->where(function($query) use ($today, $currentTime) {
+                // Event is upcoming if start date is in the future, 
+                // or if it's today but start time is in the future
+                $query->where('start_date', '>', $today)
+                    ->orWhere(function($subQuery) use ($today, $currentTime) {
+                        $subQuery->where('start_date', $today)
+                            ->where('start_time', '>', $currentTime);
+                    });
+            })
+            ->get()
+            ->filter(function($event) use ($user) {
+                // Filter events that are visible to this user
+                return $event->isVisibleToUser($user);
+            })
+            ->count();
+
         $this->stats = [
             'my_events' => $registrations->where('status', 'registered')->count(),
-            'upcoming_events' => $registrations->where('status', 'registered')
-                ->filter(function($registration) use ($today, $currentTime) {
-                    $event = $registration->event;
-                    // Event is upcoming if start date is in the future, or if it's today but start time is in the future
-                    return $event->start_date > $today || 
-                           ($event->start_date == $today && $event->start_time > $currentTime);
-                })->count(),
+            'upcoming_events' => $upcomingEventsCount, // Changed to count all visible upcoming events
             'my_tickets' => $ticketsCount,
             'pending_payments' => $pendingPaymentsCount,
         ];
