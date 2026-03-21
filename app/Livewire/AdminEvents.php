@@ -445,7 +445,7 @@ class AdminEvents extends Component
         $this->visible_to_shs_strand = [];
         $this->visible_to_year_level = [];
         $this->visible_to_college_program = [];
-}
+    }
     public function render()
     {
         $user = Auth::user();

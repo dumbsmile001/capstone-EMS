@@ -412,6 +412,15 @@ class OrganizerEvents extends Component
         }
     }
 
+    public function updatedVisibilityType($value)
+    {
+        // Reset all visibility arrays when type changes
+        $this->visible_to_grade_level = [];
+        $this->visible_to_shs_strand = [];
+        $this->visible_to_year_level = [];
+        $this->visible_to_college_program = [];
+    }
+
     public function render()
     {
         $user = Auth::user();

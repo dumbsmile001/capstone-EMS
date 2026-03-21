@@ -235,12 +235,7 @@
 
                             <!-- Active Filters Count (shows when filters are applied) -->
                             @php
-                                $activeFilters = collect([
-                                    $filterType,
-                                    $filterCategory,
-                                    $filterPayment,
-                                    $search,
-                                ])
+                                $activeFilters = collect([$filterType, $filterCategory, $filterPayment, $search])
                                     ->filter()
                                     ->count();
                             @endphp
@@ -282,7 +277,8 @@
                             class="group relative bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden border border-gray-100 hover:border-blue-200 flex flex-col h-[420px]">
                             <!-- Your existing event card code remains exactly the same -->
                             <!-- Clickable wrapper for entire card (except buttons) -->
-                            <div wire:click="openEventDetailsModal({{ $event->id }})" class="cursor-pointer flex-1">
+                            <div wire:click="openEventDetailsModal({{ $event->id }})"
+                                class="cursor-pointer flex-1">
                                 <!-- Banner Image with Gradient Overlay - Fixed height -->
                                 <div class="h-36 overflow-hidden relative">
                                     @if ($event->banner)
@@ -303,23 +299,30 @@
 
                                     <!-- Status Badges -->
                                     <div class="absolute top-2 right-2 flex gap-1">
-                                        @if($event->isCurrentlyOngoing())
-                                            <span class="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-green-100 text-green-800">
+                                        @if ($event->isCurrentlyOngoing())
+                                            <span
+                                                class="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-green-100 text-green-800">
                                                 Ongoing
                                             </span>
                                         @elseif($event->hasEnded())
-                                            <span class="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-gray-100 text-gray-800">
+                                            <span
+                                                class="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-gray-100 text-gray-800">
                                                 Ended
                                             </span>
                                         @else
-                                            <span class="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-blue-100 text-blue-800">
+                                            <span
+                                                class="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-blue-100 text-blue-800">
                                                 Upcoming
                                             </span>
                                         @endif
-                                        
-                                        <span class="px-2 py-0.5 text-[10px] font-semibold rounded-full 
-                                            {{ $event->status === 'published' ? 'bg-green-100 text-green-800' : 
-                                            ($event->status === 'draft' ? 'bg-gray-100 text-gray-800' : 'bg-red-100 text-red-800') }}">
+
+                                        <span
+                                            class="px-2 py-0.5 text-[10px] font-semibold rounded-full 
+                                            {{ $event->status === 'published'
+                                                ? 'bg-green-100 text-green-800'
+                                                : ($event->status === 'draft'
+                                                    ? 'bg-gray-100 text-gray-800'
+                                                    : 'bg-red-100 text-red-800') }}">
                                             {{ ucfirst($event->status) }}
                                         </span>
                                     </div>
@@ -328,7 +331,8 @@
                                     <div class="absolute bottom-2 left-2 flex items-center gap-2">
                                         <div class="bg-white/90 backdrop-blur-sm rounded-lg px-2 py-1 shadow-lg">
                                             <span class="text-[10px] font-semibold text-gray-800">
-                                                {{ $event->start_date->format('M d') }} - {{ $event->end_date->format('M d, Y') }}
+                                                {{ $event->start_date->format('M d') }} -
+                                                {{ $event->end_date->format('M d, Y') }}
                                             </span>
                                         </div>
                                     </div>
@@ -610,62 +614,68 @@
 
                 <!-- Date and Time -->
                 <!-- Replace the old Date & Time section with this new Start & End Date/Time section -->
-<div class="space-y-1.5">
-    <label class="flex items-center space-x-2 text-sm font-semibold text-blue-900">
-        <svg class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-        </svg>
-        <span>Event Schedule</span>
-    </label>
-    
-    <!-- Start Date & Time -->
-    <div class="grid grid-cols-2 gap-3 mb-2">
-        <div class="relative group">
-            <label class="block text-xs text-gray-600 mb-1">Start Date</label>
-            <input type="date" wire:model="start_date"
-                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
-            @error('start_date')
-                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-            @enderror
-        </div>
-        <div class="relative group">
-            <label class="block text-xs text-gray-600 mb-1">Start Time</label>
-            <input type="time" wire:model="start_time"
-                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
-            @error('start_time')
-                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-            @enderror
-        </div>
-    </div>
-    
-    <!-- End Date & Time -->
-    <div class="grid grid-cols-2 gap-3">
-        <div class="relative group">
-            <label class="block text-xs text-gray-600 mb-1">End Date</label>
-            <input type="date" wire:model="end_date" min="{{ $start_date }}"
-                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
-            @error('end_date')
-                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-            @enderror
-        </div>
-        <div class="relative group">
-            <label class="block text-xs text-gray-600 mb-1">End Time</label>
-            <input type="time" wire:model="end_time"
-                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
-            @error('end_time')
-                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-            @enderror
-        </div>
-    </div>
-    
-    <!-- Quick duration presets (optional but helpful) -->
-    <div class="flex gap-2 mt-2">
-        <button type="button" wire:click="setDuration(1)" class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">1 Hour</button>
-        <button type="button" wire:click="setDuration(2)" class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">2 Hours</button>
-        <button type="button" wire:click="setDuration(4)" class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">4 Hours</button>
-        <button type="button" wire:click="setDuration(24)" class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">Full Day</button>
-    </div>
-</div>
+                <div class="space-y-1.5">
+                    <label class="flex items-center space-x-2 text-sm font-semibold text-blue-900">
+                        <svg class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        <span>Event Schedule</span>
+                    </label>
+
+                    <!-- Start Date & Time -->
+                    <div class="grid grid-cols-2 gap-3 mb-2">
+                        <div class="relative group">
+                            <label class="block text-xs text-gray-600 mb-1">Start Date</label>
+                            <input type="date" wire:model="start_date"
+                                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
+                            @error('start_date')
+                                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="relative group">
+                            <label class="block text-xs text-gray-600 mb-1">Start Time</label>
+                            <input type="time" wire:model="start_time"
+                                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
+                            @error('start_time')
+                                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <!-- End Date & Time -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="relative group">
+                            <label class="block text-xs text-gray-600 mb-1">End Date</label>
+                            <input type="date" wire:model="end_date" min="{{ $start_date }}"
+                                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
+                            @error('end_date')
+                                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="relative group">
+                            <label class="block text-xs text-gray-600 mb-1">End Time</label>
+                            <input type="time" wire:model="end_time"
+                                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
+                            @error('end_time')
+                                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <!-- Quick duration presets (optional but helpful) -->
+                    <div class="flex gap-2 mt-2">
+                        <button type="button" wire:click="setDuration(1)"
+                            class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">1 Hour</button>
+                        <button type="button" wire:click="setDuration(2)"
+                            class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">2 Hours</button>
+                        <button type="button" wire:click="setDuration(4)"
+                            class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">4 Hours</button>
+                        <button type="button" wire:click="setDuration(24)"
+                            class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">Full Day</button>
+                    </div>
+                </div>
 
                 <!-- Event Type and Location/Link -->
                 <div class="space-y-1.5">
@@ -732,18 +742,19 @@
                         <select wire:model="visibility_type"
                             class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 hover:border-blue-300">
                             <option value="all">👥 All Students</option>
-                            <option value="grade_level">📋 Grade Levels</option>
+                            <option value="grade_level">📋 Grade Levels (SHS)</option>
                             <option value="shs_strand">🎓 SHS Strands</option>
-                            <option value="year_level">📚 Year Levels</option>
+                            <option value="year_level">📚 Year Levels (College)</option>
                             <option value="college_program">🏫 College Programs</option>
                         </select>
                     </div>
                 </div>
 
-                <!-- Dynamic Visibility Options -->
+                <!-- Dynamic Visibility Options - Each section appears only when its type is selected -->
+                <!-- Grade Level Options (SHS) -->
                 @if ($visibility_type === 'grade_level')
                     <div class="p-4 bg-blue-50 rounded-xl border-2 border-blue-100 animate-fadeIn">
-                        <label class="block text-sm font-semibold text-blue-900 mb-3">Select Grade Levels</label>
+                        <label class="block text-sm font-semibold text-blue-900 mb-3">Select Grade Levels (SHS)</label>
                         <div class="flex space-x-6">
                             <label class="flex items-center space-x-2 cursor-pointer group">
                                 <input type="checkbox" wire:model="visible_to_grade_level" value="11"
@@ -756,10 +767,86 @@
                                 <span class="text-sm text-gray-700 group-hover:text-blue-600">Grade 12</span>
                             </label>
                         </div>
+                        @error('visible_to_grade_level')
+                            <span class="text-red-500 text-xs mt-2 block">{{ $message }}</span>
+                        @enderror
+                        <p class="text-xs text-gray-500 mt-2">Only selected grade levels will see this event.</p>
                     </div>
                 @endif
 
-                <!-- Similar for other visibility types... (keeping them similar style) -->
+                <!-- SHS Strand Options -->
+                @if ($visibility_type === 'shs_strand')
+                    <div class="p-4 bg-purple-50 rounded-xl border-2 border-purple-100 animate-fadeIn">
+                        <label class="block text-sm font-semibold text-purple-900 mb-3">Select SHS Strands</label>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            @php
+                                $strands = ['ABM', 'HUMSS', 'GAS', 'ICT'];
+                            @endphp
+                            @foreach ($strands as $strand)
+                                <label class="flex items-center space-x-2 cursor-pointer group">
+                                    <input type="checkbox" wire:model="visible_to_shs_strand"
+                                        value="{{ $strand }}"
+                                        class="w-5 h-5 text-yellow-500 border-2 border-gray-300 rounded-lg focus:ring-yellow-400 focus:ring-2 transition-all group-hover:border-purple-400">
+                                    <span
+                                        class="text-sm text-gray-700 group-hover:text-purple-600">{{ $strand }}</span>
+                                </label>
+                            @endforeach
+                        </div>
+                        @error('visible_to_shs_strand')
+                            <span class="text-red-500 text-xs mt-2 block">{{ $message }}</span>
+                        @enderror
+                        <p class="text-xs text-gray-500 mt-2">Only selected SHS strands will see this event.</p>
+                    </div>
+                @endif
+
+                <!-- Year Level Options (College) -->
+                @if ($visibility_type === 'year_level')
+                    <div class="p-4 bg-green-50 rounded-xl border-2 border-green-100 animate-fadeIn">
+                        <label class="block text-sm font-semibold text-green-900 mb-3">Select Year Levels
+                            (College)</label>
+                        <div class="flex space-x-6">
+                            @for ($i = 1; $i <= 4; $i++)
+                                <label class="flex items-center space-x-2 cursor-pointer group">
+                                    <input type="checkbox" wire:model="visible_to_year_level"
+                                        value="{{ $i }}"
+                                        class="w-5 h-5 text-yellow-500 border-2 border-gray-300 rounded-lg focus:ring-yellow-400 focus:ring-2 transition-all group-hover:border-green-400">
+                                    <span
+                                        class="text-sm text-gray-700 group-hover:text-green-600">{{ $i == 1 ? '1st' : ($i == 2 ? '2nd' : ($i == 3 ? '3rd' : '4th')) }}
+                                        Year</span>
+                                </label>
+                            @endfor
+                        </div>
+                        @error('visible_to_year_level')
+                            <span class="text-red-500 text-xs mt-2 block">{{ $message }}</span>
+                        @enderror
+                        <p class="text-xs text-gray-500 mt-2">Only selected year levels will see this event.</p>
+                    </div>
+                @endif
+
+                <!-- College Program Options -->
+                @if ($visibility_type === 'college_program')
+                    <div class="p-4 bg-orange-50 rounded-xl border-2 border-orange-100 animate-fadeIn">
+                        <label class="block text-sm font-semibold text-orange-900 mb-3">Select College Programs</label>
+                        <div class="flex space-x-6">
+                            @php
+                                $programs = ['BSIT', 'BSBA'];
+                            @endphp
+                            @foreach ($programs as $program)
+                                <label class="flex items-center space-x-2 cursor-pointer group">
+                                    <input type="checkbox" wire:model="visible_to_college_program"
+                                        value="{{ $program }}"
+                                        class="w-5 h-5 text-yellow-500 border-2 border-gray-300 rounded-lg focus:ring-yellow-400 focus:ring-2 transition-all group-hover:border-orange-400">
+                                    <span
+                                        class="text-sm text-gray-700 group-hover:text-orange-600">{{ $program }}</span>
+                                </label>
+                            @endforeach
+                        </div>
+                        @error('visible_to_college_program')
+                            <span class="text-red-500 text-xs mt-2 block">{{ $message }}</span>
+                        @enderror
+                        <p class="text-xs text-gray-500 mt-2">Only selected college programs will see this event.</p>
+                    </div>
+                @endif
 
                 <!-- Description -->
                 <div class="space-y-1.5">
@@ -921,62 +1008,68 @@
 
                 <!-- Date and Time -->
                 <!-- Replace the old Date & Time section with this new Start & End Date/Time section -->
-<div class="space-y-1.5">
-    <label class="flex items-center space-x-2 text-sm font-semibold text-blue-900">
-        <svg class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-        </svg>
-        <span>Event Schedule</span>
-    </label>
-    
-    <!-- Start Date & Time -->
-    <div class="grid grid-cols-2 gap-3 mb-2">
-        <div class="relative group">
-            <label class="block text-xs text-gray-600 mb-1">Start Date</label>
-            <input type="date" wire:model="start_date"
-                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
-            @error('start_date')
-                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-            @enderror
-        </div>
-        <div class="relative group">
-            <label class="block text-xs text-gray-600 mb-1">Start Time</label>
-            <input type="time" wire:model="start_time"
-                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
-            @error('start_time')
-                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-            @enderror
-        </div>
-    </div>
-    
-    <!-- End Date & Time -->
-    <div class="grid grid-cols-2 gap-3">
-        <div class="relative group">
-            <label class="block text-xs text-gray-600 mb-1">End Date</label>
-            <input type="date" wire:model="end_date" min="{{ $start_date }}"
-                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
-            @error('end_date')
-                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-            @enderror
-        </div>
-        <div class="relative group">
-            <label class="block text-xs text-gray-600 mb-1">End Time</label>
-            <input type="time" wire:model="end_time"
-                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
-            @error('end_time')
-                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-            @enderror
-        </div>
-    </div>
-    
-    <!-- Quick duration presets (optional but helpful) -->
-    <div class="flex gap-2 mt-2">
-        <button type="button" wire:click="setDuration(1)" class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">1 Hour</button>
-        <button type="button" wire:click="setDuration(2)" class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">2 Hours</button>
-        <button type="button" wire:click="setDuration(4)" class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">4 Hours</button>
-        <button type="button" wire:click="setDuration(24)" class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">Full Day</button>
-    </div>
-</div>
+                <div class="space-y-1.5">
+                    <label class="flex items-center space-x-2 text-sm font-semibold text-blue-900">
+                        <svg class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        <span>Event Schedule</span>
+                    </label>
+
+                    <!-- Start Date & Time -->
+                    <div class="grid grid-cols-2 gap-3 mb-2">
+                        <div class="relative group">
+                            <label class="block text-xs text-gray-600 mb-1">Start Date</label>
+                            <input type="date" wire:model="start_date"
+                                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
+                            @error('start_date')
+                                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="relative group">
+                            <label class="block text-xs text-gray-600 mb-1">Start Time</label>
+                            <input type="time" wire:model="start_time"
+                                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
+                            @error('start_time')
+                                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <!-- End Date & Time -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="relative group">
+                            <label class="block text-xs text-gray-600 mb-1">End Date</label>
+                            <input type="date" wire:model="end_date" min="{{ $start_date }}"
+                                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
+                            @error('end_date')
+                                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="relative group">
+                            <label class="block text-xs text-gray-600 mb-1">End Time</label>
+                            <input type="time" wire:model="end_time"
+                                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
+                            @error('end_time')
+                                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <!-- Quick duration presets (optional but helpful) -->
+                    <div class="flex gap-2 mt-2">
+                        <button type="button" wire:click="setDuration(1)"
+                            class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">1 Hour</button>
+                        <button type="button" wire:click="setDuration(2)"
+                            class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">2 Hours</button>
+                        <button type="button" wire:click="setDuration(4)"
+                            class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">4 Hours</button>
+                        <button type="button" wire:click="setDuration(24)"
+                            class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">Full Day</button>
+                    </div>
+                </div>
 
                 <!-- Event Type and Location/Link -->
                 <div class="space-y-1.5">
@@ -1043,18 +1136,19 @@
                         <select wire:model="visibility_type"
                             class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 hover:border-blue-300">
                             <option value="all">👥 All Students</option>
-                            <option value="grade_level">📋 Grade Levels</option>
+                            <option value="grade_level">📋 Grade Levels (SHS)</option>
                             <option value="shs_strand">🎓 SHS Strands</option>
-                            <option value="year_level">📚 Year Levels</option>
+                            <option value="year_level">📚 Year Levels (College)</option>
                             <option value="college_program">🏫 College Programs</option>
                         </select>
                     </div>
                 </div>
 
-                <!-- Dynamic Visibility Options -->
+                <!-- Dynamic Visibility Options - Each section appears only when its type is selected -->
+                <!-- Grade Level Options (SHS) -->
                 @if ($visibility_type === 'grade_level')
                     <div class="p-4 bg-blue-50 rounded-xl border-2 border-blue-100 animate-fadeIn">
-                        <label class="block text-sm font-semibold text-blue-900 mb-3">Select Grade Levels</label>
+                        <label class="block text-sm font-semibold text-blue-900 mb-3">Select Grade Levels (SHS)</label>
                         <div class="flex space-x-6">
                             <label class="flex items-center space-x-2 cursor-pointer group">
                                 <input type="checkbox" wire:model="visible_to_grade_level" value="11"
@@ -1067,10 +1161,86 @@
                                 <span class="text-sm text-gray-700 group-hover:text-blue-600">Grade 12</span>
                             </label>
                         </div>
+                        @error('visible_to_grade_level')
+                            <span class="text-red-500 text-xs mt-2 block">{{ $message }}</span>
+                        @enderror
+                        <p class="text-xs text-gray-500 mt-2">Only selected grade levels will see this event.</p>
                     </div>
                 @endif
 
-                <!-- Similar for other visibility types... (keeping them similar style) -->
+                <!-- SHS Strand Options -->
+                @if ($visibility_type === 'shs_strand')
+                    <div class="p-4 bg-purple-50 rounded-xl border-2 border-purple-100 animate-fadeIn">
+                        <label class="block text-sm font-semibold text-purple-900 mb-3">Select SHS Strands</label>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            @php
+                                $strands = ['ABM', 'HUMSS', 'GAS', 'ICT'];
+                            @endphp
+                            @foreach ($strands as $strand)
+                                <label class="flex items-center space-x-2 cursor-pointer group">
+                                    <input type="checkbox" wire:model="visible_to_shs_strand"
+                                        value="{{ $strand }}"
+                                        class="w-5 h-5 text-yellow-500 border-2 border-gray-300 rounded-lg focus:ring-yellow-400 focus:ring-2 transition-all group-hover:border-purple-400">
+                                    <span
+                                        class="text-sm text-gray-700 group-hover:text-purple-600">{{ $strand }}</span>
+                                </label>
+                            @endforeach
+                        </div>
+                        @error('visible_to_shs_strand')
+                            <span class="text-red-500 text-xs mt-2 block">{{ $message }}</span>
+                        @enderror
+                        <p class="text-xs text-gray-500 mt-2">Only selected SHS strands will see this event.</p>
+                    </div>
+                @endif
+
+                <!-- Year Level Options (College) -->
+                @if ($visibility_type === 'year_level')
+                    <div class="p-4 bg-green-50 rounded-xl border-2 border-green-100 animate-fadeIn">
+                        <label class="block text-sm font-semibold text-green-900 mb-3">Select Year Levels
+                            (College)</label>
+                        <div class="flex space-x-6">
+                            @for ($i = 1; $i <= 4; $i++)
+                                <label class="flex items-center space-x-2 cursor-pointer group">
+                                    <input type="checkbox" wire:model="visible_to_year_level"
+                                        value="{{ $i }}"
+                                        class="w-5 h-5 text-yellow-500 border-2 border-gray-300 rounded-lg focus:ring-yellow-400 focus:ring-2 transition-all group-hover:border-green-400">
+                                    <span
+                                        class="text-sm text-gray-700 group-hover:text-green-600">{{ $i == 1 ? '1st' : ($i == 2 ? '2nd' : ($i == 3 ? '3rd' : '4th')) }}
+                                        Year</span>
+                                </label>
+                            @endfor
+                        </div>
+                        @error('visible_to_year_level')
+                            <span class="text-red-500 text-xs mt-2 block">{{ $message }}</span>
+                        @enderror
+                        <p class="text-xs text-gray-500 mt-2">Only selected year levels will see this event.</p>
+                    </div>
+                @endif
+
+                <!-- College Program Options -->
+                @if ($visibility_type === 'college_program')
+                    <div class="p-4 bg-orange-50 rounded-xl border-2 border-orange-100 animate-fadeIn">
+                        <label class="block text-sm font-semibold text-orange-900 mb-3">Select College Programs</label>
+                        <div class="flex space-x-6">
+                            @php
+                                $programs = ['BSIT', 'BSBA'];
+                            @endphp
+                            @foreach ($programs as $program)
+                                <label class="flex items-center space-x-2 cursor-pointer group">
+                                    <input type="checkbox" wire:model="visible_to_college_program"
+                                        value="{{ $program }}"
+                                        class="w-5 h-5 text-yellow-500 border-2 border-gray-300 rounded-lg focus:ring-yellow-400 focus:ring-2 transition-all group-hover:border-orange-400">
+                                    <span
+                                        class="text-sm text-gray-700 group-hover:text-orange-600">{{ $program }}</span>
+                                </label>
+                            @endforeach
+                        </div>
+                        @error('visible_to_college_program')
+                            <span class="text-red-500 text-xs mt-2 block">{{ $message }}</span>
+                        @enderror
+                        <p class="text-xs text-gray-500 mt-2">Only selected college programs will see this event.</p>
+                    </div>
+                @endif
 
                 <!-- Description -->
                 <div class="space-y-1.5">
@@ -1253,7 +1423,8 @@
                             </div>
                             <div>
                                 <p class="text-xs text-gray-500">Start Date</p>
-                                <p class="font-semibold text-gray-800">{{ \Carbon\Carbon::parse($selectedEvent->start_date)->format('F j, Y') }}</p>
+                                <p class="font-semibold text-gray-800">
+                                    {{ \Carbon\Carbon::parse($selectedEvent->start_date)->format('F j, Y') }}</p>
                             </div>
                         </div>
                     </div>
@@ -1271,7 +1442,8 @@
                             </div>
                             <div>
                                 <p class="text-xs text-gray-500">End Date</p>
-                                <p class="font-semibold text-gray-800">{{ \Carbon\Carbon::parse($selectedEvent->end_date)->format('F j, Y') }}</p>
+                                <p class="font-semibold text-gray-800">
+                                    {{ \Carbon\Carbon::parse($selectedEvent->end_date)->format('F j, Y') }}</p>
                             </div>
                         </div>
                     </div>
@@ -1375,18 +1547,76 @@
                         </div>
                     </div>
 
-                    <!-- Visibility -->
+                    <!-- Enhanced Visibility Section in Event Details Modal -->
                     <div class="col-span-2 bg-white p-4 rounded-xl border border-gray-200">
-                        <p class="text-xs text-gray-500 mb-2">Visibility</p>
-                        <div class="flex items-center space-x-2">
+                        <p class="text-xs text-gray-500 mb-2">Visibility Settings</p>
+                        <div class="space-y-2">
                             @if ($selectedEvent->visibility_type === 'all')
                                 <span
-                                    class="px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-sm font-medium">🌍
-                                    Visible to all students</span>
-                            @else
-                                <span
-                                    class="px-3 py-1.5 bg-yellow-100 text-yellow-700 rounded-full text-sm font-medium">🔒
-                                    Restricted access</span>
+                                    class="inline-flex items-center px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-sm font-medium">
+                                    🌍 Visible to all students
+                                </span>
+                            @elseif ($selectedEvent->visibility_type === 'grade_level')
+                                <div>
+                                    <span
+                                        class="inline-flex items-center px-3 py-1.5 bg-blue-100 text-blue-700 rounded-full text-sm font-medium mb-2">
+                                        📋 Grade Levels
+                                    </span>
+                                    <div class="flex flex-wrap gap-2 mt-2">
+                                        @foreach ($selectedEvent->visible_to_grade_level ?? [] as $grade)
+                                            <span
+                                                class="px-2 py-1 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">
+                                                Grade {{ $grade }}
+                                            </span>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @elseif ($selectedEvent->visibility_type === 'shs_strand')
+                                <div>
+                                    <span
+                                        class="inline-flex items-center px-3 py-1.5 bg-purple-100 text-purple-700 rounded-full text-sm font-medium mb-2">
+                                        🎓 SHS Strands
+                                    </span>
+                                    <div class="flex flex-wrap gap-2 mt-2">
+                                        @foreach ($selectedEvent->visible_to_shs_strand ?? [] as $strand)
+                                            <span
+                                                class="px-2 py-1 bg-purple-50 text-purple-600 rounded-lg text-xs font-medium">
+                                                {{ $strand }}
+                                            </span>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @elseif ($selectedEvent->visibility_type === 'year_level')
+                                <div>
+                                    <span
+                                        class="inline-flex items-center px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-sm font-medium mb-2">
+                                        📚 Year Levels
+                                    </span>
+                                    <div class="flex flex-wrap gap-2 mt-2">
+                                        @foreach ($selectedEvent->visible_to_year_level ?? [] as $year)
+                                            <span
+                                                class="px-2 py-1 bg-green-50 text-green-600 rounded-lg text-xs font-medium">
+                                                {{ $year == 1 ? '1st' : ($year == 2 ? '2nd' : ($year == 3 ? '3rd' : '4th')) }}
+                                                Year
+                                            </span>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @elseif ($selectedEvent->visibility_type === 'college_program')
+                                <div>
+                                    <span
+                                        class="inline-flex items-center px-3 py-1.5 bg-orange-100 text-orange-700 rounded-full text-sm font-medium mb-2">
+                                        🏫 College Programs
+                                    </span>
+                                    <div class="flex flex-wrap gap-2 mt-2">
+                                        @foreach ($selectedEvent->visible_to_college_program ?? [] as $program)
+                                            <span
+                                                class="px-2 py-1 bg-orange-50 text-orange-600 rounded-lg text-xs font-medium">
+                                                {{ $program }}
+                                            </span>
+                                        @endforeach
+                                    </div>
+                                </div>
                             @endif
                         </div>
                     </div>
@@ -1481,10 +1711,11 @@
                         <!-- Update the delete modal date display (around line 670-680) -->
                         <div class="flex-1 min-w-0">
                             <p class="text-sm font-medium text-gray-900 truncate">
-                                {{ $deletingEvent->start_date->format('M d') }} - {{ $deletingEvent->end_date->format('M d, Y') }}
+                                {{ $deletingEvent->start_date->format('M d') }} -
+                                {{ $deletingEvent->end_date->format('M d, Y') }}
                             </p>
                             <p class="text-xs text-gray-500">
-                                {{ \Carbon\Carbon::parse($deletingEvent->start_time)->format('g:i A') }} - 
+                                {{ \Carbon\Carbon::parse($deletingEvent->start_time)->format('g:i A') }} -
                                 {{ \Carbon\Carbon::parse($deletingEvent->end_time)->format('g:i A') }}
                             </p>
                             <p class="text-xs text-gray-500">
@@ -1527,7 +1758,8 @@
             <!-- Archive Icon -->
             <div class="flex justify-center">
                 <div class="p-4 bg-orange-100 rounded-full">
-                    <svg class="w-12 h-12 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-12 h-12 text-orange-600" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
                     </svg>
