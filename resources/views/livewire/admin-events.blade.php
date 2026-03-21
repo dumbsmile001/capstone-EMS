@@ -794,18 +794,19 @@
                         <select wire:model="visibility_type"
                             class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 hover:border-blue-300">
                             <option value="all">👥 All Students</option>
-                            <option value="grade_level">📋 Grade Levels</option>
+                            <option value="grade_level">📋 Grade Levels (SHS)</option>
                             <option value="shs_strand">🎓 SHS Strands</option>
-                            <option value="year_level">📚 Year Levels</option>
+                            <option value="year_level">📚 Year Levels (College)</option>
                             <option value="college_program">🏫 College Programs</option>
                         </select>
                     </div>
                 </div>
 
-                <!-- Dynamic Visibility Options -->
+                <!-- Dynamic Visibility Options - Each section appears only when its type is selected -->
+                <!-- Grade Level Options (SHS) -->
                 @if ($visibility_type === 'grade_level')
                     <div class="p-4 bg-blue-50 rounded-xl border-2 border-blue-100 animate-fadeIn">
-                        <label class="block text-sm font-semibold text-blue-900 mb-3">Select Grade Levels</label>
+                        <label class="block text-sm font-semibold text-blue-900 mb-3">Select Grade Levels (SHS)</label>
                         <div class="flex space-x-6">
                             <label class="flex items-center space-x-2 cursor-pointer group">
                                 <input type="checkbox" wire:model="visible_to_grade_level" value="11"
@@ -818,10 +819,86 @@
                                 <span class="text-sm text-gray-700 group-hover:text-blue-600">Grade 12</span>
                             </label>
                         </div>
+                        @error('visible_to_grade_level')
+                            <span class="text-red-500 text-xs mt-2 block">{{ $message }}</span>
+                        @enderror
+                        <p class="text-xs text-gray-500 mt-2">Only selected grade levels will see this event.</p>
                     </div>
                 @endif
 
-                <!-- Similar for other visibility types... (keeping them similar style) -->
+                <!-- SHS Strand Options -->
+                @if ($visibility_type === 'shs_strand')
+                    <div class="p-4 bg-purple-50 rounded-xl border-2 border-purple-100 animate-fadeIn">
+                        <label class="block text-sm font-semibold text-purple-900 mb-3">Select SHS Strands</label>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            @php
+                                $strands = ['ABM', 'HUMSS', 'GAS', 'ICT'];
+                            @endphp
+                            @foreach ($strands as $strand)
+                                <label class="flex items-center space-x-2 cursor-pointer group">
+                                    <input type="checkbox" wire:model="visible_to_shs_strand"
+                                        value="{{ $strand }}"
+                                        class="w-5 h-5 text-yellow-500 border-2 border-gray-300 rounded-lg focus:ring-yellow-400 focus:ring-2 transition-all group-hover:border-purple-400">
+                                    <span
+                                        class="text-sm text-gray-700 group-hover:text-purple-600">{{ $strand }}</span>
+                                </label>
+                            @endforeach
+                        </div>
+                        @error('visible_to_shs_strand')
+                            <span class="text-red-500 text-xs mt-2 block">{{ $message }}</span>
+                        @enderror
+                        <p class="text-xs text-gray-500 mt-2">Only selected SHS strands will see this event.</p>
+                    </div>
+                @endif
+
+                <!-- Year Level Options (College) -->
+                @if ($visibility_type === 'year_level')
+                    <div class="p-4 bg-green-50 rounded-xl border-2 border-green-100 animate-fadeIn">
+                        <label class="block text-sm font-semibold text-green-900 mb-3">Select Year Levels
+                            (College)</label>
+                        <div class="flex space-x-6">
+                            @for ($i = 1; $i <= 4; $i++)
+                                <label class="flex items-center space-x-2 cursor-pointer group">
+                                    <input type="checkbox" wire:model="visible_to_year_level"
+                                        value="{{ $i }}"
+                                        class="w-5 h-5 text-yellow-500 border-2 border-gray-300 rounded-lg focus:ring-yellow-400 focus:ring-2 transition-all group-hover:border-green-400">
+                                    <span
+                                        class="text-sm text-gray-700 group-hover:text-green-600">{{ $i == 1 ? '1st' : ($i == 2 ? '2nd' : ($i == 3 ? '3rd' : '4th')) }}
+                                        Year</span>
+                                </label>
+                            @endfor
+                        </div>
+                        @error('visible_to_year_level')
+                            <span class="text-red-500 text-xs mt-2 block">{{ $message }}</span>
+                        @enderror
+                        <p class="text-xs text-gray-500 mt-2">Only selected year levels will see this event.</p>
+                    </div>
+                @endif
+
+                <!-- College Program Options -->
+                @if ($visibility_type === 'college_program')
+                    <div class="p-4 bg-orange-50 rounded-xl border-2 border-orange-100 animate-fadeIn">
+                        <label class="block text-sm font-semibold text-orange-900 mb-3">Select College Programs</label>
+                        <div class="flex space-x-6">
+                            @php
+                                $programs = ['BSIT', 'BSBA'];
+                            @endphp
+                            @foreach ($programs as $program)
+                                <label class="flex items-center space-x-2 cursor-pointer group">
+                                    <input type="checkbox" wire:model="visible_to_college_program"
+                                        value="{{ $program }}"
+                                        class="w-5 h-5 text-yellow-500 border-2 border-gray-300 rounded-lg focus:ring-yellow-400 focus:ring-2 transition-all group-hover:border-orange-400">
+                                    <span
+                                        class="text-sm text-gray-700 group-hover:text-orange-600">{{ $program }}</span>
+                                </label>
+                            @endforeach
+                        </div>
+                        @error('visible_to_college_program')
+                            <span class="text-red-500 text-xs mt-2 block">{{ $message }}</span>
+                        @enderror
+                        <p class="text-xs text-gray-500 mt-2">Only selected college programs will see this event.</p>
+                    </div>
+                @endif
 
                 <!-- Description -->
                 <div class="space-y-1.5">
@@ -1074,18 +1151,19 @@
                         <select wire:model="visibility_type"
                             class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 hover:border-blue-300">
                             <option value="all">👥 All Students</option>
-                            <option value="grade_level">📋 Grade Levels</option>
+                            <option value="grade_level">📋 Grade Levels (SHS)</option>
                             <option value="shs_strand">🎓 SHS Strands</option>
-                            <option value="year_level">📚 Year Levels</option>
+                            <option value="year_level">📚 Year Levels (College)</option>
                             <option value="college_program">🏫 College Programs</option>
                         </select>
                     </div>
                 </div>
 
-                <!-- Dynamic Visibility Options -->
+                <!-- Dynamic Visibility Options - Each section appears only when its type is selected -->
+                <!-- Grade Level Options (SHS) -->
                 @if ($visibility_type === 'grade_level')
                     <div class="p-4 bg-blue-50 rounded-xl border-2 border-blue-100 animate-fadeIn">
-                        <label class="block text-sm font-semibold text-blue-900 mb-3">Select Grade Levels</label>
+                        <label class="block text-sm font-semibold text-blue-900 mb-3">Select Grade Levels (SHS)</label>
                         <div class="flex space-x-6">
                             <label class="flex items-center space-x-2 cursor-pointer group">
                                 <input type="checkbox" wire:model="visible_to_grade_level" value="11"
@@ -1098,10 +1176,86 @@
                                 <span class="text-sm text-gray-700 group-hover:text-blue-600">Grade 12</span>
                             </label>
                         </div>
+                        @error('visible_to_grade_level')
+                            <span class="text-red-500 text-xs mt-2 block">{{ $message }}</span>
+                        @enderror
+                        <p class="text-xs text-gray-500 mt-2">Only selected grade levels will see this event.</p>
                     </div>
                 @endif
 
-                <!-- Similar for other visibility types... (keeping them similar style) -->
+                <!-- SHS Strand Options -->
+                @if ($visibility_type === 'shs_strand')
+                    <div class="p-4 bg-purple-50 rounded-xl border-2 border-purple-100 animate-fadeIn">
+                        <label class="block text-sm font-semibold text-purple-900 mb-3">Select SHS Strands</label>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            @php
+                                $strands = ['ABM', 'HUMSS', 'GAS', 'ICT'];
+                            @endphp
+                            @foreach ($strands as $strand)
+                                <label class="flex items-center space-x-2 cursor-pointer group">
+                                    <input type="checkbox" wire:model="visible_to_shs_strand"
+                                        value="{{ $strand }}"
+                                        class="w-5 h-5 text-yellow-500 border-2 border-gray-300 rounded-lg focus:ring-yellow-400 focus:ring-2 transition-all group-hover:border-purple-400">
+                                    <span
+                                        class="text-sm text-gray-700 group-hover:text-purple-600">{{ $strand }}</span>
+                                </label>
+                            @endforeach
+                        </div>
+                        @error('visible_to_shs_strand')
+                            <span class="text-red-500 text-xs mt-2 block">{{ $message }}</span>
+                        @enderror
+                        <p class="text-xs text-gray-500 mt-2">Only selected SHS strands will see this event.</p>
+                    </div>
+                @endif
+
+                <!-- Year Level Options (College) -->
+                @if ($visibility_type === 'year_level')
+                    <div class="p-4 bg-green-50 rounded-xl border-2 border-green-100 animate-fadeIn">
+                        <label class="block text-sm font-semibold text-green-900 mb-3">Select Year Levels
+                            (College)</label>
+                        <div class="flex space-x-6">
+                            @for ($i = 1; $i <= 4; $i++)
+                                <label class="flex items-center space-x-2 cursor-pointer group">
+                                    <input type="checkbox" wire:model="visible_to_year_level"
+                                        value="{{ $i }}"
+                                        class="w-5 h-5 text-yellow-500 border-2 border-gray-300 rounded-lg focus:ring-yellow-400 focus:ring-2 transition-all group-hover:border-green-400">
+                                    <span
+                                        class="text-sm text-gray-700 group-hover:text-green-600">{{ $i == 1 ? '1st' : ($i == 2 ? '2nd' : ($i == 3 ? '3rd' : '4th')) }}
+                                        Year</span>
+                                </label>
+                            @endfor
+                        </div>
+                        @error('visible_to_year_level')
+                            <span class="text-red-500 text-xs mt-2 block">{{ $message }}</span>
+                        @enderror
+                        <p class="text-xs text-gray-500 mt-2">Only selected year levels will see this event.</p>
+                    </div>
+                @endif
+
+                <!-- College Program Options -->
+                @if ($visibility_type === 'college_program')
+                    <div class="p-4 bg-orange-50 rounded-xl border-2 border-orange-100 animate-fadeIn">
+                        <label class="block text-sm font-semibold text-orange-900 mb-3">Select College Programs</label>
+                        <div class="flex space-x-6">
+                            @php
+                                $programs = ['BSIT', 'BSBA'];
+                            @endphp
+                            @foreach ($programs as $program)
+                                <label class="flex items-center space-x-2 cursor-pointer group">
+                                    <input type="checkbox" wire:model="visible_to_college_program"
+                                        value="{{ $program }}"
+                                        class="w-5 h-5 text-yellow-500 border-2 border-gray-300 rounded-lg focus:ring-yellow-400 focus:ring-2 transition-all group-hover:border-orange-400">
+                                    <span
+                                        class="text-sm text-gray-700 group-hover:text-orange-600">{{ $program }}</span>
+                                </label>
+                            @endforeach
+                        </div>
+                        @error('visible_to_college_program')
+                            <span class="text-red-500 text-xs mt-2 block">{{ $message }}</span>
+                        @enderror
+                        <p class="text-xs text-gray-500 mt-2">Only selected college programs will see this event.</p>
+                    </div>
+                @endif
 
                 <!-- Description -->
                 <div class="space-y-1.5">
@@ -1408,18 +1562,76 @@
                         </div>
                     </div>
 
-                    <!-- Visibility -->
+                    <!-- Enhanced Visibility Section in Event Details Modal -->
                     <div class="col-span-2 bg-white p-4 rounded-xl border border-gray-200">
-                        <p class="text-xs text-gray-500 mb-2">Visibility</p>
-                        <div class="flex items-center space-x-2">
+                        <p class="text-xs text-gray-500 mb-2">Visibility Settings</p>
+                        <div class="space-y-2">
                             @if ($selectedEvent->visibility_type === 'all')
                                 <span
-                                    class="px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-sm font-medium">🌍
-                                    Visible to all students</span>
-                            @else
-                                <span
-                                    class="px-3 py-1.5 bg-yellow-100 text-yellow-700 rounded-full text-sm font-medium">🔒
-                                    Restricted access</span>
+                                    class="inline-flex items-center px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-sm font-medium">
+                                    🌍 Visible to all students
+                                </span>
+                            @elseif ($selectedEvent->visibility_type === 'grade_level')
+                                <div>
+                                    <span
+                                        class="inline-flex items-center px-3 py-1.5 bg-blue-100 text-blue-700 rounded-full text-sm font-medium mb-2">
+                                        📋 Grade Levels
+                                    </span>
+                                    <div class="flex flex-wrap gap-2 mt-2">
+                                        @foreach ($selectedEvent->visible_to_grade_level ?? [] as $grade)
+                                            <span
+                                                class="px-2 py-1 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">
+                                                Grade {{ $grade }}
+                                            </span>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @elseif ($selectedEvent->visibility_type === 'shs_strand')
+                                <div>
+                                    <span
+                                        class="inline-flex items-center px-3 py-1.5 bg-purple-100 text-purple-700 rounded-full text-sm font-medium mb-2">
+                                        🎓 SHS Strands
+                                    </span>
+                                    <div class="flex flex-wrap gap-2 mt-2">
+                                        @foreach ($selectedEvent->visible_to_shs_strand ?? [] as $strand)
+                                            <span
+                                                class="px-2 py-1 bg-purple-50 text-purple-600 rounded-lg text-xs font-medium">
+                                                {{ $strand }}
+                                            </span>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @elseif ($selectedEvent->visibility_type === 'year_level')
+                                <div>
+                                    <span
+                                        class="inline-flex items-center px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-sm font-medium mb-2">
+                                        📚 Year Levels
+                                    </span>
+                                    <div class="flex flex-wrap gap-2 mt-2">
+                                        @foreach ($selectedEvent->visible_to_year_level ?? [] as $year)
+                                            <span
+                                                class="px-2 py-1 bg-green-50 text-green-600 rounded-lg text-xs font-medium">
+                                                {{ $year == 1 ? '1st' : ($year == 2 ? '2nd' : ($year == 3 ? '3rd' : '4th')) }}
+                                                Year
+                                            </span>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @elseif ($selectedEvent->visibility_type === 'college_program')
+                                <div>
+                                    <span
+                                        class="inline-flex items-center px-3 py-1.5 bg-orange-100 text-orange-700 rounded-full text-sm font-medium mb-2">
+                                        🏫 College Programs
+                                    </span>
+                                    <div class="flex flex-wrap gap-2 mt-2">
+                                        @foreach ($selectedEvent->visible_to_college_program ?? [] as $program)
+                                            <span
+                                                class="px-2 py-1 bg-orange-50 text-orange-600 rounded-lg text-xs font-medium">
+                                                {{ $program }}
+                                            </span>
+                                        @endforeach
+                                    </div>
+                                </div>
                             @endif
                         </div>
                     </div>
@@ -1481,7 +1693,8 @@
             <!-- Warning Icon -->
             <div class="flex justify-center">
                 <div class="p-4 bg-red-100 rounded-full">
-                    <svg class="w-12 h-12 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-12 h-12 text-red-600" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>

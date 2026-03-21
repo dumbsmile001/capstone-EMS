@@ -32,7 +32,7 @@ class Event extends Model
         'visibility_type', // 'all', 'grade_level', 'shs_strand', 'year_level', 'college_program'
         'visible_to_grade_level', // JSON array: [11, 12] or null
         'visible_to_shs_strand', // JSON array: ['ABM', 'HUMSS'] or null
-        'visible_to_year_level', // JSON array: [1, 2, 3] or null
+        'visible_to_year_level', // JSON array: [1, 2, 3, 4] or null
         'visible_to_college_program', // JSON array: ['BSIT', 'BSBA'] or null
     ];
 
