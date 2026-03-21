@@ -767,18 +767,76 @@
                         </div>
                     </div>
 
-                    <!-- Visibility -->
+                    <!-- Enhanced Visibility Section in Event Details Modal -->
                     <div class="col-span-2 bg-white p-4 rounded-xl border border-gray-200">
-                        <p class="text-xs text-gray-500 mb-2">Visibility</p>
-                        <div class="flex items-center space-x-2">
+                        <p class="text-xs text-gray-500 mb-2">Visibility Settings</p>
+                        <div class="space-y-2">
                             @if ($selectedEvent->visibility_type === 'all')
                                 <span
-                                    class="px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-sm font-medium">🌍
-                                    Visible to all students</span>
-                            @else
-                                <span
-                                    class="px-3 py-1.5 bg-yellow-100 text-yellow-700 rounded-full text-sm font-medium">🔒
-                                    Restricted access</span>
+                                    class="inline-flex items-center px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-sm font-medium">
+                                    🌍 Visible to all students
+                                </span>
+                            @elseif ($selectedEvent->visibility_type === 'grade_level')
+                                <div>
+                                    <span
+                                        class="inline-flex items-center px-3 py-1.5 bg-blue-100 text-blue-700 rounded-full text-sm font-medium mb-2">
+                                        📋 Grade Levels
+                                    </span>
+                                    <div class="flex flex-wrap gap-2 mt-2">
+                                        @foreach ($selectedEvent->visible_to_grade_level ?? [] as $grade)
+                                            <span
+                                                class="px-2 py-1 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">
+                                                Grade {{ $grade }}
+                                            </span>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @elseif ($selectedEvent->visibility_type === 'shs_strand')
+                                <div>
+                                    <span
+                                        class="inline-flex items-center px-3 py-1.5 bg-purple-100 text-purple-700 rounded-full text-sm font-medium mb-2">
+                                        🎓 SHS Strands
+                                    </span>
+                                    <div class="flex flex-wrap gap-2 mt-2">
+                                        @foreach ($selectedEvent->visible_to_shs_strand ?? [] as $strand)
+                                            <span
+                                                class="px-2 py-1 bg-purple-50 text-purple-600 rounded-lg text-xs font-medium">
+                                                {{ $strand }}
+                                            </span>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @elseif ($selectedEvent->visibility_type === 'year_level')
+                                <div>
+                                    <span
+                                        class="inline-flex items-center px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-sm font-medium mb-2">
+                                        📚 Year Levels
+                                    </span>
+                                    <div class="flex flex-wrap gap-2 mt-2">
+                                        @foreach ($selectedEvent->visible_to_year_level ?? [] as $year)
+                                            <span
+                                                class="px-2 py-1 bg-green-50 text-green-600 rounded-lg text-xs font-medium">
+                                                {{ $year == 1 ? '1st' : ($year == 2 ? '2nd' : ($year == 3 ? '3rd' : '4th')) }}
+                                                Year
+                                            </span>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @elseif ($selectedEvent->visibility_type === 'college_program')
+                                <div>
+                                    <span
+                                        class="inline-flex items-center px-3 py-1.5 bg-orange-100 text-orange-700 rounded-full text-sm font-medium mb-2">
+                                        🏫 College Programs
+                                    </span>
+                                    <div class="flex flex-wrap gap-2 mt-2">
+                                        @foreach ($selectedEvent->visible_to_college_program ?? [] as $program)
+                                            <span
+                                                class="px-2 py-1 bg-orange-50 text-orange-600 rounded-lg text-xs font-medium">
+                                                {{ $program }}
+                                            </span>
+                                        @endforeach
+                                    </div>
+                                </div>
                             @endif
                         </div>
                     </div>
