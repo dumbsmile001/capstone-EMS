@@ -17,26 +17,6 @@ use Carbon\Carbon;
 class AdminDashboard extends Component
 {
     use WithFileUploads, WithPagination, LogsActivity;
-
-    // User properties
-    public $first_name;
-    public $middle_name;
-    public $last_name;
-    public $student_id;
-    public $email;
-    public $role;
-    public $grade_level;
-    public $year_level;
-    public $shs_strand;
-    public $college_program;
-
-    // Search and filter properties
-    public $search = '';
-    public $filterGradeLevel = '';
-    public $filterYearLevel = '';
-    public $filterSHSStrand = '';
-    public $filterCollegeProgram = '';
-    public $filterRole = '';
     
     // Events properties - UPDATED
     public string $title = '';
@@ -56,8 +36,6 @@ class AdminDashboard extends Component
     public $showCreateModal = false;
     public $showEditModal = false;
     public $showDeleteModal = false;
-    public $showEditUserModal = false;
-    public $showDeleteUserModal = false;
     public $showGenerateReportModal = false;
     public $showArchiveModal = false;
 
@@ -67,8 +45,6 @@ class AdminDashboard extends Component
     // Edit or delete
     public $editingEvent = null;
     public $deletingEvent = null;
-    public $editingUser = null;
-    public $deletingUser = null;
 
     //Event details
     public $showEventDetailsModal = false;
@@ -91,33 +67,12 @@ class AdminDashboard extends Component
 
     public function mount()
     {
-        $this->loadFilterOptions();
         $this->loadRecentActivities();
         // Initialize dates - ADD THIS
         $this->start_date = now()->format('Y-m-d');
         $this->start_time = now()->format('H:i');
         $this->end_date = now()->addHours(2)->format('Y-m-d');
         $this->end_time = now()->addHours(2)->format('H:i');
-    }
-
-    public function loadFilterOptions()
-    {
-        // Load distinct SHS strands from users
-        $this->availableSHSStrands = User::whereNotNull('shs_strand')
-            ->distinct()
-            ->pluck('shs_strand')
-            ->filter()
-            ->toArray();
-        
-        // Load distinct college programs from users
-        $this->availableCollegePrograms = User::whereNotNull('college_program')
-            ->distinct()
-            ->pluck('college_program')
-            ->filter()
-            ->toArray();
-        
-        // Load available roles
-        $this->availableRoles = Role::pluck('name')->toArray();
     }
 
     // Add this method
@@ -131,291 +86,6 @@ class AdminDashboard extends Component
     public function openLogDetailsModal($logId)
     {
         return redirect()->route('admin.audit-logs');
-    }
-
-    // Computed property for users with search and filters
-    public function getUsersProperty()
-    {
-        return $this->getFilteredUsersQuery()->paginate($this->perPage);
-    }
-
-    // Add a method to get the query for export (without pagination)
-    public function getFilteredUsersQuery()
-    {
-        return User::with('roles')
-            ->when($this->search, function ($query) {
-                $query->where(function ($q) {
-                    $q->where('first_name', 'like', '%' . $this->search . '%')
-                      ->orWhere('last_name', 'like', '%' . $this->search . '%')
-                      ->orWhere('email', 'like', '%' . $this->search . '%')
-                      ->orWhere('student_id', 'like', '%' . $this->search . '%');
-                });
-            })
-            ->when($this->filterGradeLevel, function ($query) {
-                $query->where('grade_level', $this->filterGradeLevel);
-            })
-            ->when($this->filterYearLevel, function ($query) {
-                $query->where('year_level', $this->filterYearLevel);
-            })
-            ->when($this->filterSHSStrand, function ($query) {
-                $query->where('shs_strand', $this->filterSHSStrand);
-            })
-            ->when($this->filterCollegeProgram, function ($query) {
-                $query->where('college_program', $this->filterCollegeProgram);
-            })
-            ->when($this->filterRole, function ($query) {
-                $query->whereHas('roles', function ($q) {
-                    $q->where('name', $this->filterRole);
-                });
-            })
-            ->orderBy('created_at', 'desc');
-    }
-
-    // Reset filters
-    public function resetFilters()
-    {
-        $this->reset(['search', 'filterGradeLevel', 'filterYearLevel', 'filterSHSStrand', 'filterCollegeProgram', 'filterRole']);
-        $this->gotoPage(1);
-    }
-
-    // Apply filters
-    public function applyFilters()
-    {
-        $this->resetPage();
-    }
-
-    // Export users to Excel/CSV using PhpSpreadsheet
-    public function exportUsers()
-    {
-        // Log the export action
-        $this->logActivity('EXPORT', null, 'Exported users data to ' . $this->exportFormat);
-        $users = $this->getFilteredUsersQuery()->get();
-        
-        // Close the modal
-        $this->showGenerateReportModal = false;
-        
-        // Prepare data for export
-        $data = $users->map(function ($user) {
-            return [
-                'Name' => $user->first_name . ' ' . $user->last_name,
-                'Email' => $user->email,
-                'Student ID' => $user->student_id ?? 'N/A',
-                'Grade Level' => $user->grade_level ? 'Grade ' . $user->grade_level : 'N/A',
-                'Year Level' => $user->year_level ? 'Year ' . $user->year_level : 'N/A',
-                'SHS Strand' => $user->shs_strand ?? 'N/A',
-                'College Program' => $user->college_program ?? 'N/A',
-                'Role' => $user->roles->first()->name ?? 'N/A',
-                'Created At' => $user->created_at->format('Y-m-d H:i:s'),
-                'Updated At' => $user->updated_at->format('Y-m-d H:i:s'),
-            ];
-        })->toArray();
-        
-        // Generate filename with timestamp
-        $filename = 'users_report_' . date('Y-m-d_H-i-s');
-        
-        // Add filter info to filename if filters are applied
-        if ($this->search || $this->filterGradeLevel || $this->filterYearLevel || $this->filterSHSStrand || $this->filterCollegeProgram || $this->filterRole) {
-            $filename .= '_filtered';
-        }
-        
-        if ($this->exportFormat === 'csv') {
-            // Export as CSV
-            $filename .= '.csv';
-            $headers = [
-                'Content-Type' => 'text/csv',
-                'Content-Disposition' => 'attachment; filename="' . $filename . '"',
-            ];
-            
-            return response()->streamDownload(function () use ($data) {
-                $output = fopen('php://output', 'w');
-                
-                // Add UTF-8 BOM for Excel compatibility
-                fwrite($output, "\xEF\xBB\xBF");
-                
-                // Add CSV headers if we have data
-                if (!empty($data)) {
-                    fputcsv($output, array_keys($data[0]));
-                }
-                
-                // Add data rows
-                foreach ($data as $row) {
-                    fputcsv($output, $row);
-                }
-                
-                fclose($output);
-            }, $filename, $headers);
-        } else {
-            // Export as Excel using PhpSpreadsheet
-            $filename .= '.xlsx';
-            $headers = [
-                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                'Content-Disposition' => 'attachment; filename="' . $filename . '"',
-            ];
-            
-            return response()->streamDownload(function () use ($data) {
-                $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
-                $sheet = $spreadsheet->getActiveSheet();
-                
-                // Set document properties
-                $spreadsheet->getProperties()
-                    ->setCreator("Admin Dashboard")
-                    ->setTitle("Users Report")
-                    ->setSubject("Users Data Export")
-                    ->setDescription("Exported users data from admin dashboard");
-                
-                // Add headers with styling
-                $headers = !empty($data) ? array_keys($data[0]) : [];
-                $column = 'A';
-                foreach ($headers as $header) {
-                    $sheet->setCellValue($column . '1', $header);
-                    // Style the header
-                    $sheet->getStyle($column . '1')->getFont()->setBold(true);
-                    $sheet->getStyle($column . '1')->getFill()
-                        ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
-                        ->getStartColor()->setARGB('FFE0E0E0');
-                    $column++;
-                }
-                
-                // Add data
-                $row = 2;
-                foreach ($data as $item) {
-                    $column = 'A';
-                    foreach ($item as $value) {
-                        $sheet->setCellValue($column . $row, $value);
-                        $column++;
-                    }
-                    $row++;
-                }
-                
-                // Auto-size columns
-                $lastColumn = $sheet->getHighestColumn();
-                for ($col = 'A'; $col <= $lastColumn; $col++) {
-                    $sheet->getColumnDimension($col)->setAutoSize(true);
-                }
-                
-                // Add some styling
-                $sheet->getStyle('A1:' . $lastColumn . '1')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM);
-                
-                $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
-                $writer->save('php://output');
-            }, $filename, $headers);
-        }
-    }
-
-    public function openEditUserModal($userId = null)
-    {
-        if ($userId) {
-            $this->editingUser = User::with('roles')->findOrFail($userId);
-            
-            // Populate form fields with existing user data
-            $this->first_name = $this->editingUser->first_name;
-            $this->middle_name = $this->editingUser->middle_name;
-            $this->last_name = $this->editingUser->last_name;
-            $this->student_id = $this->editingUser->student_id;
-            $this->email = $this->editingUser->email;
-            $this->grade_level = $this->editingUser->grade_level;
-            $this->year_level = $this->editingUser->year_level;
-            $this->shs_strand = $this->editingUser->shs_strand;
-            $this->college_program = $this->editingUser->college_program;
-            
-            // Get the first role name (assuming users have one primary role)
-            $this->role = $this->editingUser->roles->first()->name ?? 'student';
-        }
-        
-        $this->showEditUserModal = true;
-    }
-
-    public function closeEditUserModal()
-    {
-        $this->showEditUserModal = false;
-        $this->editingUser = null;
-        $this->resetUserForm();
-    }
-
-    public function openDeleteUserModal($userId = null)
-    {
-        if ($userId) {
-            $this->deletingUser = User::findOrFail($userId);
-        }
-        $this->showDeleteUserModal = true;
-    }
-
-    public function closeDeleteUserModal()
-    {
-        $this->showDeleteUserModal = false;
-        $this->deletingUser = null;
-    }
-
-    public function saveUser()
-    {
-        $this->validate([
-            'first_name' => 'required|string|max:255',
-            'middle_name' => 'nullable|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'student_id' => 'nullable|integer|unique:users,student_id,' . ($this->editingUser ? $this->editingUser->id : ''),
-            'email' => 'required|email|unique:users,email,' . ($this->editingUser ? $this->editingUser->id : ''),
-            'grade_level' => 'nullable|integer|min:11|max:12',
-            'year_level' => 'nullable|integer|min:1|max:5',
-            'shs_strand' => 'nullable|in:ABM,HUMSS,GAS,ICT',
-            'college_program' => 'nullable|in:BSIT,BSBA',
-            'role' => 'required|in:admin,organizer,student',
-        ]);
-
-        if ($this->editingUser) {
-            // Update existing user
-            $oldValues = $this->editingUser->getOriginal();
-            $this->editingUser->update([
-                'first_name' => $this->first_name,
-                'middle_name' => $this->middle_name,
-                'last_name' => $this->last_name,
-                'student_id' => $this->student_id,
-                'email' => $this->email,
-                'grade_level' => $this->grade_level,
-                'year_level' => $this->year_level,
-                'shs_strand' => $this->grade_level ? $this->shs_strand : null,
-                'college_program' => $this->year_level ? $this->college_program : null,
-            ]);
-
-            // Update role
-            $this->editingUser->syncRoles([$this->role]);
-
-            // Log the user update
-            $this->logActivity('UPDATE', $this->editingUser, null, $oldValues, $this->editingUser->toArray());
-            session()->flash('success', 'User updated successfully!');
-        }
-
-        $this->closeEditUserModal();
-        $this->resetPage();
-    }
-
-    public function deleteUser()
-    {
-        if ($this->deletingUser) {
-            // Prevent admin from deleting themselves
-            if ($this->deletingUser->id === Auth::id()) {
-                session()->flash('error', 'You cannot delete your own account!');
-                $this->closeDeleteUserModal();
-                return;
-            }
-            $user = $this->deletingUser;
-            $this->deletingUser->delete();
-
-            // Log the user deletion
-            $this->logActivity('DELETE', $user);
-            session()->flash('success', 'User deleted successfully!');
-        }
-
-        $this->closeDeleteUserModal();
-        $this->resetPage();
-    }
-
-    private function resetUserForm()
-    {
-        $this->reset([
-            'first_name', 'middle_name', 'last_name', 'student_id', 
-            'email', 'role', 'grade_level', 'year_level', 'shs_strand', 'college_program'
-        ]);
-        $this->resetErrorBag();
     }
 
     // UPDATED: Event methods with new fields
@@ -709,7 +379,6 @@ class AdminDashboard extends Component
             'archivedEvents' => $archivedEvents,
             'upcomingEvents' => $upcomingEvents,
             'upcomingEventsData' => $upcomingEventsData,
-            'users' => $this->users,
         ])->layout('layouts.app');
     }
 }

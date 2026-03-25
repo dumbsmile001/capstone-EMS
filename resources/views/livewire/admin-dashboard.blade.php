@@ -12,26 +12,33 @@
             <!-- Overview Cards - Modern Redesign -->
             <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
                 <!-- Total Users Card -->
-                <div class="group relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
+                <div
+                    class="group relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
                     <!-- Gradient Background Effect -->
-                    <div class="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-700 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
-                    
+                    <div
+                        class="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-700 opacity-0 group-hover:opacity-10 transition-opacity duration-300">
+                    </div>
+
                     <!-- Top Accent Line -->
                     <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-400 to-blue-600"></div>
-                    
+
                     <div class="relative p-6">
                         <div class="flex items-center justify-between mb-4">
                             <!-- Icon Container with Gradient Background -->
-                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center shadow-lg shadow-blue-200">
+                            <div
+                                class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center shadow-lg shadow-blue-200">
                                 <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                        d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
+                                    </path>
                                 </svg>
                             </div>
-                            
+
                             <!-- Status Badge -->
-                            <span class="px-3 py-1 text-xs font-medium text-blue-600 bg-blue-50 rounded-full">Total</span>
+                            <span
+                                class="px-3 py-1 text-xs font-medium text-blue-600 bg-blue-50 rounded-full">Total</span>
                         </div>
-                        
+
                         <!-- Card Content -->
                         <div>
                             <h3 class="text-sm font-medium text-gray-500 mb-1">Total Users</h3>
@@ -43,20 +50,27 @@
                 </div>
 
                 <!-- Total Events Card -->
-                <div class="group relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-green-600 to-green-700 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+                <div
+                    class="group relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-br from-green-600 to-green-700 opacity-0 group-hover:opacity-10 transition-opacity duration-300">
+                    </div>
                     <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-green-400 to-green-600"></div>
-                    
+
                     <div class="relative p-6">
                         <div class="flex items-center justify-between mb-4">
-                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-green-500 to-green-600 text-white flex items-center justify-center shadow-lg shadow-green-200">
+                            <div
+                                class="w-14 h-14 rounded-2xl bg-gradient-to-br from-green-500 to-green-600 text-white flex items-center justify-center shadow-lg shadow-green-200">
                                 <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                    </path>
                                 </svg>
                             </div>
-                            <span class="px-3 py-1 text-xs font-medium text-green-600 bg-green-50 rounded-full">Active</span>
+                            <span
+                                class="px-3 py-1 text-xs font-medium text-green-600 bg-green-50 rounded-full">Active</span>
                         </div>
-                        
+
                         <div>
                             <h3 class="text-sm font-medium text-gray-500 mb-1">Total Events</h3>
                             <div class="flex items-end justify-between">
@@ -67,21 +81,27 @@
                 </div>
 
                 <!-- Archived Events Card - Fixed Icon -->
-                <div class="group relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-yellow-600 to-yellow-700 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+                <div
+                    class="group relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-br from-yellow-600 to-yellow-700 opacity-0 group-hover:opacity-10 transition-opacity duration-300">
+                    </div>
                     <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-yellow-400 to-yellow-600"></div>
-                    
+
                     <div class="relative p-6">
                         <div class="flex items-center justify-between mb-4">
-                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-yellow-500 to-yellow-600 text-white flex items-center justify-center shadow-lg shadow-yellow-200">
+                            <div
+                                class="w-14 h-14 rounded-2xl bg-gradient-to-br from-yellow-500 to-yellow-600 text-white flex items-center justify-center shadow-lg shadow-yellow-200">
                                 <!-- Fixed: Proper archive icon instead of the old one -->
                                 <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                        d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
                                 </svg>
                             </div>
-                            <span class="px-3 py-1 text-xs font-medium text-yellow-600 bg-yellow-50 rounded-full">Archived</span>
+                            <span
+                                class="px-3 py-1 text-xs font-medium text-yellow-600 bg-yellow-50 rounded-full">Archived</span>
                         </div>
-                        
+
                         <div>
                             <h3 class="text-sm font-medium text-gray-500 mb-1">Archived Events</h3>
                             <div class="flex items-end justify-between">
@@ -92,20 +112,26 @@
                 </div>
 
                 <!-- Upcoming Events Card -->
-                <div class="group relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-orange-600 to-orange-700 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+                <div
+                    class="group relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-br from-orange-600 to-orange-700 opacity-0 group-hover:opacity-10 transition-opacity duration-300">
+                    </div>
                     <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-orange-400 to-orange-600"></div>
-                    
+
                     <div class="relative p-6">
                         <div class="flex items-center justify-between mb-4">
-                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 text-white flex items-center justify-center shadow-lg shadow-orange-200">
+                            <div
+                                class="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 text-white flex items-center justify-center shadow-lg shadow-orange-200">
                                 <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                             </div>
-                            <span class="px-3 py-1 text-xs font-medium text-orange-600 bg-orange-50 rounded-full">Upcoming</span>
+                            <span
+                                class="px-3 py-1 text-xs font-medium text-orange-600 bg-orange-50 rounded-full">Upcoming</span>
                         </div>
-                        
+
                         <div>
                             <h3 class="text-sm font-medium text-gray-500 mb-1">Upcoming Events</h3>
                             <div class="flex items-end justify-between">
@@ -156,7 +182,7 @@
                                 <div class="flex-1">
                                     <h3 class="font-semibold text-gray-800">{{ $event->title }}</h3>
                                     <p class="text-sm text-gray-600">
-                                        {{ \Carbon\Carbon::parse($event->start_time)->format('g:i A') }} - 
+                                        {{ \Carbon\Carbon::parse($event->start_time)->format('g:i A') }} -
                                         {{ \Carbon\Carbon::parse($event->end_time)->format('g:i A') }} •
                                         {{ $event->type === 'online' ? 'Online' : 'In-person' }}
                                     </p>
@@ -175,7 +201,7 @@
                                     </svg>
                                 </div>
                             </div>
-                            @empty
+                        @empty
                             <div class="text-center py-8 text-gray-500 bg-gray-50 rounded-lg">
                                 <svg class="w-12 h-12 mx-auto text-gray-400" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
@@ -224,28 +250,32 @@
                                         class="w-8 h-8 {{ $iconColor }} rounded-full flex items-center justify-center">
                                         @switch($activity->action)
                                             @case('CREATE')
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                         d="M12 4v16m8-8H4" />
                                                 </svg>
                                             @break
 
                                             @case('UPDATE')
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                         d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                                                 </svg>
                                             @break
 
                                             @case('DELETE')
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                         d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                                 </svg>
                                             @break
 
                                             @case('LOGIN')
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                         d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
                                                 </svg>
@@ -319,35 +349,27 @@
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-xl font-semibold text-gray-800">Data Management</h2>
                     </div>
-                    
+
                     <!-- Tabs -->
                     <div class="border-b border-gray-200 mb-4">
                         <nav class="flex space-x-4">
-                            <button @click="activeTab = 'users'"
-                                :class="activeTab === 'users' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'"
-                                class="px-4 py-2 font-medium text-sm transition-colors">
-                                Users
-                            </button>
                             <button @click="activeTab = 'registrations'"
-                                :class="activeTab === 'registrations' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'"
+                                :class="activeTab === 'registrations' ? 'border-b-2 border-blue-600 text-blue-600' :
+                                    'text-gray-500 hover:text-gray-700'"
                                 class="px-4 py-2 font-medium text-sm transition-colors">
                                 Event Registrations
                             </button>
                             <button @click="activeTab = 'payments'"
-                                :class="activeTab === 'payments' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'"
+                                :class="activeTab === 'payments' ? 'border-b-2 border-blue-600 text-blue-600' :
+                                    'text-gray-500 hover:text-gray-700'"
                                 class="px-4 py-2 font-medium text-sm transition-colors">
                                 Payments
                             </button>
                         </nav>
                     </div>
-                    
+
                     <!-- Tab Content -->
                     <div class="overflow-x-auto">
-                        <!-- Users Tab -->
-                        <div x-show="activeTab === 'users'" x-transition>
-                            @include('livewire.partials.admin-users-table')
-                        </div>
-
                         <!-- Registrations Tab -->
                         <div x-show="activeTab === 'registrations'" x-transition>
                             <livewire:admin-registrations />
@@ -409,63 +431,69 @@
 
                     <!-- Date and Time -->
                     <!-- Replace the old date/time section (around line 450) with this: -->
-<!-- Date and Time -->
-<div class="space-y-1.5">
-    <label class="flex items-center space-x-2 text-sm font-semibold text-blue-900">
-        <svg class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-        </svg>
-        <span>Event Schedule</span>
-    </label>
-    
-    <!-- Start Date & Time -->
-    <div class="grid grid-cols-2 gap-3 mb-2">
-        <div class="relative group">
-            <label class="block text-xs text-gray-600 mb-1">Start Date</label>
-            <input type="date" wire:model="start_date"
-                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
-            @error('start_date')
-                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-            @enderror
-        </div>
-        <div class="relative group">
-            <label class="block text-xs text-gray-600 mb-1">Start Time</label>
-            <input type="time" wire:model="start_time"
-                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
-            @error('start_time')
-                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-            @enderror
-        </div>
-    </div>
-    
-    <!-- End Date & Time -->
-    <div class="grid grid-cols-2 gap-3">
-        <div class="relative group">
-            <label class="block text-xs text-gray-600 mb-1">End Date</label>
-            <input type="date" wire:model="end_date" min="{{ $start_date }}"
-                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
-            @error('end_date')
-                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-            @enderror
-        </div>
-        <div class="relative group">
-            <label class="block text-xs text-gray-600 mb-1">End Time</label>
-            <input type="time" wire:model="end_time"
-                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
-            @error('end_time')
-                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-            @enderror
-        </div>
-    </div>
-    
-    <!-- Quick duration presets -->
-    <div class="flex gap-2 mt-2">
-        <button type="button" wire:click="setDuration(1)" class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">1 Hour</button>
-        <button type="button" wire:click="setDuration(2)" class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">2 Hours</button>
-        <button type="button" wire:click="setDuration(4)" class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">4 Hours</button>
-        <button type="button" wire:click="setDuration(24)" class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">Full Day</button>
-    </div>
-</div>
+                    <!-- Date and Time -->
+                    <div class="space-y-1.5">
+                        <label class="flex items-center space-x-2 text-sm font-semibold text-blue-900">
+                            <svg class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <span>Event Schedule</span>
+                        </label>
+
+                        <!-- Start Date & Time -->
+                        <div class="grid grid-cols-2 gap-3 mb-2">
+                            <div class="relative group">
+                                <label class="block text-xs text-gray-600 mb-1">Start Date</label>
+                                <input type="date" wire:model="start_date"
+                                    class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
+                                @error('start_date')
+                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="relative group">
+                                <label class="block text-xs text-gray-600 mb-1">Start Time</label>
+                                <input type="time" wire:model="start_time"
+                                    class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
+                                @error('start_time')
+                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <!-- End Date & Time -->
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="relative group">
+                                <label class="block text-xs text-gray-600 mb-1">End Date</label>
+                                <input type="date" wire:model="end_date" min="{{ $start_date }}"
+                                    class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
+                                @error('end_date')
+                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="relative group">
+                                <label class="block text-xs text-gray-600 mb-1">End Time</label>
+                                <input type="time" wire:model="end_time"
+                                    class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
+                                @error('end_time')
+                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <!-- Quick duration presets -->
+                        <div class="flex gap-2 mt-2">
+                            <button type="button" wire:click="setDuration(1)"
+                                class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">1 Hour</button>
+                            <button type="button" wire:click="setDuration(2)"
+                                class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">2 Hours</button>
+                            <button type="button" wire:click="setDuration(4)"
+                                class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">4 Hours</button>
+                            <button type="button" wire:click="setDuration(24)"
+                                class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">Full Day</button>
+                        </div>
+                    </div>
 
                     <!-- Event Type and Location/Link -->
                     <div class="space-y-1.5">
@@ -721,63 +749,69 @@
 
                     <!-- Date and Time -->
                     <!-- Replace the old date/time section (around line 450) with this: -->
-<!-- Date and Time -->
-<div class="space-y-1.5">
-    <label class="flex items-center space-x-2 text-sm font-semibold text-blue-900">
-        <svg class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-        </svg>
-        <span>Event Schedule</span>
-    </label>
-    
-    <!-- Start Date & Time -->
-    <div class="grid grid-cols-2 gap-3 mb-2">
-        <div class="relative group">
-            <label class="block text-xs text-gray-600 mb-1">Start Date</label>
-            <input type="date" wire:model="start_date"
-                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
-            @error('start_date')
-                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-            @enderror
-        </div>
-        <div class="relative group">
-            <label class="block text-xs text-gray-600 mb-1">Start Time</label>
-            <input type="time" wire:model="start_time"
-                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
-            @error('start_time')
-                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-            @enderror
-        </div>
-    </div>
-    
-    <!-- End Date & Time -->
-    <div class="grid grid-cols-2 gap-3">
-        <div class="relative group">
-            <label class="block text-xs text-gray-600 mb-1">End Date</label>
-            <input type="date" wire:model="end_date" min="{{ $start_date }}"
-                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
-            @error('end_date')
-                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-            @enderror
-        </div>
-        <div class="relative group">
-            <label class="block text-xs text-gray-600 mb-1">End Time</label>
-            <input type="time" wire:model="end_time"
-                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
-            @error('end_time')
-                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-            @enderror
-        </div>
-    </div>
-    
-    <!-- Quick duration presets -->
-    <div class="flex gap-2 mt-2">
-        <button type="button" wire:click="setDuration(1)" class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">1 Hour</button>
-        <button type="button" wire:click="setDuration(2)" class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">2 Hours</button>
-        <button type="button" wire:click="setDuration(4)" class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">4 Hours</button>
-        <button type="button" wire:click="setDuration(24)" class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">Full Day</button>
-    </div>
-</div>
+                    <!-- Date and Time -->
+                    <div class="space-y-1.5">
+                        <label class="flex items-center space-x-2 text-sm font-semibold text-blue-900">
+                            <svg class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <span>Event Schedule</span>
+                        </label>
+
+                        <!-- Start Date & Time -->
+                        <div class="grid grid-cols-2 gap-3 mb-2">
+                            <div class="relative group">
+                                <label class="block text-xs text-gray-600 mb-1">Start Date</label>
+                                <input type="date" wire:model="start_date"
+                                    class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
+                                @error('start_date')
+                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="relative group">
+                                <label class="block text-xs text-gray-600 mb-1">Start Time</label>
+                                <input type="time" wire:model="start_time"
+                                    class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
+                                @error('start_time')
+                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <!-- End Date & Time -->
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="relative group">
+                                <label class="block text-xs text-gray-600 mb-1">End Date</label>
+                                <input type="date" wire:model="end_date" min="{{ $start_date }}"
+                                    class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
+                                @error('end_date')
+                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="relative group">
+                                <label class="block text-xs text-gray-600 mb-1">End Time</label>
+                                <input type="time" wire:model="end_time"
+                                    class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300">
+                                @error('end_time')
+                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <!-- Quick duration presets -->
+                        <div class="flex gap-2 mt-2">
+                            <button type="button" wire:click="setDuration(1)"
+                                class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">1 Hour</button>
+                            <button type="button" wire:click="setDuration(2)"
+                                class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">2 Hours</button>
+                            <button type="button" wire:click="setDuration(4)"
+                                class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">4 Hours</button>
+                            <button type="button" wire:click="setDuration(24)"
+                                class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg">Full Day</button>
+                        </div>
+                    </div>
 
                     <!-- Event Type and Location/Link -->
                     <div class="space-y-1.5">
@@ -1042,78 +1076,80 @@
                     <!-- Event Details Grid with improved borders and spacing -->
                     <div class="grid grid-cols-2 gap-4">
                         <!-- Start Date -->
-                    <div
-                        class="bg-white p-4 rounded-xl border border-gray-200 hover:border-green-300 transition-all duration-200">
-                        <div class="flex items-center space-x-3">
-                            <div class="p-2 bg-green-100 rounded-lg">
-                                <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                            </div>
-                            <div>
-                                <p class="text-xs text-gray-500">Start Date</p>
-                                <p class="font-semibold text-gray-800">{{ \Carbon\Carbon::parse($selectedEvent->start_date)->format('F j, Y') }}</p>
+                        <div
+                            class="bg-white p-4 rounded-xl border border-gray-200 hover:border-green-300 transition-all duration-200">
+                            <div class="flex items-center space-x-3">
+                                <div class="p-2 bg-green-100 rounded-lg">
+                                    <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500">Start Date</p>
+                                    <p class="font-semibold text-gray-800">
+                                        {{ \Carbon\Carbon::parse($selectedEvent->start_date)->format('F j, Y') }}</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- End Date -->
-                    <div
-                        class="bg-white p-4 rounded-xl border border-gray-200 hover:border-green-300 transition-all duration-200">
-                        <div class="flex items-center space-x-3">
-                            <div class="p-2 bg-green-100 rounded-lg">
-                                <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                            </div>
-                            <div>
-                                <p class="text-xs text-gray-500">End Date</p>
-                                <p class="font-semibold text-gray-800">{{ \Carbon\Carbon::parse($selectedEvent->end_date)->format('F j, Y') }}</p>
+                        <!-- End Date -->
+                        <div
+                            class="bg-white p-4 rounded-xl border border-gray-200 hover:border-green-300 transition-all duration-200">
+                            <div class="flex items-center space-x-3">
+                                <div class="p-2 bg-green-100 rounded-lg">
+                                    <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500">End Date</p>
+                                    <p class="font-semibold text-gray-800">
+                                        {{ \Carbon\Carbon::parse($selectedEvent->end_date)->format('F j, Y') }}</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Start Time -->
-                    <div
-                        class="bg-white p-4 rounded-xl border border-gray-200 hover:border-green-300 transition-all duration-200">
-                        <div class="flex items-center space-x-3">
-                            <div class="p-2 bg-green-100 rounded-lg">
-                                <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                            </div>
-                            <div>
-                                <p class="text-xs text-gray-500">Start Time</p>
-                                <p class="font-semibold text-gray-800">
-                                    {{ \Carbon\Carbon::parse($selectedEvent->start_time)->format('g:i A') }}</p>
+                        <!-- Start Time -->
+                        <div
+                            class="bg-white p-4 rounded-xl border border-gray-200 hover:border-green-300 transition-all duration-200">
+                            <div class="flex items-center space-x-3">
+                                <div class="p-2 bg-green-100 rounded-lg">
+                                    <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500">Start Time</p>
+                                    <p class="font-semibold text-gray-800">
+                                        {{ \Carbon\Carbon::parse($selectedEvent->start_time)->format('g:i A') }}</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- End Time -->
-                    <div
-                        class="bg-white p-4 rounded-xl border border-gray-200 hover:border-green-300 transition-all duration-200">
-                        <div class="flex items-center space-x-3">
-                            <div class="p-2 bg-green-100 rounded-lg">
-                                <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                            </div>
-                            <div>
-                                <p class="text-xs text-gray-500">End Time</p>
-                                <p class="font-semibold text-gray-800">
-                                    {{ \Carbon\Carbon::parse($selectedEvent->end_time)->format('g:i A') }}</p>
+                        <!-- End Time -->
+                        <div
+                            class="bg-white p-4 rounded-xl border border-gray-200 hover:border-green-300 transition-all duration-200">
+                            <div class="flex items-center space-x-3">
+                                <div class="p-2 bg-green-100 rounded-lg">
+                                    <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500">End Time</p>
+                                    <p class="font-semibold text-gray-800">
+                                        {{ \Carbon\Carbon::parse($selectedEvent->end_time)->format('g:i A') }}</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
                         <!-- Location/Link (full width) -->
                         <div
@@ -1249,508 +1285,4 @@
                 </div>
             @endif
         </x-custom-modal>
-
-        <!-- Export Users Report -->
-        <x-custom-modal model="showGenerateReportModal" maxWidth="lg" title="Export Users Report"
-            description="Export filtered user data to Excel or CSV format" headerBg="green">
-            <div class="space-y-6">
-                <!-- Current Filters Summary Card -->
-                <div class="bg-gradient-to-br from-green-50 to-emerald-50 p-5 rounded-xl border border-green-200">
-                    <div class="flex items-center space-x-2 mb-3">
-                        <div class="p-1.5 bg-green-200 rounded-lg">
-                            <svg class="w-4 h-4 text-green-700" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-                            </svg>
-                        </div>
-                        <h3 class="font-semibold text-green-800">Active Filters</h3>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-3 text-sm">
-                        <div class="space-y-2">
-                            <p class="text-green-700">
-                                <span class="font-medium">Search:</span>
-                                <span class="text-green-600">{{ $search ?: 'None' }}</span>
-                            </p>
-                            <p class="text-green-700">
-                                <span class="font-medium">Grade Level:</span>
-                                <span
-                                    class="text-green-600">{{ $filterGradeLevel ? 'Grade ' . $filterGradeLevel : 'All' }}</span>
-                            </p>
-                            <p class="text-green-700">
-                                <span class="font-medium">Year Level:</span>
-                                <span
-                                    class="text-green-600">{{ $filterYearLevel ? 'Year ' . $filterYearLevel : 'All' }}</span>
-                            </p>
-                        </div>
-                        <div class="space-y-2">
-                            <p class="text-green-700">
-                                <span class="font-medium">SHS Strand:</span>
-                                <span class="text-green-600">{{ $filterSHSStrand ?: 'All' }}</span>
-                            </p>
-                            <p class="text-green-700">
-                                <span class="font-medium">College Program:</span>
-                                <span class="text-green-600">{{ $filterCollegeProgram ?: 'All' }}</span>
-                            </p>
-                            <p class="text-green-700">
-                                <span class="font-medium">Role:</span>
-                                <span class="text-green-600">{{ $filterRole ? ucfirst($filterRole) : 'All' }}</span>
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Total Records Badge -->
-                    <div class="mt-3 pt-3 border-t border-green-200">
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm text-green-700">Records to export:</span>
-                            <span class="px-3 py-1 bg-green-200 text-green-800 rounded-full text-sm font-semibold">
-                                {{ $users->total() ?? 0 }} users
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Export Format Selection -->
-                <div class="space-y-3">
-                    <label class="flex items-center space-x-2 text-sm font-semibold text-green-800">
-                        <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        <span>Choose Export Format</span>
-                    </label>
-
-                    <div class="grid grid-cols-2 gap-4">
-                        <!-- Excel Option -->
-                        <label class="relative cursor-pointer">
-                            <input type="radio" wire:model="exportFormat" value="xlsx" class="sr-only peer">
-                            <div
-                                class="p-4 bg-white border-2 border-gray-200 rounded-xl peer-checked:border-green-500 peer-checked:bg-green-50 hover:border-green-300 transition-all duration-200">
-                                <div class="flex flex-col items-center text-center">
-                                    <div class="p-3 bg-green-100 rounded-full mb-2">
-                                        <svg class="w-8 h-8 text-green-600" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" />
-                                            <path d="M14 2v6h6M8 13h8M8 17h4" stroke="white" stroke-width="2" />
-                                        </svg>
-                                    </div>
-                                    <span class="font-semibold text-gray-800">Excel</span>
-                                    <span class="text-xs text-gray-500 mt-1">.xlsx format</span>
-                                </div>
-                            </div>
-                        </label>
-
-                        <!-- CSV Option -->
-                        <label class="relative cursor-pointer">
-                            <input type="radio" wire:model="exportFormat" value="csv" class="sr-only peer">
-                            <div
-                                class="p-4 bg-white border-2 border-gray-200 rounded-xl peer-checked:border-green-500 peer-checked:bg-green-50 hover:border-green-300 transition-all duration-200">
-                                <div class="flex flex-col items-center text-center">
-                                    <div class="p-3 bg-green-100 rounded-full mb-2">
-                                        <svg class="w-8 h-8 text-green-600" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" />
-                                            <text x="8" y="18" fill="white" font-size="10"
-                                                font-weight="bold">CSV</text>
-                                        </svg>
-                                    </div>
-                                    <span class="font-semibold text-gray-800">CSV</span>
-                                    <span class="text-xs text-gray-500 mt-1">Comma separated</span>
-                                </div>
-                            </div>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Additional Export Options (Optional) -->
-                <div class="p-4 bg-gray-50 rounded-xl border-2 border-gray-100">
-                    <label class="flex items-center space-x-3 cursor-pointer">
-                        <input type="checkbox" wire:model="includeHeaders"
-                            class="w-5 h-5 text-green-600 border-2 border-gray-300 rounded-lg focus:ring-green-500 focus:ring-2">
-                        <div>
-                            <span class="font-medium text-gray-700">Include column headers</span>
-                            <p class="text-xs text-gray-500">Recommended for data analysis</p>
-                        </div>
-                    </label>
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="flex space-x-3 pt-4 border-t-2 border-gray-100">
-                    <button type="button" wire:click="closeGenerateReportModal"
-                        class="flex-1 px-6 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-all duration-200 font-medium flex items-center justify-center space-x-2 group">
-                        <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none"
-                            stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                        </svg>
-                        <span>Cancel</span>
-                    </button>
-                    <button type="button" wire:click="exportUsers"
-                        class="flex-1 px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-xl hover:from-green-700 hover:to-green-800 transition-all duration-200 font-medium flex items-center justify-center space-x-2 group shadow-lg shadow-green-200">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        <span>Export {{ strtoupper($exportFormat) }}</span>
-                    </button>
-                </div>
-            </div>
-        </x-custom-modal>
-
-        <!-- Update User -->
-        <x-custom-modal model="showEditUserModal" maxWidth="lg" title="Edit User"
-            description="Update user information and academic details" headerBg="yellow">
-            <form wire:submit.prevent="saveUser" class="space-y-6">
-                <!-- Personal Information Section -->
-                <div class="space-y-4">
-                    <h3
-                        class="text-sm font-semibold text-gray-700 flex items-center space-x-2 pb-2 border-b border-gray-200">
-                        <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
-                        <span>Personal Information</span>
-                    </h3>
-
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <!-- First Name -->
-                        <div class="space-y-1.5">
-                            <label class="flex items-center space-x-2 text-sm font-semibold text-blue-900">
-                                <svg class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                </svg>
-                                <span>First Name</span>
-                            </label>
-                            <div class="relative group">
-                                <input type="text" wire:model="first_name"
-                                    class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300"
-                                    placeholder="Enter first name">
-                                @error('first_name')
-                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <!-- Middle Name -->
-                        <div class="space-y-1.5">
-                            <label class="flex items-center space-x-2 text-sm font-semibold text-blue-900">
-                                <svg class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                </svg>
-                                <span>Middle Name</span>
-                            </label>
-                            <div class="relative group">
-                                <input type="text" wire:model="middle_name"
-                                    class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300"
-                                    placeholder="Enter middle name">
-                            </div>
-                        </div>
-
-                        <!-- Last Name -->
-                        <div class="space-y-1.5">
-                            <label class="flex items-center space-x-2 text-sm font-semibold text-blue-900">
-                                <svg class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                </svg>
-                                <span>Last Name</span>
-                            </label>
-                            <div class="relative group">
-                                <input type="text" wire:model="last_name"
-                                    class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300"
-                                    placeholder="Enter last name">
-                                @error('last_name')
-                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Academic Information Section -->
-                <div class="space-y-4">
-                    <h3
-                        class="text-sm font-semibold text-gray-700 flex items-center space-x-2 pb-2 border-b border-gray-200">
-                        <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 14l9-5-9-5-9 5 9 5z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
-                        </svg>
-                        <span>Academic Information</span>
-                    </h3>
-
-                    <div class="grid grid-cols-2 gap-4">
-                        <!-- Grade Level -->
-                        <div class="space-y-1.5">
-                            <label class="flex items-center space-x-2 text-sm font-semibold text-blue-900">
-                                <svg class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                                </svg>
-                                <span>Grade Level</span>
-                            </label>
-                            <select wire:model="grade_level"
-                                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 hover:border-blue-300">
-                                <option value="">Select Grade Level</option>
-                                <option value="11">📚 Grade 11</option>
-                                <option value="12">📚 Grade 12</option>
-                            </select>
-                            @error('grade_level')
-                                <span class="text-red-500 text-xs">{{ $message }}</span>
-                            @enderror
-                        </div>
-
-                        <!-- SHS Strand -->
-                        <div class="space-y-1.5">
-                            <label class="flex items-center space-x-2 text-sm font-semibold text-blue-900">
-                                <svg class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                </svg>
-                                <span>SHS Strand</span>
-                            </label>
-                            <select wire:model="shs_strand"
-                                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 hover:border-blue-300 {{ $grade_level ? 'bg-gray-100 cursor-not-allowed' : '' }}"
-                                {{ $grade_level ? 'disabled' : '' }}>
-                                <option value="">Select SHS Strand</option>
-                                <option value="ABM">📊 ABM</option>
-                                <option value="HUMSS">📖 HUMSS</option>
-                                <option value="GAS">🔬 GAS</option>
-                                <option value="ICT">💻 ICT</option>
-                            </select>
-                            @error('shs_strand')
-                                <span class="text-red-500 text-xs">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4">
-                        <!-- Year Level -->
-                        <div class="space-y-1.5">
-                            <label class="flex items-center space-x-2 text-sm font-semibold text-blue-900">
-                                <svg class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                                <span>Year Level</span>
-                            </label>
-                            <select wire:model="year_level"
-                                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 hover:border-blue-300">
-                                <option value="">Select Year Level</option>
-                                <option value="1">1st Year</option>
-                                <option value="2">2nd Year</option>
-                                <option value="3">3rd Year</option>
-                                <option value="4">4th Year</option>
-                                <option value="5">5th Year</option>
-                            </select>
-                            @error('year_level')
-                                <span class="text-red-500 text-xs">{{ $message }}</span>
-                            @enderror
-                        </div>
-
-                        <!-- College Program -->
-                        <div class="space-y-1.5">
-                            <label class="flex items-center space-x-2 text-sm font-semibold text-blue-900">
-                                <svg class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                                </svg>
-                                <span>College Program</span>
-                            </label>
-                            <select wire:model="college_program"
-                                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 hover:border-blue-300 {{ $year_level ? 'bg-gray-100 cursor-not-allowed' : '' }}"
-                                {{ $year_level ? 'disabled' : '' }}>
-                                <option value="">Select College Program</option>
-                                <option value="BSIT">💻 BSIT</option>
-                                <option value="BSBA">📈 BSBA</option>
-                            </select>
-                            @error('college_program')
-                                <span class="text-red-500 text-xs">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Account Information Section -->
-                <div class="space-y-4">
-                    <h3
-                        class="text-sm font-semibold text-gray-700 flex items-center space-x-2 pb-2 border-b border-gray-200">
-                        <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
-                        </svg>
-                        <span>Account Information</span>
-                    </h3>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- Student ID -->
-                        <div class="space-y-1.5">
-                            <label class="flex items-center space-x-2 text-sm font-semibold text-blue-900">
-                                <svg class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
-                                </svg>
-                                <span>Student ID</span>
-                            </label>
-                            <div class="relative group">
-                                <input type="text" wire:model="student_id"
-                                    class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300"
-                                    placeholder="Enter student ID">
-                            </div>
-                        </div>
-
-                        <!-- Email -->
-                        <div class="space-y-1.5">
-                            <label class="flex items-center space-x-2 text-sm font-semibold text-blue-900">
-                                <svg class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                </svg>
-                                <span>Email</span>
-                            </label>
-                            <div class="relative group">
-                                <input type="email" wire:model="email"
-                                    class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300"
-                                    placeholder="user@example.com">
-                                @error('email')
-                                    <span class="text-red-500 text-xs">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <!-- Role -->
-                        <div class="space-y-1.5">
-                            <label class="flex items-center space-x-2 text-sm font-semibold text-blue-900">
-                                <svg class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                <span>Role</span>
-                            </label>
-                            <select wire:model="role"
-                                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 hover:border-blue-300">
-                                <option value="admin">👑 Admin</option>
-                                <option value="organizer">🎯 Organizer</option>
-                                <option value="student">🎓 Student</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="flex space-x-3 pt-4 border-t-2 border-gray-100">
-                    <button type="button" wire:click="closeEditUserModal"
-                        class="flex-1 px-6 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-all duration-200 font-medium flex items-center justify-center space-x-2 group">
-                        <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none"
-                            stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                        </svg>
-                        <span>Cancel</span>
-                    </button>
-                    <button type="submit" wire:click="saveUser"
-                        class="flex-1 px-6 py-3 bg-gradient-to-r from-yellow-600 to-yellow-700 text-white rounded-xl hover:from-yellow-700 hover:to-yellow-800 transition-all duration-200 font-medium flex items-center justify-center space-x-2 group shadow-lg shadow-yellow-200">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M5 13l4 4L19 7" />
-                        </svg>
-                        <span>Save Changes</span>
-                        <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none"
-                            stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                        </svg>
-                    </button>
-                </div>
-            </form>
-        </x-custom-modal>
-
-        <!-- Delete User -->
-        <x-custom-modal model="showDeleteUserModal" maxWidth="sm" title="Delete User"
-            description="This action cannot be undone" headerBg="red" :showCloseButton="true">
-            <div class="text-center space-y-6">
-                <!-- Warning Icon -->
-                <div class="flex justify-center">
-                    <div class="p-4 bg-red-100 rounded-full">
-                        <svg class="w-16 h-16 text-red-600" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                        </svg>
-                    </div>
-                </div>
-
-                <!-- Warning Message -->
-                <div class="space-y-2">
-                    <h3 class="text-lg font-semibold text-gray-900">Are you absolutely sure?</h3>
-                    <p class="text-sm text-gray-600">
-                        This will permanently delete the user account and remove all associated data.
-                        @if ($deletingUser)
-                            <br>
-                            <span class="font-semibold text-red-600">User: {{ $deletingUser->first_name }}
-                                {{ $deletingUser->last_name }}</span>
-                        @endif
-                    </p>
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="flex flex-col sm:flex-row gap-3 pt-4">
-                    <button type="button" wire:click="closeDeleteUserModal"
-                        class="flex-1 px-6 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-all duration-200 font-medium flex items-center justify-center space-x-2 group">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                        <span>Cancel</span>
-                    </button>
-                    <button type="button" wire:click="deleteUser"
-                        class="flex-1 px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-xl hover:from-red-700 hover:to-red-800 transition-all duration-200 font-medium flex items-center justify-center space-x-2 group shadow-lg shadow-red-200">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                        <span>Confirm Delete</span>
-                    </button>
-                </div>
-            </div>
-        </x-custom-modal>
     </div>
-
-    <script>
-        document.addEventListener('livewire:initialized', () => {
-            Livewire.on('editUserModal', () => {
-                // Handle field disabling based on grade_level/year_level
-                Livewire.on('updated', (component, name, value) => {
-                    if (name === 'grade_level' && value) {
-                        // If grade_level is selected, disable college_program
-                        const collegeProgramSelect = document.querySelector(
-                            'select[wire\\:model="college_program"]');
-                        if (collegeProgramSelect) {
-                            collegeProgramSelect.disabled = true;
-                            collegeProgramSelect.classList.add('bg-gray-100', 'cursor-not-allowed');
-                        }
-                    } else if (name === 'year_level' && value) {
-                        // If year_level is selected, disable shs_strand
-                        const shsStrandSelect = document.querySelector(
-                            'select[wire\\:model="shs_strand"]');
-                        if (shsStrandSelect) {
-                            shsStrandSelect.disabled = true;
-                            shsStrandSelect.classList.add('bg-gray-100', 'cursor-not-allowed');
-                        }
-                    }
-                });
-            });
-        });
-    </script>
