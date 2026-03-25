@@ -18,24 +18,29 @@
         </div>
     @endif
 
-     <!-- Main Container -->
+    <!-- Main Container -->
     <div class="bg-white rounded-lg shadow-md p-1.5">
         <div class="overflow-x-auto">
-            <div class="relative bg-gradient-to-br from-blue-50 to-yellow-50 shadow-xs rounded-xl border border-green-100">
-                
+            <div
+                class="relative bg-gradient-to-br from-blue-50 to-yellow-50 shadow-xs rounded-xl border border-green-100">
+
                 <!-- Search and Filter Controls -->
                 <div class="p-5 bg-white/80 backdrop-blur-sm border-b border-green-100 rounded-t-xl">
                     <div class="flex justify-between items-center mb-5">
                         <h3 class="text-lg font-semibold text-green-900 flex items-center gap-2">
-                            <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                </path>
                             </svg>
                             Event Registrations
                         </h3>
                         <button wire:click="openExportModal"
                             class="px-4 py-2 bg-gradient-to-r from-green-600 to-green-800 text-white rounded-lg hover:from-green-500 hover:to-green-600 transition-all duration-200 text-sm font-medium flex items-center gap-2 shadow-md shadow-green-200">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                             </svg>
                             Export to Excel/CSV
                         </button>
@@ -49,8 +54,10 @@
                             <div class="md:col-span-2">
                                 <div class="relative group">
                                     <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                        <svg class="w-4 h-4 text-green-400 group-focus-within:text-emerald-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                        <svg class="w-4 h-4 text-green-400 group-focus-within:text-emerald-500 transition-colors"
+                                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                                         </svg>
                                     </div>
                                     <input type="text" wire:model.live.debounce.300ms="search"
@@ -111,7 +118,8 @@
                                 <button wire:click="resetFilters"
                                     class="w-full px-4 py-2.5 text-sm font-medium text-green-700 bg-green-50 border-2 border-green-200 rounded-xl hover:bg-emerald-50 hover:border-emerald-400 hover:text-emerald-700 focus:ring-2 focus:ring-emerald-200 transition-all duration-200 flex items-center justify-center gap-2">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                                     </svg>
                                     Reset All Filters
                                 </button>
@@ -126,46 +134,75 @@
                         <table class="min-w-full divide-y divide-green-100">
                             <thead class="bg-gradient-to-r from-green-600 to-emerald-700">
                                 <tr>
-                                    <th class="px-4 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider">Student</th>
-                                    <th class="px-4 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider">Event</th>
-                                    <th class="px-4 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider">Status</th>
-                                    <th class="px-4 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider">Ticket</th>
-                                    <th class="px-4 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider">Payment</th>
-                                    <th class="px-4 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider">Actions</th>
+                                    <th
+                                        class="px-4 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                                        Student</th>
+                                    <th
+                                        class="px-4 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                                        Event</th>
+                                    <th
+                                        class="px-4 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                                        Status</th>
+                                    <th
+                                        class="px-4 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                                        Ticket</th>
+                                    <th
+                                        class="px-4 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                                        Payment</th>
+                                    <th
+                                        class="px-4 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                                        Actions</th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-green-50">
                                 @foreach ($registrations as $index => $registration)
-                                    <tr class="{{ $index % 2 === 0 ? 'bg-white hover:bg-green-50' : 'bg-green-50/30 hover:bg-green-100' }} transition-colors duration-150 group">
+                                    <tr
+                                        class="{{ $index % 2 === 0 ? 'bg-white hover:bg-green-50' : 'bg-green-50/30 hover:bg-green-100' }} transition-colors duration-150 group">
                                         <!-- Student Info -->
                                         <td class="px-4 py-3">
                                             <div class="flex flex-col">
-                                                <span class="text-sm font-medium text-gray-900">{{ $registration->user->first_name }} {{ $registration->user->last_name }}</span>
-                                                <span class="text-xs text-gray-500 font-mono">{{ $registration->user->student_id ?? 'N/A' }}</span>
-                                                <span class="text-xs text-gray-400">{{ $registration->user->email }}</span>
+                                                <span
+                                                    class="text-sm font-medium text-gray-900">{{ $registration->user->first_name }}
+                                                    {{ $registration->user->last_name }}</span>
+                                                <span
+                                                    class="text-xs text-gray-500 font-mono">{{ $registration->user->student_id ?? 'N/A' }}</span>
+                                                <span
+                                                    class="text-xs text-gray-400">{{ $registration->user->email }}</span>
                                             </div>
                                         </td>
 
                                         <!-- Event -->
                                         <td class="px-4 py-3">
                                             <div class="flex flex-col">
-                                                <span class="text-sm text-gray-900">{{ Str::limit($registration->event->title, 25) }}</span>
+                                                <span
+                                                    class="text-sm text-gray-900">{{ Str::limit($registration->event->title, 25) }}</span>
                                                 @if ($registration->event->require_payment)
-                                                    <span class="text-xs text-emerald-600 font-medium">₱{{ number_format($registration->event->payment_amount, 2) }}</span>
+                                                    <span
+                                                        class="text-xs text-emerald-600 font-medium">₱{{ number_format($registration->event->payment_amount, 2) }}</span>
                                                 @else
                                                     <span class="text-xs text-gray-500">Free Event</span>
                                                 @endif
                                             </div>
                                         </td>
-
                                         <!-- Registration Status -->
                                         <td class="px-4 py-3">
-                                            @if ($registration->status === 'registered')
-                                                <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-lg text-xs font-medium">Registered</span>
-                                            @elseif($registration->status === 'attended')
-                                                <span class="px-2 py-1 bg-green-100 text-green-800 rounded-lg text-xs font-medium">Attended</span>
-                                            @elseif($registration->status === 'cancelled')
-                                                <span class="px-2 py-1 bg-red-100 text-red-800 rounded-lg text-xs font-medium">Cancelled</span>
+                                            @php
+                                                // Determine actual status based on ticket usage
+                                                $displayStatus = $registration->status;
+                                                if ($registration->ticket && $registration->ticket->isUsed()) {
+                                                    $displayStatus = 'attended';
+                                                }
+                                            @endphp
+
+                                            @if ($displayStatus === 'registered')
+                                                <span
+                                                    class="px-2 py-1 bg-blue-100 text-blue-800 rounded-lg text-xs font-medium">Registered</span>
+                                            @elseif($displayStatus === 'attended')
+                                                <span
+                                                    class="px-2 py-1 bg-green-100 text-green-800 rounded-lg text-xs font-medium">Attended</span>
+                                            @elseif($displayStatus === 'cancelled')
+                                                <span
+                                                    class="px-2 py-1 bg-red-100 text-red-800 rounded-lg text-xs font-medium">Cancelled</span>
                                             @endif
                                         </td>
 
@@ -174,35 +211,45 @@
                                             @if ($registration->ticket)
                                                 <div class="flex flex-col">
                                                     @if ($registration->ticket->isActive())
-                                                        <span class="px-2 py-1 bg-green-100 text-green-800 rounded-lg text-xs font-medium">Active</span>
+                                                        <span
+                                                            class="px-2 py-1 bg-green-100 text-green-800 rounded-lg text-xs font-medium">Active</span>
                                                     @elseif($registration->ticket->isPendingPayment())
-                                                        <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-lg text-xs font-medium">Pending</span>
+                                                        <span
+                                                            class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-lg text-xs font-medium">Pending</span>
                                                     @elseif($registration->ticket->isUsed())
-                                                        <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded-lg text-xs font-medium">Used</span>
+                                                        <span
+                                                            class="px-2 py-1 bg-gray-100 text-gray-800 rounded-lg text-xs font-medium">Used</span>
                                                     @endif
-                                                    <span class="text-xs text-gray-500 mt-1 font-mono">{{ substr($registration->ticket->ticket_number, -8) }}</span>
+                                                    <span
+                                                        class="text-xs text-gray-500 mt-1 font-mono">{{ substr($registration->ticket->ticket_number, -8) }}</span>
                                                 </div>
                                             @else
-                                                <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded-lg text-xs font-medium">None</span>
+                                                <span
+                                                    class="px-2 py-1 bg-gray-100 text-gray-800 rounded-lg text-xs font-medium">None</span>
                                             @endif
                                         </td>
 
                                         <!-- Payment Status -->
                                         <td class="px-4 py-3">
                                             @if (!$registration->event->require_payment)
-                                                <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded-lg text-xs font-medium">Free</span>
+                                                <span
+                                                    class="px-2 py-1 bg-gray-100 text-gray-800 rounded-lg text-xs font-medium">Free</span>
                                             @else
                                                 @if ($registration->isPaymentVerified())
                                                     <div class="flex flex-col">
-                                                        <span class="px-2 py-1 bg-green-100 text-green-800 rounded-lg text-xs font-medium">Verified</span>
+                                                        <span
+                                                            class="px-2 py-1 bg-green-100 text-green-800 rounded-lg text-xs font-medium">Verified</span>
                                                         @if ($registration->payment_verified_at)
-                                                            <span class="text-xs text-gray-500 mt-1">{{ $registration->payment_verified_at->format('M d, Y') }}</span>
+                                                            <span
+                                                                class="text-xs text-gray-500 mt-1">{{ $registration->payment_verified_at->format('M d, Y') }}</span>
                                                         @endif
                                                     </div>
                                                 @elseif($registration->isPaymentRejected())
-                                                    <span class="px-2 py-1 bg-red-100 text-red-800 rounded-lg text-xs font-medium">Rejected</span>
+                                                    <span
+                                                        class="px-2 py-1 bg-red-100 text-red-800 rounded-lg text-xs font-medium">Rejected</span>
                                                 @else
-                                                    <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-lg text-xs font-medium">Pending</span>
+                                                    <span
+                                                        class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-lg text-xs font-medium">Pending</span>
                                                 @endif
                                             @endif
                                         </td>
@@ -219,8 +266,10 @@
                                                         <button wire:click="verifyPayment({{ $registration->id }})"
                                                             class="p-2 bg-green-100 text-green-600 rounded-lg hover:bg-green-600 hover:text-white transition-all duration-200 group/verify"
                                                             title="Verify Payment">
-                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                                viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2" d="M5 13l4 4L19 7" />
                                                             </svg>
                                                         </button>
                                                     @endif
@@ -229,18 +278,24 @@
                                                         <button wire:click="rejectPayment({{ $registration->id }})"
                                                             class="p-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-600 hover:text-white transition-all duration-200 group/reject"
                                                             title="Reject Payment">
-                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                                viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                                                             </svg>
                                                         </button>
                                                     @endif
 
                                                     @if ($buttons['reset'])
-                                                        <button wire:click="resetPaymentStatus({{ $registration->id }})"
+                                                        <button
+                                                            wire:click="resetPaymentStatus({{ $registration->id }})"
                                                             class="p-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-600 hover:text-white transition-all duration-200 group/reset"
                                                             title="Reset Status">
-                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                                viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                                                             </svg>
                                                         </button>
                                                     @endif
@@ -250,8 +305,10 @@
                                                     <button wire:click="generateTicket({{ $registration->id }})"
                                                         class="p-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition-all duration-200 group/generate"
                                                         title="Generate Ticket">
-                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                            viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                                         </svg>
                                                     </button>
                                                 @endif
@@ -260,9 +317,14 @@
                                                     <button wire:click="viewTicket({{ $registration->id }})"
                                                         class="p-2 bg-purple-100 text-purple-600 rounded-lg hover:bg-purple-600 hover:text-white transition-all duration-200 group/view"
                                                         title="View Ticket">
-                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                            viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                                         </svg>
                                                     </button>
                                                 @endif
@@ -271,8 +333,11 @@
                                                     <button wire:click="regenerateTicket({{ $registration->id }})"
                                                         class="p-2 bg-orange-100 text-orange-600 rounded-lg hover:bg-orange-600 hover:text-white transition-all duration-200 group/regenerate"
                                                         title="Regenerate Ticket">
-                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                            viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                                                         </svg>
                                                     </button>
                                                 @endif
@@ -297,15 +362,19 @@
                             <div class="flex items-center space-x-2">
                                 @if ($registrations->onFirstPage())
                                     <span class="px-3 py-2 bg-gray-100 text-gray-400 rounded-lg cursor-not-allowed">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15 19l-7-7 7-7" />
                                         </svg>
                                     </span>
                                 @else
                                     <button wire:click="previousPage"
                                         class="px-3 py-2 bg-white text-green-600 border-2 border-green-200 rounded-lg hover:bg-emerald-400 hover:text-white hover:border-emerald-400 transition-all duration-200">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15 19l-7-7 7-7" />
                                         </svg>
                                     </button>
                                 @endif
@@ -323,14 +392,18 @@
                                 @if ($registrations->hasMorePages())
                                     <button wire:click="nextPage"
                                         class="px-3 py-2 bg-white text-green-600 border-2 border-green-200 rounded-lg hover:bg-emerald-400 hover:text-white hover:border-emerald-400 transition-all duration-200">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 5l7 7-7 7" />
                                         </svg>
                                     </button>
                                 @else
                                     <span class="px-3 py-2 bg-gray-100 text-gray-400 rounded-lg cursor-not-allowed">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 5l7 7-7 7" />
                                         </svg>
                                     </span>
                                 @endif
@@ -342,8 +415,11 @@
                 <!-- Empty State -->
                 <div class="px-4 py-12 text-center text-gray-500">
                     <div class="flex flex-col items-center justify-center">
-                        <svg class="w-16 h-16 mb-4 text-green-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        <svg class="w-16 h-16 mb-4 text-green-300" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                            </path>
                         </svg>
                         <p class="text-lg font-medium text-green-800">No registrations found</p>
                         <p class="text-sm text-green-600 mt-1">
@@ -503,7 +579,8 @@
                     <!-- Ticket Header -->
                     <div class="flex justify-between items-start mb-6">
                         <div>
-                            <h3 class="text-xl font-bold text-gray-900">{{ $selectedTicketRegistration->event->title }}
+                            <h3 class="text-xl font-bold text-gray-900">
+                                {{ $selectedTicketRegistration->event->title }}
                             </h3>
                             <p class="text-sm text-gray-600">{{ $selectedTicketRegistration->event->category }} Event
                             </p>

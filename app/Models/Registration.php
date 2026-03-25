@@ -70,7 +70,27 @@ class Registration extends Model
                     'ticket_id' => $registration->ticket->id
                 ]);
             }
+            
+            // Sync status from ticket (this will handle attended status)
+            $registration->syncStatusFromTicket();
         });
+    }
+
+    public function syncStatusFromTicket()
+    {
+        // Check if ticket exists and is used
+        if ($this->ticket && $this->ticket->isUsed()) {
+            // If registration is not already marked as attended, update it
+            if ($this->status !== 'attended') {
+                $this->update(['status' => 'attended']);
+                
+                \Log::info('Registration status synced to attended from ticket', [
+                    'registration_id' => $this->id,
+                    'ticket_id' => $this->ticket->id,
+                    'ticket_number' => $this->ticket->ticket_number
+                ]);
+            }
+        }
     }
 
     // Add this method to your Registration.php model

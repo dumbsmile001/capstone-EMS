@@ -25,6 +25,26 @@ class Ticket extends Model
         'used_at' => 'datetime',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+        
+        static::updated(function ($ticket) {
+            // If ticket status changed to 'used', update the associated registration
+            if ($ticket->isDirty('status') && $ticket->status === 'used') {
+                if ($ticket->registration) {
+                    $ticket->registration->update(['status' => 'attended']);
+                    
+                    \Log::info('Registration marked as attended after ticket usage', [
+                        'registration_id' => $ticket->registration->id,
+                        'ticket_id' => $ticket->id,
+                        'ticket_number' => $ticket->ticket_number
+                    ]);
+                }
+            }
+        });
+    }
+
     public function registration()
     {
         return $this->belongsTo(Registration::class);

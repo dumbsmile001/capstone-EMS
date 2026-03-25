@@ -345,6 +345,12 @@ class AdminRegistrations extends Component
     public function resetPaymentStatus($registrationId)
     {
         $registration = Registration::with(['user', 'ticket'])->find($registrationId);
+    
+        // Check if registration is cancelled or attended
+        if (in_array($registration->status, ['cancelled', 'attended'])) {
+            session()->flash('error', 'Cannot reset payment status for a ' . $registration->status . ' registration.');
+            return;
+        }
         
         // Check if ticket is used - prevent reset
         if ($registration->ticket && $registration->ticket->isUsed()) {
@@ -384,7 +390,13 @@ class AdminRegistrations extends Component
 
     public function generateTicket($registrationId)
     {
-        $registration = Registration::with(['user', 'event', 'ticket'])->find($registrationId);
+       $registration = Registration::with(['user', 'event', 'ticket'])->find($registrationId);
+    
+        // Check if registration is cancelled or attended
+        if (in_array($registration->status, ['cancelled', 'attended'])) {
+            session()->flash('error', 'Cannot generate ticket for a ' . $registration->status . ' registration.');
+            return;
+        }
         
         // Check if ticket exists and is used - prevent generation
         if ($registration->ticket && $registration->ticket->isUsed()) {
@@ -444,6 +456,12 @@ class AdminRegistrations extends Component
    public function regenerateTicket($registrationId)
     {
         $registration = Registration::with(['user', 'event', 'ticket'])->find($registrationId);
+    
+        // Check if registration is cancelled or attended
+        if (in_array($registration->status, ['cancelled', 'attended'])) {
+            session()->flash('error', 'Cannot regenerate ticket for a ' . $registration->status . ' registration.');
+            return;
+        }
         
         // Check if ticket is used - prevent regeneration
         if ($registration->ticket && $registration->ticket->isUsed()) {
@@ -512,9 +530,25 @@ class AdminRegistrations extends Component
     // Helper method to determine what buttons to show
     public function getActionButtons($registration)
     {
-        $buttons = [];
+         $buttons = [];
+    
+        // Determine if registration is attended (ticket used)
+        $isAttended = ($registration->ticket && $registration->ticket->isUsed());
+        $isCancelled = ($registration->status === 'cancelled');
         
-        // First, check if ticket exists and is used - this overrides everything
+        // If attended or cancelled, only show view ticket if available
+        if ($isAttended || $isCancelled) {
+            return [
+                'verify' => false,
+                'reject' => false,
+                'generate' => false,
+                'view' => $registration->ticket ? true : false, // Always allow viewing tickets for attended/cancelled
+                'regenerate' => false,
+                'reset' => false,
+            ];
+        }
+        
+        // Check if ticket exists and is used - this overrides everything else
         if ($registration->ticket && $registration->ticket->isUsed()) {
             return [
                 'verify' => false,

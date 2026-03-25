@@ -204,13 +204,21 @@
 
                                         <!-- Registration Status -->
                                         <td class="px-4 py-3">
-                                            @if ($registration->status === 'registered')
+                                            @php
+                                                // Determine actual status based on ticket usage
+                                                $displayStatus = $registration->status;
+                                                if ($registration->ticket && $registration->ticket->isUsed()) {
+                                                    $displayStatus = 'attended';
+                                                }
+                                            @endphp
+
+                                            @if ($displayStatus === 'registered')
                                                 <span
                                                     class="px-2 py-1 bg-blue-100 text-blue-800 rounded-lg text-xs font-medium">Registered</span>
-                                            @elseif($registration->status === 'attended')
+                                            @elseif($displayStatus === 'attended')
                                                 <span
                                                     class="px-2 py-1 bg-green-100 text-green-800 rounded-lg text-xs font-medium">Attended</span>
-                                            @elseif($registration->status === 'cancelled')
+                                            @elseif($displayStatus === 'cancelled')
                                                 <span
                                                     class="px-2 py-1 bg-red-100 text-red-800 rounded-lg text-xs font-medium">Cancelled</span>
                                             @endif
