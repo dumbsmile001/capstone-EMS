@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Registration;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\DB;
 
 class Event extends Model
 {
@@ -12,12 +13,11 @@ class Event extends Model
     
     protected $fillable = [
         'title',
-        'start_date',        // Changed from 'date'
-        'start_time',        // Changed from 'time'
-        'end_date',          // New field
-        'end_time',          // New field
-        'type',
-        'place_link',
+        'start_date',
+        'start_time',
+        'end_date',
+        'end_time',
+        'location',
         'category',
         'description',
         'banner',
@@ -25,15 +25,14 @@ class Event extends Model
         'payment_amount',
         'status',
         'created_by',
-        'is_archived', // Add this
-        'archived_at', // Add this
-        'archived_by', // Add this
-        // Add these for visibility
-        'visibility_type', // 'all', 'grade_level', 'shs_strand', 'year_level', 'college_program'
-        'visible_to_grade_level', // JSON array: [11, 12] or null
-        'visible_to_shs_strand', // JSON array: ['ABM', 'HUMSS'] or null
-        'visible_to_year_level', // JSON array: [1, 2, 3, 4] or null
-        'visible_to_college_program', // JSON array: ['BSIT', 'BSBA'] or null
+        'is_archived',
+        'archived_at',
+        'archived_by',
+        'visibility_type',
+        'visible_to_grade_level',
+        'visible_to_shs_strand',
+        'visible_to_year_level',
+        'visible_to_college_program',
     ];
 
     protected $casts = [
@@ -41,23 +40,122 @@ class Event extends Model
         'end_date' => 'date',  
         'require_payment' => 'boolean',
         'payment_amount' => 'decimal:2',
-        'is_archived' => 'boolean', // Add this
-        'archived_at' => 'datetime', // Add this
+        'is_archived' => 'boolean',
+        'archived_at' => 'datetime',
         'visible_to_grade_level' => 'array',
         'visible_to_shs_strand' => 'array',
         'visible_to_year_level' => 'array',
         'visible_to_college_program' => 'array',
     ];
 
-    // Add helper methods for date/time logic
+    // Predefined locations
+    public static $predefinedLocations = [
+        'SPCC AVR',
+        'SPCC School Grounds',
+    ];
+
+    // Helper method to get start datetime
     public function getStartDateTimeAttribute()
     {
         return \Carbon\Carbon::parse($this->start_date->format('Y-m-d') . ' ' . $this->start_time);
     }
 
+    // Helper method to get end datetime
     public function getEndDateTimeAttribute()
     {
         return \Carbon\Carbon::parse($this->end_date->format('Y-m-d') . ' ' . $this->end_time);
+    }
+
+    /**
+     * Check if this event conflicts with another event
+     * Conflict occurs when:
+     * 1. Same location
+     * 2. Time periods overlap
+     */
+    public function conflictsWith(Event $otherEvent)
+    {
+        // Only check conflicts for active (non-archived) events
+        if ($otherEvent->is_archived) {
+            return false;
+        }
+
+        // Different locations don't conflict
+        if ($this->location !== $otherEvent->location) {
+            return false;
+        }
+
+        // Check if time periods overlap
+        $thisStart = $this->startDateTime;
+        $thisEnd = $this->endDateTime;
+        $otherStart = $otherEvent->startDateTime;
+        $otherEnd = $otherEvent->endDateTime;
+
+        // Overlap condition: one event starts before the other ends AND ends after the other starts
+        return $thisStart < $otherEnd && $thisEnd > $otherStart;
+    }
+
+    /**
+     * Find conflicting events for a given event
+     */
+    public function findConflicts($excludeSelf = false)
+    {
+        $query = Event::where('location', $this->location)
+            ->where('is_archived', false)
+            ->where('status', 'published');
+
+        if ($excludeSelf && $this->id) {
+            $query->where('id', '!=', $this->id);
+        }
+
+        $events = $query->get();
+        
+        $conflicts = [];
+        foreach ($events as $event) {
+            if ($this->conflictsWith($event)) {
+                $conflicts[] = $event;
+            }
+        }
+        
+        return $conflicts;
+    }
+
+    /**
+     * Check if an event would cause conflicts
+     */
+    public function wouldCauseConflict($excludeSelf = false)
+    {
+        return count($this->findConflicts($excludeSelf)) > 0;
+    }
+
+    /**
+     * Get a human-readable conflict message
+     */
+    public function getConflictMessage()
+    {
+        $conflicts = $this->findConflicts();
+        
+        if (empty($conflicts)) {
+            return null;
+        }
+        
+        $conflict = $conflicts[0];
+        $conflictCount = count($conflicts);
+        
+        if ($conflictCount === 1) {
+            return sprintf(
+                'This event conflicts with "%s" which runs from %s to %s at the same location (%s).',
+                $conflict->title,
+                $conflict->startDateTime->format('M d, Y g:i A'),
+                $conflict->endDateTime->format('M d, Y g:i A'),
+                $this->location
+            );
+        } else {
+            return sprintf(
+                'This event conflicts with %d other event(s) scheduled at %s during the same time period.',
+                $conflictCount,
+                $this->location
+            );
+        }
     }
 
     public function isCurrentlyOngoing()
@@ -78,23 +176,19 @@ class Event extends Model
 
     public function canRegister()
     {
-        // Registration closes when event starts
         return !$this->hasStarted() && !$this->is_archived && $this->status === 'published';
     }
 
     public function canCancelRegistration()
     {
-        // Can cancel until event starts
         return !$this->hasStarted() && !$this->is_archived;
     }
 
     public function canBeArchived()
     {
-        // Can archive after event ends
         return $this->hasEnded() && !$this->is_archived && $this->status === 'published';
     }
 
-    // Update the scope for events that should be auto-archived
     public function scopeShouldBeArchived($query)
     {
         return $query->where('end_date', '<', now()->toDateString())
@@ -106,7 +200,6 @@ class Event extends Model
             ->where('status', 'published');
     }
 
-    // Update the scope for upcoming events
     public function scopeUpcoming($query)
     {
         return $query->where(function($q) {
@@ -118,7 +211,6 @@ class Event extends Model
         });
     }
 
-    // New scope for ongoing events
     public function scopeOngoing($query)
     {
         return $query->where('start_date', '<=', now()->toDateString())
@@ -134,52 +226,43 @@ class Event extends Model
 
     public function isVisibleToUser(User $user)
     {
-        // If event is archived or not published, it's not visible
         if ($this->is_archived || $this->status !== 'published') {
             return false;
         }
 
-        // Check visibility rules
         switch ($this->visibility_type) {
             case 'all':
                 return true;
-                
             case 'grade_level':
                 if (!$user->grade_level || !$this->visible_to_grade_level) {
                     return false;
                 }
                 return in_array($user->grade_level, $this->visible_to_grade_level);
-                
             case 'shs_strand':
                 if (!$user->shs_strand || !$this->visible_to_shs_strand) {
                     return false;
                 }
                 return in_array($user->shs_strand, $this->visible_to_shs_strand);
-                
             case 'year_level':
                 if (!$user->year_level || !$this->visible_to_year_level) {
                     return false;
                 }
                 return in_array($user->year_level, $this->visible_to_year_level);
-                
             case 'college_program':
                 if (!$user->college_program || !$this->visible_to_college_program) {
                     return false;
                 }
                 return in_array($user->college_program, $this->visible_to_college_program);
-                
             default:
                 return true;
         }
     }
 
-    // Add these relationships
     public function archiver()
     {
         return $this->belongsTo(User::class, 'archived_by');
     }
 
-    // Add this scope to get only active (non-archived) events
     public function scopeActive($query)
     {
         return $query->where('is_archived', false);
@@ -190,7 +273,6 @@ class Event extends Model
         return $query->where('is_archived', true);
     }
 
-    // Archive method
     public function archive($userId = null)
     {
         $this->update([
@@ -200,7 +282,6 @@ class Event extends Model
         ]);
     }
 
-    // Unarchive method
     public function unarchive()
     {
         $this->update([
@@ -210,16 +291,12 @@ class Event extends Model
         ]);
     }
 
-    // Check if event is past
     public function isPast()
     {
         $eventDateTime = \Carbon\Carbon::parse($this->date->format('Y-m-d') . ' ' . $this->time);
         return $eventDateTime->isPast();
     }
 
-    /**
-     * Get the user who created the event.
-     */
     public function creator()
     {
         return $this->belongsTo(User::class, 'created_by');
