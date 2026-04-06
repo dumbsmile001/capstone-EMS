@@ -1165,33 +1165,9 @@
                                     </svg>
                                 </div>
                                 <div class="flex-1">
-                                    <p class="text-xs text-gray-500">
-                                        {{ $selectedEvent->type === 'online' ? 'Event Link' : 'Location' }}</p>
-                                    @if ($selectedEvent->type === 'online' && filter_var($selectedEvent->place_link, FILTER_VALIDATE_URL))
-                                        <a href="{{ $selectedEvent->place_link }}" target="_blank"
-                                            class="font-semibold text-green-600 hover:text-green-700 hover:underline transition-colors flex items-center space-x-1 break-all">
-                                            <span>{{ $selectedEvent->place_link }}</span>
-                                            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                            </svg>
-                                        </a>
-                                    @else
-                                        <p class="font-semibold text-gray-800">{{ $selectedEvent->place_link }}</p>
-                                    @endif
+                                    <p class="text-xs text-gray-500">Location</p>
+                                    <p class="font-semibold text-gray-800">{{ $selectedEvent->location }}</p>
                                 </div>
-                            </div>
-                        </div>
-
-                        <!-- Type and Category -->
-                        <div class="bg-white p-4 rounded-xl border border-gray-200">
-                            <p class="text-xs text-gray-500 mb-2">Event Type</p>
-                            <div class="flex items-center space-x-2">
-                                <span
-                                    class="w-2 h-2 rounded-full {{ $selectedEvent->type === 'online' ? 'bg-green-500' : 'bg-orange-500' }}"></span>
-                                <span
-                                    class="font-medium capitalize">{{ str_replace('-', ' ', $selectedEvent->type) }}</span>
                             </div>
                         </div>
 
@@ -1272,14 +1248,6 @@
                                     d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                             </svg>
                             <span>Close</span>
-                        </button>
-                        <button type="button" wire:click="openEditModal({{ $selectedEvent->id }})"
-                            class="flex-1 px-6 py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white rounded-xl hover:from-yellow-600 hover:to-yellow-700 transition-all duration-200 font-medium flex items-center justify-center space-x-2 group shadow-lg shadow-yellow-200">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                            </svg>
-                            <span>Edit Event</span>
                         </button>
                     </div>
                 </div>
