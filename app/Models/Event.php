@@ -105,12 +105,20 @@ class Event extends Model
 
         if ($excludeSelf && $this->id) {
             $query->where('id', '!=', $this->id);
+        } elseif ($excludeSelf && !$this->id) {
+            // For new events, we don't need to exclude anything by ID
+            // Just proceed with the query
         }
 
         $events = $query->get();
         
         $conflicts = [];
         foreach ($events as $event) {
+            // Make sure we're not comparing the event with itself
+            if ($excludeSelf && $this->id && $event->id === $this->id) {
+                continue;
+            }
+            
             if ($this->conflictsWith($event)) {
                 $conflicts[] = $event;
             }

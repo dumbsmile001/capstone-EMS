@@ -187,6 +187,7 @@ class OrganizerEvents extends Component
      */
     public function createEvent()
     {
+        // First validate the basic data
         $validatedData = $this->validateEventData();
         
         // Additional validation: if same date, end time must be after start time
@@ -198,8 +199,11 @@ class OrganizerEvents extends Component
         // Prepare event data
         $eventData = $this->prepareEventData();
         
-        // Check for conflicts
-        if (!$this->checkConflicts($eventData)) {
+        // Log the data for debugging
+        \Log::info('Creating event with data:', $eventData);
+        
+        // Check for conflicts (no exclude ID for new events)
+        if (!$this->checkConflicts($eventData, null)) {
             // Store pending data and show conflict modal
             $this->pendingEventData = $eventData;
             $this->showConflictModal = true;
@@ -411,10 +415,40 @@ class OrganizerEvents extends Component
             $tempEvent->id = $excludeEventId;
         }
         
-        $conflicts = $tempEvent->findConflicts($excludeEventId !== null);
+        // Get potential conflicting events
+        $query = Event::where('location', $tempEvent->location)
+            ->where('is_archived', false)
+            ->where('status', 'published');
+        
+        // Exclude the current event if we're updating
+        if ($excludeEventId) {
+            $query->where('id', '!=', $excludeEventId);
+        }
+        
+        $potentialConflicts = $query->get();
+        
+        $conflicts = [];
+        foreach ($potentialConflicts as $event) {
+            // Skip if it's the same event (for updates)
+            if ($excludeEventId && $event->id == $excludeEventId) {
+                continue;
+            }
+            
+            // Check if time periods overlap
+            $tempStart = $tempEvent->startDateTime;
+            $tempEnd = $tempEvent->endDateTime;
+            $eventStart = $event->startDateTime;
+            $eventEnd = $event->endDateTime;
+            
+            // Overlap condition
+            if ($tempStart < $eventEnd && $tempEnd > $eventStart) {
+                $conflicts[] = $event;
+            }
+        }
         
         if (!empty($conflicts)) {
             $this->conflictingEvents = $conflicts;
+            \Log::info('Conflicts found:', ['count' => count($conflicts), 'conflicts' => $conflicts]);
             return false;
         }
         
