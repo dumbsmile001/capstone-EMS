@@ -38,6 +38,9 @@ class AdminEvents extends Component
     public $showEventDetailsModal = false;
     public $showArchiveModal = false;
     public $showConflictModal = false;    // New: for showing conflicts
+    public $showAutoArchiveModal = false;
+    public $autoArchiveDryRun = false;
+    public $autoArchiveResults = null;
     
     // Event management
     public $editingEvent = null;
@@ -520,6 +523,101 @@ class AdminEvents extends Component
         }
         
         $this->closeArchiveModal();
+    }
+
+    public function confirmAutoArchive()
+    {
+        $this->showAutoArchiveModal = true;
+    }
+
+    public function performAutoArchive()
+    {
+        $this->autoArchiveDryRun = false;
+        
+        // Get the count of events to archive first
+        $cutoffDate = now()->subDays(1);
+        $eventsToArchive = Event::where('is_archived', false)
+            ->where('status', 'published')
+            ->where(function ($query) use ($cutoffDate) {
+                $query->where('end_date', '<', $cutoffDate->toDateString())
+                    ->orWhere(function ($q) use ($cutoffDate) {
+                        $q->where('end_date', $cutoffDate->toDateString())
+                            ->where('end_time', '<', $cutoffDate->format('H:i:s'));
+                    });
+            })
+            ->get();
+        
+        $archived = 0;
+        $failed = 0;
+        $results = [];
+        
+        foreach ($eventsToArchive as $event) {
+            try {
+                $event->archive(null);
+                $archived++;
+                $results[] = [
+                    'title' => $event->title,
+                    'status' => 'success'
+                ];
+            } catch (\Exception $e) {
+                $failed++;
+                $results[] = [
+                    'title' => $event->title,
+                    'status' => 'failed',
+                    'error' => $e->getMessage()
+                ];
+            }
+        }
+        
+        $this->autoArchiveResults = [
+            'total' => $eventsToArchive->count(),
+            'archived' => $archived,
+            'failed' => $failed,
+            'results' => $results
+        ];
+        
+        $this->logActivity('AUTO_ARCHIVE', null, 
+            auth()->user()->first_name . ' ' . auth()->user()->last_name . ' triggered manual auto-archive. ' .
+            $archived . ' events archived, ' . $failed . ' failed.');
+        
+        if ($archived > 0) {
+            session()->flash('success', "Auto-archived {$archived} event(s) successfully!");
+        } else {
+            session()->flash('info', 'No expired events found to archive.');
+        }
+        
+        $this->showAutoArchiveModal = false;
+    }
+
+    public function previewAutoArchive()
+    {
+        $cutoffDate = now()->subDays(1);
+        
+        $eventsToArchive = Event::where('is_archived', false)
+            ->where('status', 'published')
+            ->where(function ($query) use ($cutoffDate) {
+                $query->where('end_date', '<', $cutoffDate->toDateString())
+                    ->orWhere(function ($q) use ($cutoffDate) {
+                        $q->where('end_date', $cutoffDate->toDateString())
+                            ->where('end_time', '<', $cutoffDate->format('H:i:s'));
+                    });
+            })
+            ->with('creator')
+            ->get();
+        
+        $this->autoArchiveResults = [
+            'total' => $eventsToArchive->count(),
+            'archived' => 0,
+            'failed' => 0,
+            'preview' => $eventsToArchive->map(fn($e) => [
+                'title' => $e->title,
+                'end_date' => $e->end_date->format('M d, Y'),
+                'end_time' => \Carbon\Carbon::parse($e->end_time)->format('g:i A'),
+                'creator' => ($e->creator->first_name ?? 'Unknown') . ' ' . ($e->creator->last_name ?? ''),
+            ])->toArray()
+        ];
+        
+        $this->autoArchiveDryRun = true;
     }
     
     public function sortBy($field)

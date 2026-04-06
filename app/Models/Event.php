@@ -197,6 +197,25 @@ class Event extends Model
         return $this->hasEnded() && !$this->is_archived && $this->status === 'published';
     }
 
+    /**
+     * Scope for events that are eligible for auto-archiving
+     * (ended X days ago and not archived)
+     */
+    public function scopeEligibleForArchiving($query, $daysAfterEnd = 1)
+    {
+        $cutoffDate = now()->subDays($daysAfterEnd);
+        
+        return $query->where('is_archived', false)
+            ->where('status', 'published')
+            ->where(function ($q) use ($cutoffDate) {
+                $q->where('end_date', '<', $cutoffDate->toDateString())
+                    ->orWhere(function ($subQ) use ($cutoffDate) {
+                        $subQ->where('end_date', $cutoffDate->toDateString())
+                            ->where('end_time', '<', $cutoffDate->format('H:i:s'));
+                    });
+            });
+    }
+
     public function scopeShouldBeArchived($query)
     {
         return $query->where('end_date', '<', now()->toDateString())

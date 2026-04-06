@@ -20,13 +20,25 @@
                     </div>
                     <p class="text-gray-600">Manage all events in the system</p>
                 </div>
-                <button wire:click="openCreateModal"
-                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                    </svg>
-                    Create New Event
-                </button>
+                <!-- Add this button next to the Create New Event button (around line 35) -->
+                <div class="flex gap-3">
+                    <button wire:click="confirmAutoArchive"
+                        class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                        </svg>
+                        Auto-Archive Expired
+                    </button>
+                    <button wire:click="openCreateModal"
+                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4">
+                            </path>
+                        </svg>
+                        Create New Event
+                    </button>
+                </div>
             </div>
 
             <!-- Search and Filter Section -->
@@ -700,13 +712,16 @@
                 <!-- Location Field -->
                 <div class="space-y-1.5">
                     <label class="flex items-center space-x-2 text-sm font-semibold text-blue-900">
-                        <svg class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <svg class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
                         <span>Event Location</span>
                     </label>
-                    
+
                     <select wire:model="location"
                         class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 hover:border-blue-300 appearance-none cursor-pointer">
                         <option value="">Select a location</option>
@@ -715,7 +730,7 @@
                         @endforeach
                         <option value="custom">+ Custom Location</option>
                     </select>
-                    
+
                     @if ($location === 'custom')
                         <div class="mt-3 animate-slideDown">
                             <input type="text" wire:model="customLocation"
@@ -723,7 +738,7 @@
                                 placeholder="Enter custom location (e.g., Room 201, Library, etc.)">
                         </div>
                     @endif
-                    
+
                     @error('location')
                         <span class="text-red-500 text-xs">{{ $message }}</span>
                     @enderror
@@ -1097,13 +1112,16 @@
                 <!-- Location Field -->
                 <div class="space-y-1.5">
                     <label class="flex items-center space-x-2 text-sm font-semibold text-blue-900">
-                        <svg class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <svg class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
                         <span>Event Location</span>
                     </label>
-                    
+
                     <select wire:model="location"
                         class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 hover:border-blue-300 appearance-none cursor-pointer">
                         <option value="">Select a location</option>
@@ -1112,7 +1130,7 @@
                         @endforeach
                         <option value="custom">+ Custom Location</option>
                     </select>
-                    
+
                     @if ($location === 'custom')
                         <div class="mt-3 animate-slideDown">
                             <input type="text" wire:model="customLocation"
@@ -1120,7 +1138,7 @@
                                 placeholder="Enter custom location (e.g., Room 201, Library, etc.)">
                         </div>
                     @endif
-                    
+
                     @error('location')
                         <span class="text-red-500 text-xs">{{ $message }}</span>
                     @enderror
@@ -1844,29 +1862,33 @@
             <!-- Warning Icon -->
             <div class="flex justify-center">
                 <div class="p-4 bg-red-100 rounded-full animate-pulse">
-                    <svg class="w-12 h-12 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    <svg class="w-12 h-12 text-red-600" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
                 </div>
             </div>
 
             <!-- Warning Title -->
             <h3 class="text-xl font-bold text-center text-gray-900">Schedule Conflict!</h3>
-            
+
             <!-- Main Warning Message -->
             <p class="text-sm text-center text-gray-700 bg-red-50 p-4 rounded-xl border border-red-200">
-                The event you're trying to schedule conflicts with existing event(s) at the same location and time period.
+                The event you're trying to schedule conflicts with existing event(s) at the same location and time
+                period.
             </p>
 
             <!-- Conflicting Events List -->
             <div class="space-y-3">
                 <h4 class="font-semibold text-gray-800 flex items-center gap-2">
                     <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     Conflicting Events:
                 </h4>
-                
+
                 <div class="space-y-2 max-h-64 overflow-y-auto">
                     @foreach ($conflictingEvents as $conflict)
                         <div class="p-3 bg-red-50 rounded-lg border border-red-200">
@@ -1877,23 +1899,26 @@
                                         📍 {{ $conflict->location }}
                                     </p>
                                     <p class="text-xs text-gray-600 mt-1">
-                                        🕐 {{ $conflict->start_date->format('M d, Y') }} 
-                                        {{ \Carbon\Carbon::parse($conflict->start_time)->format('g:i A') }} - 
-                                        {{ $conflict->end_date->format('M d, Y') }} 
+                                        🕐 {{ $conflict->start_date->format('M d, Y') }}
+                                        {{ \Carbon\Carbon::parse($conflict->start_time)->format('g:i A') }} -
+                                        {{ $conflict->end_date->format('M d, Y') }}
                                         {{ \Carbon\Carbon::parse($conflict->end_time)->format('g:i A') }}
                                     </p>
                                 </div>
                                 <div class="flex-shrink-0">
                                     @if ($conflict->isCurrentlyOngoing())
-                                        <span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-200 text-red-800">
+                                        <span
+                                            class="px-2 py-1 text-xs font-semibold rounded-full bg-red-200 text-red-800">
                                             Ongoing
                                         </span>
                                     @elseif($conflict->hasStarted())
-                                        <span class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-200 text-yellow-800">
+                                        <span
+                                            class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-200 text-yellow-800">
                                             In Progress
                                         </span>
                                     @else
-                                        <span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-200 text-blue-800">
+                                        <span
+                                            class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-200 text-blue-800">
                                             Upcoming
                                         </span>
                                     @endif
@@ -1907,8 +1932,10 @@
             <!-- Recommendation -->
             <div class="p-4 bg-yellow-50 rounded-xl border border-yellow-200">
                 <div class="flex items-start space-x-3">
-                    <svg class="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <svg class="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     <div class="text-sm text-yellow-800">
                         <p class="font-semibold mb-1">Recommendation:</p>
@@ -1921,17 +1948,112 @@
             <div class="flex space-x-3 pt-4 border-t border-gray-200">
                 <button type="button" wire:click="closeConflictModal"
                     class="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-all duration-200 font-medium flex items-center justify-center space-x-2 group">
-                    <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                     </svg>
                     <span>Go Back & Fix</span>
                 </button>
-                <button type="button" 
-                    wire:click="{{ $editingEvent ? 'forceUpdateEvent' : 'forceCreateEvent' }}"
+                <button type="button" wire:click="{{ $editingEvent ? 'forceUpdateEvent' : 'forceCreateEvent' }}"
                     class="flex-1 px-4 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-xl hover:from-red-700 hover:to-red-800 transition-all duration-200 font-medium flex items-center justify-center space-x-2 group shadow-lg shadow-red-200">
                     <span>Override Anyway</span>
-                    <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </x-custom-modal>
+    <!-- Auto-Archive Confirmation Modal -->
+    <x-custom-modal model="showAutoArchiveModal" maxWidth="lg" title="Auto-Archive Expired Events"
+        description="Archive all events that ended 1 or more days ago" headerBg="purple">
+        <div class="space-y-6">
+            @if ($autoArchiveResults && $autoArchiveDryRun)
+                <!-- Preview Results -->
+                <div class="bg-purple-50 p-5 rounded-xl border border-purple-200">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="p-2 bg-purple-200 rounded-lg">
+                            <svg class="w-6 h-6 text-purple-700" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-purple-800">Preview Results</h3>
+                            <p class="text-sm text-purple-600">
+                                Found {{ $autoArchiveResults['total'] }} event(s) eligible for archiving
+                            </p>
+                        </div>
+                    </div>
+
+                    @if ($autoArchiveResults['total'] > 0)
+                        <div class="max-h-64 overflow-y-auto space-y-2">
+                            @foreach ($autoArchiveResults['preview'] as $event)
+                                <div class="bg-white p-3 rounded-lg border border-purple-100">
+                                    <p class="font-medium text-gray-800">{{ $event['title'] }}</p>
+                                    <p class="text-xs text-gray-500">
+                                        Ended: {{ $event['end_date'] }} at {{ $event['end_time'] }} |
+                                        Creator: {{ $event['creator'] }}
+                                    </p>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
+            @endif
+
+            <!-- Info Message -->
+            <div class="bg-yellow-50 p-4 rounded-xl border border-yellow-200">
+                <div class="flex items-start gap-3">
+                    <svg class="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div class="text-sm text-yellow-800">
+                        <p class="font-semibold mb-1">What will happen?</p>
+                        <ul class="list-disc list-inside space-y-1 text-xs">
+                            <li>All events that ended 1 or more days ago will be archived</li>
+                            <li>Archived events will be moved to the Archived Events page</li>
+                            <li>This action can be reversed from the Archived Events page</li>
+                            <li>The system automatically does this daily at 1 AM</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex space-x-3 pt-4 border-t border-gray-200">
+                <button type="button" wire:click="$set('showAutoArchiveModal', false)"
+                    class="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-all duration-200 font-medium flex items-center justify-center space-x-2 group">
+                    <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    <span>Cancel</span>
+                </button>
+                <button type="button" wire:click="previewAutoArchive"
+                    class="flex-1 px-4 py-3 bg-purple-100 text-purple-700 rounded-xl hover:bg-purple-200 transition-all duration-200 font-medium flex items-center justify-center space-x-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                    <span>Preview</span>
+                </button>
+                <button type="button" wire:click="performAutoArchive"
+                    class="flex-1 px-4 py-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-xl hover:from-purple-700 hover:to-purple-800 transition-all duration-200 font-medium flex items-center justify-center space-x-2 group shadow-lg shadow-purple-200">
+                    <span>Archive Now</span>
+                    <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8" />
                     </svg>
                 </button>
             </div>
