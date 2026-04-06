@@ -677,35 +677,39 @@
                     </div>
                 </div>
 
-                <!-- Event Type and Location/Link -->
+                <!-- Location Field -->
                 <div class="space-y-1.5">
                     <label class="flex items-center space-x-2 text-sm font-semibold text-blue-900">
-                        <svg class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <svg class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
-                        <span>Event Type & Location</span>
+                        <span>Event Location</span>
                     </label>
-                    <div class="space-y-3">
-                        <select wire:model="type"
-                            class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 hover:border-blue-300 appearance-none cursor-pointer">
-                            <option value="">Select event type</option>
-                            <option value="online">🌐 Online Event</option>
-                            <option value="face-to-face">👥 Face-to-Face Event</option>
-                        </select>
-
-                        <div class="relative group">
-                            <input type="text" wire:model="place_link"
-                                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300"
-                                placeholder="{{ $type === 'online' ? 'Meeting link (Zoom, Google Meet, etc.)' : 'Event venue/location' }}">
-                            @error('place_link')
-                                <span class="text-red-500 text-xs">{{ $message }}</span>
-                            @enderror
+                    
+                    <select wire:model="location"
+                        class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 hover:border-blue-300 appearance-none cursor-pointer">
+                        <option value="">Select a location</option>
+                        @foreach ($predefinedLocations as $loc)
+                            <option value="{{ $loc }}">{{ $loc }}</option>
+                        @endforeach
+                        <option value="custom">+ Custom Location</option>
+                    </select>
+                    
+                    @if ($location === 'custom')
+                        <div class="mt-3 animate-slideDown">
+                            <input type="text" wire:model="customLocation"
+                                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200"
+                                placeholder="Enter custom location (e.g., Room 201, Library, etc.)">
                         </div>
-                    </div>
+                    @endif
+                    
+                    @error('location')
+                        <span class="text-red-500 text-xs">{{ $message }}</span>
+                    @enderror
+                    @error('customLocation')
+                        <span class="text-red-500 text-xs">{{ $message }}</span>
+                    @enderror
                 </div>
 
                 <!-- Category and Visibility in Grid -->
@@ -1071,35 +1075,39 @@
                     </div>
                 </div>
 
-                <!-- Event Type and Location/Link -->
+                <!-- Location Field -->
                 <div class="space-y-1.5">
                     <label class="flex items-center space-x-2 text-sm font-semibold text-blue-900">
-                        <svg class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <svg class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
-                        <span>Event Type & Location</span>
+                        <span>Event Location</span>
                     </label>
-                    <div class="space-y-3">
-                        <select wire:model="type"
-                            class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 hover:border-blue-300 appearance-none cursor-pointer">
-                            <option value="">Select event type</option>
-                            <option value="online">🌐 Online Event</option>
-                            <option value="face-to-face">👥 Face-to-Face Event</option>
-                        </select>
-
-                        <div class="relative group">
-                            <input type="text" wire:model="place_link"
-                                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 group-hover:border-blue-300"
-                                placeholder="{{ $type === 'online' ? 'Meeting link (Zoom, Google Meet, etc.)' : 'Event venue/location' }}">
-                            @error('place_link')
-                                <span class="text-red-500 text-xs">{{ $message }}</span>
-                            @enderror
+                    
+                    <select wire:model="location"
+                        class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 hover:border-blue-300 appearance-none cursor-pointer">
+                        <option value="">Select a location</option>
+                        @foreach ($predefinedLocations as $loc)
+                            <option value="{{ $loc }}">{{ $loc }}</option>
+                        @endforeach
+                        <option value="custom">+ Custom Location</option>
+                    </select>
+                    
+                    @if ($location === 'custom')
+                        <div class="mt-3 animate-slideDown">
+                            <input type="text" wire:model="customLocation"
+                                class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200"
+                                placeholder="Enter custom location (e.g., Room 201, Library, etc.)">
                         </div>
-                    </div>
+                    @endif
+                    
+                    @error('location')
+                        <span class="text-red-500 text-xs">{{ $message }}</span>
+                    @enderror
+                    @error('customLocation')
+                        <span class="text-red-500 text-xs">{{ $message }}</span>
+                    @enderror
                 </div>
 
                 <!-- Category and Visibility in Grid -->
@@ -1500,33 +1508,9 @@
                                 </svg>
                             </div>
                             <div class="flex-1">
-                                <p class="text-xs text-gray-500">
-                                    {{ $selectedEvent->type === 'online' ? 'Event Link' : 'Location' }}</p>
-                                @if ($selectedEvent->type === 'online' && filter_var($selectedEvent->place_link, FILTER_VALIDATE_URL))
-                                    <a href="{{ $selectedEvent->place_link }}" target="_blank"
-                                        class="font-semibold text-green-600 hover:text-green-700 hover:underline transition-colors flex items-center space-x-1 break-all">
-                                        <span>{{ $selectedEvent->place_link }}</span>
-                                        <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                        </svg>
-                                    </a>
-                                @else
-                                    <p class="font-semibold text-gray-800">{{ $selectedEvent->place_link }}</p>
-                                @endif
+                                <p class="text-xs text-gray-500">Location</p>
+                                <p class="font-semibold text-gray-800">{{ $selectedEvent->location }}</p>
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- Type and Category -->
-                    <div class="bg-white p-4 rounded-xl border border-gray-200">
-                        <p class="text-xs text-gray-500 mb-2">Event Type</p>
-                        <div class="flex items-center space-x-2">
-                            <span
-                                class="w-2 h-2 rounded-full {{ $selectedEvent->type === 'online' ? 'bg-green-500' : 'bg-orange-500' }}"></span>
-                            <span
-                                class="font-medium capitalize">{{ str_replace('-', ' ', $selectedEvent->type) }}</span>
                         </div>
                     </div>
 
@@ -1829,6 +1813,107 @@
                         stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </x-custom-modal>
+
+     <!-- Conflict Warning Modal -->
+    <x-custom-modal model="showConflictModal" maxWidth="lg" title="Schedule Conflict Detected"
+        description="This event conflicts with existing events" headerBg="red">
+        <div class="space-y-6">
+            <!-- Warning Icon -->
+            <div class="flex justify-center">
+                <div class="p-4 bg-red-100 rounded-full animate-pulse">
+                    <svg class="w-12 h-12 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Warning Title -->
+            <h3 class="text-xl font-bold text-center text-gray-900">Schedule Conflict!</h3>
+            
+            <!-- Main Warning Message -->
+            <p class="text-sm text-center text-gray-700 bg-red-50 p-4 rounded-xl border border-red-200">
+                The event you're trying to schedule conflicts with existing event(s) at the same location and time period.
+            </p>
+
+            <!-- Conflicting Events List -->
+            <div class="space-y-3">
+                <h4 class="font-semibold text-gray-800 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Conflicting Events:
+                </h4>
+                
+                <div class="space-y-2 max-h-64 overflow-y-auto">
+                    @foreach ($conflictingEvents as $conflict)
+                        <div class="p-3 bg-red-50 rounded-lg border border-red-200">
+                            <div class="flex items-start justify-between">
+                                <div class="flex-1">
+                                    <p class="font-semibold text-red-800">{{ $conflict->title }}</p>
+                                    <p class="text-xs text-red-600 mt-1">
+                                        📍 {{ $conflict->location }}
+                                    </p>
+                                    <p class="text-xs text-gray-600 mt-1">
+                                        🕐 {{ $conflict->start_date->format('M d, Y') }} 
+                                        {{ \Carbon\Carbon::parse($conflict->start_time)->format('g:i A') }} - 
+                                        {{ $conflict->end_date->format('M d, Y') }} 
+                                        {{ \Carbon\Carbon::parse($conflict->end_time)->format('g:i A') }}
+                                    </p>
+                                </div>
+                                <div class="flex-shrink-0">
+                                    @if ($conflict->isCurrentlyOngoing())
+                                        <span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-200 text-red-800">
+                                            Ongoing
+                                        </span>
+                                    @elseif($conflict->hasStarted())
+                                        <span class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-200 text-yellow-800">
+                                            In Progress
+                                        </span>
+                                    @else
+                                        <span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-200 text-blue-800">
+                                            Upcoming
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+
+            <!-- Recommendation -->
+            <div class="p-4 bg-yellow-50 rounded-xl border border-yellow-200">
+                <div class="flex items-start space-x-3">
+                    <svg class="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div class="text-sm text-yellow-800">
+                        <p class="font-semibold mb-1">Recommendation:</p>
+                        <p>Please choose a different time slot or location to avoid scheduling conflicts.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex space-x-3 pt-4 border-t border-gray-200">
+                <button type="button" wire:click="closeConflictModal"
+                    class="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-all duration-200 font-medium flex items-center justify-center space-x-2 group">
+                    <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    <span>Go Back & Fix</span>
+                </button>
+                <button type="button" 
+                    wire:click="{{ $editingEvent ? 'forceUpdateEvent' : 'forceCreateEvent' }}"
+                    class="flex-1 px-4 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-xl hover:from-red-700 hover:to-red-800 transition-all duration-200 font-medium flex items-center justify-center space-x-2 group shadow-lg shadow-red-200">
+                    <span>Override Anyway</span>
+                    <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                     </svg>
                 </button>
             </div>

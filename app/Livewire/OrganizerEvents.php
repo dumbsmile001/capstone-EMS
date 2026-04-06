@@ -18,13 +18,16 @@ class OrganizerEvents extends Component
     public $start_time;        // Changed
     public $end_date;          // New
     public $end_time;          // New
-    public string $type = '';
-    public $place_link = '';
+    public string $location = '';
     public string $category = '';
     public string $description = '';
     public $banner;
     public bool $require_payment = false;
     public $payment_amount = 0;
+
+    // Predefined locations
+    public $predefinedLocations = [];
+    public $customLocation = '';
 
     // Modal flags
     public $showCreateModal = false;
@@ -32,12 +35,15 @@ class OrganizerEvents extends Component
     public $showDeleteModal = false;
     public $showEventDetailsModal = false;
     public $showArchiveModal = false;
+    public $showConflictModal = false;
 
     // Event management
     public $editingEvent = null;
     public $deletingEvent = null;
     public $selectedEvent = null;
     public $archivingEvent = null;
+    public $pendingEventData = null;
+    public $conflictingEvents = [];
 
     // Search and filter
     public $search = '';
@@ -67,6 +73,9 @@ class OrganizerEvents extends Component
 
     public function mount()
     {
+        // Load predefined locations
+        $this->predefinedLocations = Event::$predefinedLocations;
+
         // Initialize with today's date for create form
         $this->start_date = now()->format('Y-m-d');
         $this->start_time = now()->format('H:i');
@@ -100,8 +109,16 @@ class OrganizerEvents extends Component
         $this->start_time = $this->editingEvent->start_time;
         $this->end_date = $this->editingEvent->end_date->format('Y-m-d');
         $this->end_time = $this->editingEvent->end_time;
-        $this->type = $this->editingEvent->type;
-        $this->place_link = $this->editingEvent->place_link;
+
+        // Handle location - check if it's a predefined location or custom
+        if (in_array($this->editingEvent->location, Event::$predefinedLocations)) {
+            $this->location = $this->editingEvent->location;
+            $this->customLocation = '';
+        } else {
+            $this->location = 'custom';
+            $this->customLocation = $this->editingEvent->location;
+        }
+
         $this->category = $this->editingEvent->category;
         $this->description = $this->editingEvent->description;
         $this->require_payment = $this->editingEvent->require_payment;
@@ -134,6 +151,13 @@ class OrganizerEvents extends Component
         $this->selectedEvent = null;
     }
 
+     public function closeConflictModal()
+    {
+        $this->showConflictModal = false;
+        $this->conflictingEvents = [];
+        $this->pendingEventData = null;
+    }
+
     public function confirmDelete()
     {
         if ($this->deletingEvent) {
@@ -158,124 +182,135 @@ class OrganizerEvents extends Component
         $this->deletingEvent = null;
     }
 
+    /**
+     * Create event with conflict checking
+     */
     public function createEvent()
     {
-        $data = $this->validate([
-            'title' => 'required|string|max:255',
-            'start_date' => 'required|date|after_or_equal:today',
-            'start_time' => 'required',
-            'end_date' => 'required|date|after_or_equal:start_date',
-            'end_time' => 'required',
-            'type' => 'required|in:online,face-to-face',
-            'place_link' => 'required|string|max:500',
-            'category' => 'required|in:academic,sports,cultural',
-            'description' => 'required|string|min:10',
-            'banner' => 'nullable|image|max:2048',
-            'require_payment' => 'boolean',
-            'payment_amount' => 'nullable|required_if:require_payment,true|numeric|min:0',
-            'visibility_type' => 'required|in:all,grade_level,shs_strand,year_level,college_program',
-            'visible_to_grade_level' => 'nullable|array',
-            'visible_to_shs_strand' => 'nullable|array',
-            'visible_to_year_level' => 'nullable|array',
-            'visible_to_college_program' => 'nullable|array',
-        ]);
-
+        $validatedData = $this->validateEventData();
+        
         // Additional validation: if same date, end time must be after start time
         if ($this->start_date === $this->end_date && $this->end_time <= $this->start_time) {
             $this->addError('end_time', 'End time must be after start time on the same day.');
             return;
         }
+        
+        // Prepare event data
+        $eventData = $this->prepareEventData();
+        
+        // Check for conflicts
+        if (!$this->checkConflicts($eventData)) {
+            // Store pending data and show conflict modal
+            $this->pendingEventData = $eventData;
+            $this->showConflictModal = true;
+            return;
+        }
+        
+        // No conflicts, proceed with creation
+        $this->saveEvent($eventData);
+    }
 
+    /**
+     * Force create event despite conflicts (after user confirmation)
+     */
+    public function forceCreateEvent()
+    {
+        if ($this->pendingEventData) {
+            $this->saveEvent($this->pendingEventData);
+            $this->pendingEventData = null;
+            $this->conflictingEvents = [];
+            $this->showConflictModal = false;
+        }
+    }
+
+    /**
+     * Save event to database
+     */
+    private function saveEvent($eventData)
+    {
         // Handle banner upload
         $bannerPath = $this->banner ? $this->banner->store('event-banners', 'public') : null;
-
+        
         // Create the event
-        $event = Event::create([
-            'title' => $this->title,
-            'start_date' => $this->start_date,
-            'start_time' => $this->start_time,
-            'end_date' => $this->end_date,
-            'end_time' => $this->end_time,
-            'type' => $this->type,
-            'place_link' => $this->place_link,
-            'category' => $this->category,
-            'description' => $this->description,
+        $event = Event::create(array_merge($eventData, [
             'banner' => $bannerPath,
-            'require_payment' => $this->require_payment,
-            'payment_amount' => $this->require_payment ? $this->payment_amount : null,
             'created_by' => Auth::id(),
             'status' => 'published',
-            'visibility_type' => $this->visibility_type,
-            'visible_to_grade_level' => $this->visibility_type === 'grade_level' ? $this->visible_to_grade_level : null,
-            'visible_to_shs_strand' => $this->visibility_type === 'shs_strand' ? $this->visible_to_shs_strand : null,
-            'visible_to_year_level' => $this->visibility_type === 'year_level' ? $this->visible_to_year_level : null,
-            'visible_to_college_program' => $this->visibility_type === 'college_program' ? $this->visible_to_college_program : null,
-        ]);
-
-         // Log the activity
-        $this->logActivity('CREATE', $event);
-
+        ]));
+        
+        $this->logActivity('CREATE', $event, 
+            auth()->user()->first_name . ' ' . auth()->user()->last_name . ' created new event: ' . $event->title);
+        
         $this->closeCreateModal();
         session()->flash('success', 'Event created successfully!');
     }
 
+    /**
+     * Update event with conflict checking
+     */
     public function updateEvent()
     {
-        if ($this->editingEvent) {
-            $data = $this->validate([
-                'title' => 'required|string|max:255',
-                'start_date' => 'required|date',
-                'start_time' => 'required',
-                'end_date' => 'required|date|after_or_equal:start_date',
-                'end_time' => 'required',
-                'type' => 'required|in:online,face-to-face',
-                'place_link' => 'required|string|max:500',
-                'category' => 'required|in:academic,sports,cultural',
-                'description' => 'required|string|min:10',
-                'banner' => 'nullable|image|max:2048',
-                'require_payment' => 'boolean',
-                'payment_amount' => 'nullable|required_if:require_payment,true|numeric|min:0',
-                'visibility_type' => 'required|in:all,grade_level,shs_strand,year_level,college_program',
-                'visible_to_grade_level' => 'nullable|array',
-                'visible_to_shs_strand' => 'nullable|array',
-                'visible_to_year_level' => 'nullable|array',
-                'visible_to_college_program' => 'nullable|array',
-            ]);
-
-            // Additional validation for time logic
-            if ($this->start_date === $this->end_date && $this->end_time <= $this->start_time) {
-                $this->addError('end_time', 'End time must be after start time on the same day.');
-                return;
-            }
-
-            // Get old values for logging
-            $oldValues = $this->editingEvent->toArray();
-
-            // Handle banner upload if new banner is provided
-            if ($this->banner) {
-                $data['banner'] = $this->banner->store('event-banners', 'public');
-            }
-            else {
-                // Keep the existing banner if no new banner is uploaded
-                unset($data['banner']);
-            }
-
-            // Add visibility fields
-            $data['visibility_type'] = $this->visibility_type;
-            $data['visible_to_grade_level'] = $this->visibility_type === 'grade_level' ? $this->visible_to_grade_level : null;
-            $data['visible_to_shs_strand'] = $this->visibility_type === 'shs_strand' ? $this->visible_to_shs_strand : null;
-            $data['visible_to_year_level'] = $this->visibility_type === 'year_level' ? $this->visible_to_year_level : null;
-            $data['visible_to_college_program'] = $this->visibility_type === 'college_program' ? $this->visible_to_college_program : null;
-
-            $this->editingEvent->update($data);
-
-            // Log the activity with changes
-            $newValues = $this->editingEvent->fresh()->toArray();
-            $this->logActivity('UPDATE', $this->editingEvent, null, $oldValues, $newValues);
-            
-            $this->closeEditModal();
-            session()->flash('success', 'Event updated successfully!');
+        if (!$this->editingEvent) {
+            return;
         }
+        
+        $validatedData = $this->validateEventData();
+        
+        // Additional validation for time logic
+        if ($this->start_date === $this->end_date && $this->end_time <= $this->start_time) {
+            $this->addError('end_time', 'End time must be after start time on the same day.');
+            return;
+        }
+        
+        // Prepare event data
+        $eventData = $this->prepareEventData();
+        
+        // Check for conflicts (excluding current event)
+        if (!$this->checkConflicts($eventData, $this->editingEvent->id)) {
+            // Store pending data and show conflict modal
+            $this->pendingEventData = $eventData;
+            $this->showConflictModal = true;
+            return;
+        }
+        
+        // No conflicts, proceed with update
+        $this->saveUpdatedEvent($eventData);
+    }
+
+    /**
+     * Force update event despite conflicts
+     */
+    public function forceUpdateEvent()
+    {
+        if ($this->pendingEventData && $this->editingEvent) {
+            $this->saveUpdatedEvent($this->pendingEventData);
+            $this->pendingEventData = null;
+            $this->conflictingEvents = [];
+            $this->showConflictModal = false;
+        }
+    }
+
+    /**
+     * Save updated event
+     */
+    private function saveUpdatedEvent($eventData)
+    {
+        // Handle banner upload if new banner is provided
+        if ($this->banner) {
+            $eventData['banner'] = $this->banner->store('event-banners', 'public');
+        }
+        
+        $oldValues = $this->editingEvent->getOriginal();
+        $this->editingEvent->update($eventData);
+        
+        $this->logActivity('UPDATE', $this->editingEvent, 
+            auth()->user()->first_name . ' ' . auth()->user()->last_name . ' updated event: ' . $this->editingEvent->title,
+            $oldValues, 
+            $this->editingEvent->toArray()
+        );
+        
+        $this->closeEditModal();
+        session()->flash('success', 'Event updated successfully!');
     }
 
     public function sortBy($field)
@@ -364,6 +399,93 @@ class OrganizerEvents extends Component
             ->paginate($this->eventsPerPage);
     }
 
+    /**
+     * Check for conflicts before creating/updating
+     */
+    private function checkConflicts($eventData, $excludeEventId = null)
+    {
+        // Create a temporary event object to check conflicts
+        $tempEvent = new Event($eventData);
+        
+        if ($excludeEventId) {
+            $tempEvent->id = $excludeEventId;
+        }
+        
+        $conflicts = $tempEvent->findConflicts($excludeEventId !== null);
+        
+        if (!empty($conflicts)) {
+            $this->conflictingEvents = $conflicts;
+            return false;
+        }
+        
+        return true;
+    }
+
+    /**
+     * Prepare event data from form
+     */
+    private function prepareEventData()
+    {
+        // Determine final location
+        $finalLocation = $this->location;
+        if ($finalLocation === 'custom' && !empty($this->customLocation)) {
+            $finalLocation = $this->customLocation;
+        }
+        
+        return [
+            'title' => $this->title,
+            'start_date' => $this->start_date,
+            'start_time' => $this->start_time,
+            'end_date' => $this->end_date,
+            'end_time' => $this->end_time,
+            'location' => $finalLocation,
+            'category' => $this->category,
+            'description' => $this->description,
+            'require_payment' => $this->require_payment,
+            'payment_amount' => $this->require_payment ? $this->payment_amount : null,
+            'visibility_type' => $this->visibility_type,
+            'visible_to_grade_level' => $this->visibility_type === 'grade_level' ? $this->visible_to_grade_level : null,
+            'visible_to_shs_strand' => $this->visibility_type === 'shs_strand' ? $this->visible_to_shs_strand : null,
+            'visible_to_year_level' => $this->visibility_type === 'year_level' ? $this->visible_to_year_level : null,
+            'visible_to_college_program' => $this->visibility_type === 'college_program' ? $this->visible_to_college_program : null,
+        ];
+    }
+
+    /**
+     * Validate event data
+     */
+    private function validateEventData()
+    {
+        return $this->validate([
+            'title' => 'required|string|max:255',
+            'start_date' => 'required|date|after_or_equal:today',
+            'start_time' => 'required',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'end_time' => 'required',
+            'location' => 'required|string|max:500',
+            'category' => 'required|in:academic,sports,cultural',
+            'description' => 'required|string|min:10',
+            'banner' => 'nullable|image|max:2048',
+            'require_payment' => 'boolean',
+            'payment_amount' => 'nullable|required_if:require_payment,true|numeric|min:0',
+            'visibility_type' => 'required|in:all,grade_level,shs_strand,year_level,college_program',
+            'visible_to_grade_level' => 'nullable|array',
+            'visible_to_shs_strand' => 'nullable|array',
+            'visible_to_year_level' => 'nullable|array',
+            'visible_to_college_program' => 'nullable|array',
+        ]);
+    }
+
+    /**
+     * Handle location change
+     */
+    public function updatedLocation($value)
+    {
+        if ($value !== 'custom') {
+            $this->customLocation = '';
+        }
+    }
+
     public function getEventStatsProperty()
     {
         $userId = Auth::id();
@@ -389,7 +511,7 @@ class OrganizerEvents extends Component
     private function resetForm()
     {
        $this->reset([
-            'title', 'start_date', 'start_time', 'end_date', 'end_time', 'type', 'place_link', 
+            'title', 'start_date', 'start_time', 'end_date', 'end_time', 'location', 
             'category', 'description', 'banner', 'require_payment', 'payment_amount',
             'visibility_type', 'visible_to_grade_level', 'visible_to_shs_strand',
             'visible_to_year_level', 'visible_to_college_program'
