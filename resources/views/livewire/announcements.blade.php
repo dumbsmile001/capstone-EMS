@@ -37,143 +37,143 @@
             </div>
 
             <!-- Enhanced Filters & Search Bar -->
-<div class="mb-8 bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
-    <div class="flex flex-col lg:flex-row gap-6">
-        <!-- Search Bar - Enhanced -->
-        <div class="flex-1">
-            <label class="block text-sm font-semibold text-gray-700 mb-2">Search Announcements</label>
-            <div class="relative group">
-                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <svg class="w-5 h-5 text-gray-400 group-focus-within:text-blue-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                    </svg>
-                </div>
-                <input 
-                    type="text" 
-                    wire:model.live.debounce.300ms="search"
-                    placeholder="Search by title or description..." 
-                    class="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all duration-200 text-gray-700 placeholder-gray-400"
-                >
-                @if($search)
-                    <button 
-                        wire:click="$set('search', '')"
-                        class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600"
-                    >
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                        </svg>
-                    </button>
-                @endif
-            </div>
-            @if($search)
-                <p class="mt-2 text-sm text-gray-500">
-                    Searching for: <span class="font-semibold text-blue-600">"{{ $search }}"</span>
-                </p>
-            @endif
-        </div>
+            <div class="mb-8 bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
+                <div class="flex flex-col lg:flex-row gap-6">
+                    <!-- Search Bar - Enhanced -->
+                    <div class="flex-1">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Search Announcements</label>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <svg class="w-5 h-5 text-gray-400 group-focus-within:text-blue-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                                </svg>
+                            </div>
+                            <input 
+                                type="text" 
+                                wire:model.live.debounce.300ms="search"
+                                placeholder="Search by title or description..." 
+                                class="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all duration-200 text-gray-700 placeholder-gray-400"
+                            >
+                            @if($search)
+                                <button 
+                                    wire:click="$set('search', '')"
+                                    class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600"
+                                >
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                    </svg>
+                                </button>
+                            @endif
+                        </div>
+                        @if($search)
+                            <p class="mt-2 text-sm text-gray-500">
+                                Searching for: <span class="font-semibold text-blue-600">"{{ $search }}"</span>
+                            </p>
+                        @endif
+                    </div>
 
-        <!-- Filter Controls - Enhanced -->
-        <div class="flex flex-col sm:flex-row gap-4">
-            <!-- Category Filter -->
-            <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Category</label>
-                <div class="relative">
-                    <select 
-                        wire:model.live="categoryFilter"
-                        class="appearance-none w-full pl-4 pr-10 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 bg-white text-gray-700 font-medium transition-all duration-200 cursor-pointer hover:border-gray-300"
-                    >
-                        <option value="">All Categories</option>
-                        <option value="general" class="text-blue-600">📢 General</option>
-                        <option value="event" class="text-green-600">🎉 Events</option>
-                        <option value="reminder" class="text-yellow-600">⏰ Reminders</option>
-                    </select>
-                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                        </svg>
+                    <!-- Filter Controls - Enhanced -->
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <!-- Category Filter -->
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Category</label>
+                            <div class="relative">
+                                <select 
+                                    wire:model.live="categoryFilter"
+                                    class="appearance-none w-full pl-4 pr-10 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 bg-white text-gray-700 font-medium transition-all duration-200 cursor-pointer hover:border-gray-300"
+                                >
+                                    <option value="">All Categories</option>
+                                    <option value="general" class="text-blue-600">📢 General</option>
+                                    <option value="event" class="text-green-600">🎉 Events</option>
+                                    <option value="reminder" class="text-yellow-600">⏰ Reminders</option>
+                                </select>
+                                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sort Direction -->
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Sort By</label>
+                            <div class="relative">
+                                <select 
+                                    wire:model.live="sortDirection"
+                                    class="appearance-none w-full pl-4 pr-10 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 bg-white text-gray-700 font-medium transition-all duration-200 cursor-pointer hover:border-gray-300"
+                                >
+                                    <option value="desc">⬇️ Latest First</option>
+                                    <option value="asc">⬆️ Oldest First</option>
+                                </select>
+                                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Clear Filters Button (Enhanced) -->
+                        @if($search || $categoryFilter || $sortDirection != 'desc')
+                            <div class="flex items-end">
+                                <button 
+                                    wire:click="clearFilters"
+                                    class="px-6 py-4 bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 rounded-xl hover:from-gray-200 hover:to-gray-300 transition-all duration-200 flex items-center gap-2 font-medium shadow-sm hover:shadow border border-gray-300"
+                                >
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                    </svg>
+                                    Clear Filters
+                                </button>
+                            </div>
+                        @endif
                     </div>
                 </div>
-            </div>
 
-            <!-- Sort Direction -->
-            <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Sort By</label>
-                <div class="relative">
-                    <select 
-                        wire:model.live="sortDirection"
-                        class="appearance-none w-full pl-4 pr-10 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 bg-white text-gray-700 font-medium transition-all duration-200 cursor-pointer hover:border-gray-300"
-                    >
-                        <option value="desc">⬇️ Latest First</option>
-                        <option value="asc">⬆️ Oldest First</option>
-                    </select>
-                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                        </svg>
+                <!-- Active Filters Pills (Enhanced) -->
+                @if($search || $categoryFilter)
+                    <div class="mt-4 pt-4 border-t border-gray-100">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="text-sm text-gray-500">Active filters:</span>
+                            @if($search)
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg text-sm border border-blue-200">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                                    </svg>
+                                    "{{ $search }}"
+                                    <button wire:click="$set('search', '')" class="hover:text-blue-900">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                        </svg>
+                                    </button>
+                                </span>
+                            @endif
+                            @if($categoryFilter)
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 
+                                    @switch($categoryFilter)
+                                        @case('event') bg-green-50 text-green-700 border-green-200 @break
+                                        @case('reminder') bg-yellow-50 text-yellow-700 border-yellow-200 @break
+                                        @default bg-blue-50 text-blue-700 border-blue-200
+                                    @endswitch
+                                    rounded-lg text-sm border">
+                                    @switch($categoryFilter)
+                                        @case('event') 🎉 @break
+                                        @case('reminder') ⏰ @break
+                                        @default 📢
+                                    @endswitch
+                                    {{ ucfirst($categoryFilter) }}
+                                    <button wire:click="$set('categoryFilter', '')" class="hover:text-current opacity-60 hover:opacity-100">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                        </svg>
+                                    </button>
+                                </span>
+                            @endif
+                        </div>
                     </div>
-                </div>
-            </div>
-            
-            <!-- Clear Filters Button (Enhanced) -->
-            @if($search || $categoryFilter || $sortDirection != 'desc')
-                <div class="flex items-end">
-                    <button 
-                        wire:click="clearFilters"
-                        class="px-6 py-4 bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 rounded-xl hover:from-gray-200 hover:to-gray-300 transition-all duration-200 flex items-center gap-2 font-medium shadow-sm hover:shadow border border-gray-300"
-                    >
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                        </svg>
-                        Clear Filters
-                    </button>
-                </div>
-            @endif
-        </div>
-    </div>
-
-    <!-- Active Filters Pills (Enhanced) -->
-    @if($search || $categoryFilter)
-        <div class="mt-4 pt-4 border-t border-gray-100">
-            <div class="flex flex-wrap items-center gap-2">
-                <span class="text-sm text-gray-500">Active filters:</span>
-                @if($search)
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg text-sm border border-blue-200">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                        </svg>
-                        "{{ $search }}"
-                        <button wire:click="$set('search', '')" class="hover:text-blue-900">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                            </svg>
-                        </button>
-                    </span>
-                @endif
-                @if($categoryFilter)
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 
-                        @switch($categoryFilter)
-                            @case('event') bg-green-50 text-green-700 border-green-200 @break
-                            @case('reminder') bg-yellow-50 text-yellow-700 border-yellow-200 @break
-                            @default bg-blue-50 text-blue-700 border-blue-200
-                        @endswitch
-                        rounded-lg text-sm border">
-                        @switch($categoryFilter)
-                            @case('event') 🎉 @break
-                            @case('reminder') ⏰ @break
-                            @default 📢
-                        @endswitch
-                        {{ ucfirst($categoryFilter) }}
-                        <button wire:click="$set('categoryFilter', '')" class="hover:text-current opacity-60 hover:opacity-100">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                            </svg>
-                        </button>
-                    </span>
                 @endif
             </div>
-        </div>
-    @endif
-</div>
 
             <!-- Main Content Grid - Reordered for mobile -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -315,6 +315,147 @@
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
             </div>
+
+            <!-- Visibility Type Field -->
+            <div>
+                <label for="visibility_type" class="block text-sm font-semibold text-gray-700 mb-2">
+                    <span class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                        Who can see this announcement?
+                    </span>
+                </label>
+                <select 
+                    id="visibility_type" 
+                    wire:model.live="visibility_type" 
+                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200"
+                >
+                    <option value="all">👥 Everyone (All Users)</option>
+                    @role(['admin', 'organizer'])
+                        <option value="roles">👔 Specific User Roles</option>
+                    @endrole
+                    <option value="grade_level">📋 Grade Levels (SHS)</option>
+                    <option value="shs_strand">🎓 SHS Strands</option>
+                    <option value="year_level">📚 Year Levels (College)</option>
+                    <option value="college_program">🏫 College Programs</option>
+                </select>
+                @error('visibility_type') 
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Role-based Visibility Options (Admin/Organizer only) -->
+            @if($visibility_type === 'roles' && auth()->user()->hasRole(['admin', 'organizer']))
+                <div class="p-4 bg-purple-50 rounded-xl border-2 border-purple-100 animate-fadeIn">
+                    <label class="block text-sm font-semibold text-purple-900 mb-3">Select User Roles</label>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        @foreach($availableRoles as $role => $label)
+                            <label class="flex items-center space-x-2 cursor-pointer group">
+                                <input type="checkbox" wire:model="visible_to_roles" value="{{ $role }}"
+                                    class="w-5 h-5 text-yellow-500 border-2 border-gray-300 rounded-lg focus:ring-yellow-400 focus:ring-2 transition-all group-hover:border-purple-400">
+                                <span class="text-sm text-gray-700 group-hover:text-purple-600">{{ $label }}</span>
+                            </label>
+                        @endforeach
+                    </div>
+                    @error('visible_to_roles')
+                        <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
+                    @enderror
+                    <p class="text-xs text-gray-500 mt-2">Only users with selected roles will see this announcement.</p>
+                </div>
+            @endif
+
+            <!-- Grade Level Options (SHS) -->
+            @if($visibility_type === 'grade_level')
+                <div class="p-4 bg-blue-50 rounded-xl border-2 border-blue-100 animate-fadeIn">
+                    <label class="block text-sm font-semibold text-blue-900 mb-3">Select Grade Levels (SHS)</label>
+                    <div class="flex space-x-6">
+                        <label class="flex items-center space-x-2 cursor-pointer group">
+                            <input type="checkbox" wire:model="visible_to_grade_level" value="11"
+                                class="w-5 h-5 text-yellow-500 border-2 border-gray-300 rounded-lg focus:ring-yellow-400 focus:ring-2 transition-all group-hover:border-blue-400">
+                            <span class="text-sm text-gray-700 group-hover:text-blue-600">Grade 11</span>
+                        </label>
+                        <label class="flex items-center space-x-2 cursor-pointer group">
+                            <input type="checkbox" wire:model="visible_to_grade_level" value="12"
+                                class="w-5 h-5 text-yellow-500 border-2 border-gray-300 rounded-lg focus:ring-yellow-400 focus:ring-2 transition-all group-hover:border-blue-400">
+                            <span class="text-sm text-gray-700 group-hover:text-blue-600">Grade 12</span>
+                        </label>
+                    </div>
+                    @error('visible_to_grade_level')
+                        <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
+                    @enderror
+                    <p class="text-xs text-gray-500 mt-2">Only selected grade levels will see this announcement.</p>
+                </div>
+            @endif
+
+            <!-- SHS Strand Options -->
+            @if($visibility_type === 'shs_strand')
+                <div class="p-4 bg-purple-50 rounded-xl border-2 border-purple-100 animate-fadeIn">
+                    <label class="block text-sm font-semibold text-purple-900 mb-3">Select SHS Strands</label>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        @php
+                            $strands = ['ABM', 'HUMSS', 'GAS', 'ICT'];
+                        @endphp
+                        @foreach($strands as $strand)
+                            <label class="flex items-center space-x-2 cursor-pointer group">
+                                <input type="checkbox" wire:model="visible_to_shs_strand" value="{{ $strand }}"
+                                    class="w-5 h-5 text-yellow-500 border-2 border-gray-300 rounded-lg focus:ring-yellow-400 focus:ring-2 transition-all group-hover:border-purple-400">
+                                <span class="text-sm text-gray-700 group-hover:text-purple-600">{{ $strand }}</span>
+                            </label>
+                        @endforeach
+                    </div>
+                    @error('visible_to_shs_strand')
+                        <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
+                    @enderror
+                    <p class="text-xs text-gray-500 mt-2">Only selected SHS strands will see this announcement.</p>
+                </div>
+            @endif
+
+            <!-- Year Level Options (College) -->
+            @if($visibility_type === 'year_level')
+                <div class="p-4 bg-green-50 rounded-xl border-2 border-green-100 animate-fadeIn">
+                    <label class="block text-sm font-semibold text-green-900 mb-3">Select Year Levels (College)</label>
+                    <div class="flex space-x-6">
+                        @for($i = 1; $i <= 4; $i++)
+                            <label class="flex items-center space-x-2 cursor-pointer group">
+                                <input type="checkbox" wire:model="visible_to_year_level" value="{{ $i }}"
+                                    class="w-5 h-5 text-yellow-500 border-2 border-gray-300 rounded-lg focus:ring-yellow-400 focus:ring-2 transition-all group-hover:border-green-400">
+                                <span class="text-sm text-gray-700 group-hover:text-green-600">
+                                    {{ $i == 1 ? '1st' : ($i == 2 ? '2nd' : ($i == 3 ? '3rd' : '4th')) }} Year
+                                </span>
+                            </label>
+                        @endfor
+                    </div>
+                    @error('visible_to_year_level')
+                        <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
+                    @enderror
+                    <p class="text-xs text-gray-500 mt-2">Only selected year levels will see this announcement.</p>
+                </div>
+            @endif
+
+            <!-- College Program Options -->
+            @if($visibility_type === 'college_program')
+                <div class="p-4 bg-orange-50 rounded-xl border-2 border-orange-100 animate-fadeIn">
+                    <label class="block text-sm font-semibold text-orange-900 mb-3">Select College Programs</label>
+                    <div class="flex space-x-6">
+                        @php
+                            $programs = ['BSIT', 'BSBA'];
+                        @endphp
+                        @foreach($programs as $program)
+                            <label class="flex items-center space-x-2 cursor-pointer group">
+                                <input type="checkbox" wire:model="visible_to_college_program" value="{{ $program }}"
+                                    class="w-5 h-5 text-yellow-500 border-2 border-gray-300 rounded-lg focus:ring-yellow-400 focus:ring-2 transition-all group-hover:border-orange-400">
+                                <span class="text-sm text-gray-700 group-hover:text-orange-600">{{ $program }}</span>
+                            </label>
+                        @endforeach
+                    </div>
+                    @error('visible_to_college_program')
+                        <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
+                    @enderror
+                    <p class="text-xs text-gray-500 mt-2">Only selected college programs will see this announcement.</p>
+                </div>
+            @endif
 
             <!-- Description Field -->
             <div>
