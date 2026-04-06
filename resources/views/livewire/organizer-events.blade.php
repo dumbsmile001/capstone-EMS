@@ -93,37 +93,6 @@
                             </div>
                         </div>
 
-                        <!-- Type Filter -->
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">
-                                <span class="flex items-center gap-1">
-                                    <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M13 7h8m-8 5h5m-5 5h3M4 7h5v5H4V7zm0 10h3v-5H4v5z" />
-                                    </svg>
-                                    Event Type
-                                </span>
-                            </label>
-                            <div class="relative">
-                                <select wire:model.live="filterType"
-                                    class="w-full px-4 py-3 text-sm border-2 border-gray-200 rounded-xl bg-white 
-                               focus:ring-2 focus:ring-yellow-200 focus:border-yellow-400 
-                               transition-all duration-200 appearance-none cursor-pointer hover:border-blue-300">
-                                    <option value="">All Types</option>
-                                    <option value="online">🌐 Online</option>
-                                    <option value="face-to-face">👥 Face-to-Face</option>
-                                </select>
-                                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 9l-7 7-7-7" />
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-
                         <!-- Category Filter -->
                         <div>
                             <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">

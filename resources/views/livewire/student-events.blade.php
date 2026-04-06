@@ -720,33 +720,9 @@
                                 </svg>
                             </div>
                             <div class="flex-1">
-                                <p class="text-xs text-gray-500">
-                                    {{ $selectedEvent->type === 'online' ? 'Event Link' : 'Location' }}</p>
-                                @if ($selectedEvent->type === 'online' && filter_var($selectedEvent->place_link, FILTER_VALIDATE_URL))
-                                    <a href="{{ $selectedEvent->place_link }}" target="_blank"
-                                        class="font-semibold text-green-600 hover:text-green-700 hover:underline transition-colors flex items-center space-x-1 break-all">
-                                        <span>{{ $selectedEvent->place_link }}</span>
-                                        <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                        </svg>
-                                    </a>
-                                @else
-                                    <p class="font-semibold text-gray-800">{{ $selectedEvent->place_link }}</p>
-                                @endif
+                                <p class="text-xs text-gray-500">Location</p>
+                                <p class="font-semibold text-gray-800">{{ $selectedEvent->location }}</p>
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- Type and Category -->
-                    <div class="bg-white p-4 rounded-xl border border-gray-200">
-                        <p class="text-xs text-gray-500 mb-2">Event Type</p>
-                        <div class="flex items-center space-x-2">
-                            <span
-                                class="w-2 h-2 rounded-full {{ $selectedEvent->type === 'online' ? 'bg-green-500' : 'bg-orange-500' }}"></span>
-                            <span
-                                class="font-medium capitalize">{{ str_replace('-', ' ', $selectedEvent->type) }}</span>
                         </div>
                     </div>
 
