@@ -220,6 +220,31 @@
                 </div>
             @endif --}}
 
+            <!-- Terms and Conditions Section -->
+            <div class="mb-6">
+                <h3 class="text-base sm:text-lg font-semibold text-gray-800 mb-4 border-b pb-2">Agreement</h3>
+                
+                <div class="mt-4">
+                    <label for="terms" class="flex items-start cursor-pointer">
+                        <input 
+                            type="checkbox" 
+                            id="terms" 
+                            wire:model="terms" 
+                            required
+                            class="mt-1 w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                        >
+                        <div class="ms-2 text-xs sm:text-sm text-gray-700">
+                            {!! __('I have read and agree to the :terms_of_service', [
+                                'terms_of_service' => '<a target="_blank" href="'.route('terms.show').'" class="text-blue-600 hover:text-blue-700 underline">'.__('Terms and Conditions').'</a>',
+                            ]) !!}
+                        </div>
+                    </label>
+                    @error('terms') 
+                        <span class="text-red-600 text-xs sm:text-sm mt-1 block">{{ $message }}</span> 
+                    @enderror
+                </div>
+            </div>
+
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-end mt-6 gap-3">
                 <a class="underline text-xs sm:text-sm text-blue-600 hover:text-blue-700 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors" href="{{ route('login') }}">
                     {{ __('Already registered?') }}

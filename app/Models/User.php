@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\TermAgreement;
+use App\Models\TermsVersion;
 use App\Models\Announcement;
 use App\Models\Registration;
 use Laravel\Sanctum\HasApiTokens;
@@ -95,5 +97,32 @@ class User extends Authenticatable{
         }
         $name .= ' ' . $this->last_name;
         return $name;
+    }
+
+    // Add this relationship:
+    public function termAgreements()
+    {
+        return $this->hasMany(TermAgreement::class);
+    }
+
+    // Add these methods:
+    public function hasAcceptedLatestTerms(): bool
+    {
+        $latestVersion = TermsVersion::getActiveVersion();
+        if (!$latestVersion) {
+            return true; // No terms defined yet
+        }
+        
+        return $this->termAgreements()
+            ->where('terms_version_id', $latestVersion->id)
+            ->exists();
+    }
+
+    public function getLatestTermsAcceptance(): ?TermAgreement
+    {
+        return $this->termAgreements()
+            ->with('termsVersion')
+            ->latest()
+            ->first();
     }
 }

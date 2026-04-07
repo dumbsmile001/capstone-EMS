@@ -7,10 +7,18 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// Terms and Conditions Routes (outside auth middleware)
+Route::get('/terms', [App\Http\Controllers\TermsController::class, 'show'])->name('terms.show');
+
+Route::post('/terms/accept', [App\Http\Controllers\TermAcceptanceController::class, 'accept'])
+    ->middleware(['auth:sanctum'])
+    ->name('terms.accept');
+
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
+    'terms.accepted',
 ])->group(function () {
     // Make dashboard the default home page
     Route::get('/dashboard', \App\Livewire\Home::class)->name('home'); // <-- Dashboard is now home
@@ -26,6 +34,8 @@ Route::middleware([
     Route::get('/admin/events/archived', \App\Livewire\AdminArchivedEvents::class)->name('admin.events.archived');
     Route::get('/admin/attendance', \App\Livewire\AdminEventAttendance::class)->name('admin.attendance');
     Route::get('/admin/audit-logs', \App\Livewire\AuditLogs::class)->name('admin.audit-logs');
+    Route::get('/admin/terms', \App\Livewire\AdminTermsManager::class)
+    ->name('admin.terms');
 
     Route::get('/organizer/events', \App\Livewire\OrganizerEvents::class)
     ->name('organizer.events');

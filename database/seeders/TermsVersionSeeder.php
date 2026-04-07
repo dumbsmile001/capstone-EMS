@@ -1,0 +1,49 @@
+<?php
+// database/seeders/TermsVersionSeeder.php
+
+namespace Database\Seeders;
+
+use App\Models\TermsVersion;
+use Illuminate\Database\Seeder;
+
+class TermsVersionSeeder extends Seeder
+{
+    public function run(): void
+    {
+        TermsVersion::create([
+            'version' => '1.0.0',
+            'content' => '<h2>Terms and Conditions</h2>
+            
+            <h3>1. Acceptance of Terms</h3>
+            <p>By registering for and using the SPCC Events Management System, you agree to be bound by these Terms and Conditions.</p>
+            
+            <h3>2. User Accounts</h3>
+            <p>You are responsible for maintaining the confidentiality of your account credentials. You agree to accept responsibility for all activities that occur under your account.</p>
+            
+            <h3>3. Event Registration</h3>
+            <p>Registration for events is subject to availability. SPCC reserves the right to cancel or modify events at any time.</p>
+            
+            <h3>4. Code of Conduct</h3>
+            <p>Users must behave respectfully at all events. Harassment, discrimination, or disruptive behavior will not be tolerated.</p>
+            
+            <h3>5. Privacy</h3>
+            <p>Your personal information will be handled in accordance with our Privacy Policy and applicable data protection laws.</p>
+            
+            <h3>6. Changes to Terms</h3>
+            <p>We may modify these terms at any time. Continued use of the system constitutes acceptance of modified terms.</p>
+            
+            <h3>7. Limitation of Liability</h3>
+            <p>SPCC shall not be liable for any indirect, incidental, or consequential damages arising from your use of the system.</p>
+            
+            <h3>8. Governing Law</h3>
+            <p>These terms shall be governed by the laws of the Republic of the Philippines.</p>
+            
+            <h3>9. Contact Information</h3>
+            <p>For questions about these Terms, contact us at: <a href="mailto:events@spcc.edu.ph">events@spcc.edu.ph</a></p>',
+            'summary' => 'Standard terms for using the SPCC Events Management System. Covers user accounts, event registration, code of conduct, and privacy.',
+            'is_active' => true,
+            'effective_date' => now(),
+            'created_by' => null,
+        ]);
+    }
+}

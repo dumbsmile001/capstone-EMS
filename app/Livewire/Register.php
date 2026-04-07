@@ -87,7 +87,7 @@ class Register extends Component
                     }
                 }
             ],
-            'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : [],
+            'terms' => 'accepted',
         ];
     }
 
