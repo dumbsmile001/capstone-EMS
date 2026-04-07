@@ -4,16 +4,17 @@ namespace App\Livewire;
 
 use App\Models\User;
 use App\Traits\LogsActivity;
-use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
-use Laravel\Jetstream\Jetstream;
+use Livewire\Component;
 use Spatie\Permission\Models\Role;
 
 class Register extends Component
 {
     use LogsActivity;
+    
     public string $first_name = '';
     public string $middle_name = '';
     public string $last_name = '';
@@ -26,8 +27,27 @@ class Register extends Component
     public ?string $shs_strand = null;
     public ?string $college_program = null;
     public bool $terms = false;
+    
+    // Add this property
+    public bool $isGoogleRegistration = false;
+    
+    // Add mount method to handle Google registration
+    public function mount()
+    {
+        if (session()->has('google_registration') && session()->has('google_auth')) {
+            $this->isGoogleRegistration = true;
+            $googleData = session('google_auth');
+            $this->email = $googleData['email'];
+            $this->first_name = $googleData['first_name'];
+            $this->last_name = $googleData['last_name'];
+            
+            // Generate a random password for Google users
+            $this->password = Str::random(16);
+            $this->password_confirmation = $this->password;
+        }
+    }
 
-     // Add this computed property to help with UI state
+    // Rest of your existing methods remain the same...
     public function getShouldDisableCollegeFields(): bool
     {
         return !empty($this->grade_level) || !empty($this->shs_strand);
@@ -91,7 +111,6 @@ class Register extends Component
         ];
     }
 
-    // Add validation messages
     protected function messages(): array
     {
         return [
@@ -102,7 +121,6 @@ class Register extends Component
 
     public function updated($propertyName)
     {
-         // Reset fields when grade_level or year_level changes
         if ($propertyName === 'grade_level') {
             if ($this->grade_level) {
                 $this->reset('year_level', 'college_program');
@@ -139,9 +157,11 @@ class Register extends Component
             'shs_strand' => $this->grade_level ? $this->shs_strand : null,
             'college_program' => $this->year_level ? $this->college_program : null,
             'password' => Hash::make($this->password),
+            // Add google_id field if you have it in your users table
+            'google_id' => $this->isGoogleRegistration ? session('google_auth.google_id') : null,
         ]);
 
-        // Assign default 'student' role (create if it doesn't exist)
+        // Assign default 'student' role
         $studentRole = Role::firstOrCreate(['name' => 'student', 'guard_name' => 'web']);
         $user->assignRole($studentRole);
 
@@ -149,8 +169,12 @@ class Register extends Component
 
         // Log user registration
         $this->logActivity('REGISTER', $user);
+        
+        // Clear Google session data
+        session()->forget(['google_registration', 'google_auth']);
         session()->regenerate();
 
+        // Check if terms need to be accepted (your existing terms system will handle this)
         return redirect()->route('home');
     }
 

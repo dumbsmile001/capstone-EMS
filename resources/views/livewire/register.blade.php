@@ -23,6 +23,16 @@
         <x-validation-errors class="mb-4" />
 
         <form wire:submit="register">
+            @if(session('google_registration'))
+                <div class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                    <p class="text-sm text-blue-700">
+                        <svg class="inline w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                        </svg>
+                        Please complete your profile information to continue with your Google account.
+                    </p>
+                </div>
+            @endif
             <!-- Personal Information Section -->
             <div class="mb-6">
                 <h3 class="text-base sm:text-lg font-semibold text-gray-800 mb-4 border-b pb-2">Personal Information</h3>

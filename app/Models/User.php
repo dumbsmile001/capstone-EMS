@@ -34,6 +34,7 @@ class User extends Authenticatable{
         'college_program',  // Changed from 'program'
         'email',
         'password',
+        'google_id',
     ];
     protected $hidden = [
         'password',
