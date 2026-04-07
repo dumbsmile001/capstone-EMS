@@ -51,7 +51,7 @@ class TermsController extends Controller
         <p>These terms shall be governed by the laws of the Republic of the Philippines.</p>
         
         <h3>9. Contact Information</h3>
-        <p>For questions about these Terms, contact us at: <a href="mailto:events@spcc.edu.ph">events@spcc.edu.ph</a></p>
+        <p>For questions about these Terms, contact us at: <a href="mailto:info@systemsplus.edu.ph">info@systemsplus.edu.ph</a></p>
         
         <p class="text-center mt-4"><strong>Last Updated: January 1, 2024</strong></p>
         HTML;

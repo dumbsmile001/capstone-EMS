@@ -11,7 +11,7 @@ class TermsVersionSeeder extends Seeder
     public function run(): void
     {
         TermsVersion::create([
-            'version' => '1.0.0',
+            'version' => '1.0.1',
             'content' => '<h2>Terms and Conditions</h2>
             
             <h3>1. Acceptance of Terms</h3>
@@ -39,7 +39,7 @@ class TermsVersionSeeder extends Seeder
             <p>These terms shall be governed by the laws of the Republic of the Philippines.</p>
             
             <h3>9. Contact Information</h3>
-            <p>For questions about these Terms, contact us at: <a href="mailto:events@spcc.edu.ph">events@spcc.edu.ph</a></p>',
+            <p>For questions about these Terms, contact us at: <a href="mailto:info@systemsplus.edu.ph">info@systemsplus.edu.ph</a></p>',
             'summary' => 'Standard terms for using the SPCC Events Management System. Covers user accounts, event registration, code of conduct, and privacy.',
             'is_active' => true,
             'effective_date' => now(),
