@@ -58,6 +58,6 @@ class AdminTermsManager extends Component
     {
         return view('livewire.admin-terms-manager', [
             'termsVersions' => TermsVersion::with('creator')->orderBy('created_at', 'desc')->paginate(10),
-        ]);
+        ])->layout('layouts.app');
     }
 }

@@ -167,6 +167,19 @@
                     <span class="ml-auto w-2 h-2 bg-blue-900 rounded-full animate-pulse"></span>
                 @endif
             </a>
+
+            <!-- Audit Logs Link -->
+            <a href="{{ route('admin.terms') }}"
+                class="flex items-center px-4 py-3 rounded-lg hover:bg-yellow-400 hover:text-blue-900 transition-all duration-200 transform hover:translate-x-1 group {{ request()->routeIs('admin.terms') ? 'bg-yellow-400 text-blue-900 shadow-lg' : 'text-white hover:shadow-md' }}">
+                <svg class="w-5 h-5 mr-3 group-hover:scale-110 transition-transform duration-200" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
+                    {!! $menuIcons['audit'] !!}
+                </svg>
+                <span class="font-medium">Terms Manager</span>
+                @if (request()->routeIs('admin.terms'))
+                    <span class="ml-auto w-2 h-2 bg-blue-900 rounded-full animate-pulse"></span>
+                @endif
+            </a>
         @endif
 
         {{-- Organizer menu items --}}
