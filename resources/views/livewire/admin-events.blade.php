@@ -778,7 +778,7 @@
                             </svg>
                             <span>Visibility</span>
                         </label>
-                        <select wire:model="visibility_type"
+                        <select wire:model.live="visibility_type"
                             class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 hover:border-blue-300">
                             <option value="all">👥 All Students</option>
                             <option value="grade_level">📋 Grade Levels (SHS)</option>
@@ -954,7 +954,7 @@
                         <span class="font-medium text-gray-700">Require Payment</span>
                     </div>
                     <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" wire:model="require_payment" class="sr-only peer">
+                        <input type="checkbox" wire:model.live="require_payment" class="sr-only peer">
                         <div
                             class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-yellow-400 peer-checked:to-yellow-500">
                         </div>
@@ -1178,7 +1178,7 @@
                             </svg>
                             <span>Visibility</span>
                         </label>
-                        <select wire:model="visibility_type"
+                        <select wire:model.live="visibility_type"
                             class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-yellow-400 focus:ring-2 focus:ring-yellow-200 transition-all duration-200 hover:border-blue-300">
                             <option value="all">👥 All Students</option>
                             <option value="grade_level">📋 Grade Levels (SHS)</option>
@@ -1354,7 +1354,7 @@
                         <span class="font-medium text-gray-700">Require Payment</span>
                     </div>
                     <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" wire:model="require_payment" class="sr-only peer">
+                        <input type="checkbox" wire:model.live="require_payment" class="sr-only peer">
                         <div
                             class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-yellow-400 peer-checked:to-yellow-500">
                         </div>
